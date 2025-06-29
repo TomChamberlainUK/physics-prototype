@@ -7,8 +7,8 @@ describe('App', () => {
     render(App);
   });
 
-  it('Should render', () => {
-    const text = screen.getByText('Hello, World!');
-    expect(text).toBeInTheDocument();
+  it('Should render a canvas', () => {
+    const canvas = screen.getByTestId('canvas');
+    expect(canvas).toBeInTheDocument();
   });
 });

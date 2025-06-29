@@ -6,6 +6,6 @@ export default mergeConfig(viteConfig, defineConfig({
   plugins: [svelteTesting()],
   test: {
     environment: 'jsdom',
-    setupFiles: ['./tests/vitest.setup.ts']
-  }
+    setupFiles: ['./tests/vitest.setup.ts'],
+  },
 }));

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Renderer from './Renderer';
 
   let canvas: HTMLCanvasElement;
 
@@ -8,24 +9,17 @@
       throw new Error('Canvas element not found');
     }
 
-    const ctx = canvas.getContext('2d');
+    const renderer = new Renderer(canvas);
 
-    if (!ctx) {
-      throw new Error('Failed to get canvas context');
-    }
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    ctx.fillStyle = 'white';
-    ctx.arc(
+    renderer.ctx.fillStyle = 'white';
+    renderer.ctx.arc(
       canvas.width / 2,
       canvas.height / 2,
       64,
       0,
       2 * Math.PI,
     );
-    ctx.fill();
+    renderer.ctx.fill();
   });
 </script>
 

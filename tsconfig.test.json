@@ -10,7 +10,11 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "types": ["@testing-library/jest-dom"],
-    "composite": true
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "#/*": ["src/*"],
+    },
   },
   "include": ["src", "tests"]
 }

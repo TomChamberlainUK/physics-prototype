@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, it, expect, beforeEach } from 'vitest';
-import App from '../src/App.svelte';
+import App from '#/App.svelte';
 
 describe('App', () => {
   beforeEach(() => {

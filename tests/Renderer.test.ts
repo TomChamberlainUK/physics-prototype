@@ -4,31 +4,42 @@ import Renderer from '#/Renderer';
 describe('Renderer', () => {
   let renderer: Renderer;
   let canvas: HTMLCanvasElement;
-  let canvasGetContextSpy: MockInstance<typeof HTMLCanvasElement.prototype.getContext>;
 
-  beforeAll(() => {
-    canvas = document.createElement('canvas');
-    canvasGetContextSpy = vi.spyOn(canvas, 'getContext');
-  });
+  describe('constructor', () => {
+    let canvasGetContextSpy: MockInstance<typeof HTMLCanvasElement.prototype.getContext>;
 
-  beforeEach(() => {
-    renderer = new Renderer(canvas);
-  });
+    beforeAll(() => {
+      canvas = document.createElement('canvas');
+      canvasGetContextSpy = vi.spyOn(canvas, 'getContext');
+    });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+    });
 
-  it('Should instantiate', () => {
-    expect(renderer).toBeInstanceOf(Renderer);
-  });
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
 
-  it('Should set the canvas size to match the window', () => {
-    expect(canvas.width).toBe(window.innerWidth);
-    expect(canvas.height).toBe(window.innerHeight);
-  });
+    it('Should instantiate', () => {
+      expect(renderer).toBeInstanceOf(Renderer);
+    });
 
-  it('Should get the canvas rendering context', () => {
-    expect(canvasGetContextSpy).toHaveBeenCalledWith('2d');
+    it('Should set the canvas size to match the window', () => {
+      expect(canvas.width).toBe(window.innerWidth);
+      expect(canvas.height).toBe(window.innerHeight);
+    });
+
+    it('Should get the canvas rendering context', () => {
+      expect(canvasGetContextSpy).toHaveBeenCalledWith('2d');
+    });
+
+    it('Should expose the canvas', () => {
+      expect(renderer.canvas).toBe(canvas);
+    });
+
+    it('Should expose the rendering context', () => {
+      expect(renderer.ctx).toBeInstanceOf(CanvasRenderingContext2D);
+    });
   });
 });

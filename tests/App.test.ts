@@ -4,17 +4,12 @@ import App from '#/App.svelte';
 
 describe('App', () => {
   const mockRenderer = vi.hoisted(() => vi.fn());
-  const mockCtxArc = vi.hoisted(() => vi.fn());
-  const mockCtxFill = vi.hoisted(() => vi.fn());
+  const mockDrawCircle = vi.hoisted(() => vi.fn());
 
   beforeAll(() => {
     vi.mock(import('#/Renderer'), () => {
       const Renderer = mockRenderer;
-      Renderer.prototype.ctx = {
-        fillStyle: '#000',
-        arc: mockCtxArc,
-        fill: mockCtxFill,
-      };
+      Renderer.prototype.drawCircle = mockDrawCircle;
       return { default: Renderer };
     });
   });
@@ -34,14 +29,11 @@ describe('App', () => {
 
   it('Should render a white circle on the canvas', () => {
     const canvas = screen.getByTestId<HTMLCanvasElement>('canvas');
-    expect(mockRenderer.prototype.ctx.fillStyle).toBe('white');
-    expect(mockCtxArc).toHaveBeenCalledWith(
-      canvas.width / 2,
-      canvas.height / 2,
-      64,
-      0,
-      2 * Math.PI,
-    );
-    expect(mockCtxFill).toHaveBeenCalled();
+    expect(mockDrawCircle).toHaveBeenCalledWith({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 64,
+      color: 'white',
+    });
   });
 });

@@ -11,15 +11,12 @@
 
     const renderer = new Renderer(canvas);
 
-    renderer.ctx.fillStyle = 'white';
-    renderer.ctx.arc(
-      canvas.width / 2,
-      canvas.height / 2,
-      64,
-      0,
-      2 * Math.PI,
-    );
-    renderer.ctx.fill();
+    renderer.drawCircle({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 64,
+      color: 'white',
+    });
   });
 </script>
 

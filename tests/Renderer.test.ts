@@ -5,11 +5,14 @@ describe('Renderer', () => {
   let renderer: Renderer;
   let canvas: HTMLCanvasElement;
 
-  describe('constructor', () => {
+  beforeAll(() => {
+    canvas = document.createElement('canvas');
+  });
+
+  describe('constructor()', () => {
     let canvasGetContextSpy: MockInstance<typeof HTMLCanvasElement.prototype.getContext>;
 
     beforeAll(() => {
-      canvas = document.createElement('canvas');
       canvasGetContextSpy = vi.spyOn(canvas, 'getContext');
     });
 
@@ -40,6 +43,34 @@ describe('Renderer', () => {
 
     it('Should expose the rendering context', () => {
       expect(renderer.ctx).toBeInstanceOf(CanvasRenderingContext2D);
+    });
+  });
+
+  describe('drawCircle()', () => {
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+    });
+
+    it('Should draw a circle on the canvas', () => {
+      const mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
+      const mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
+
+      renderer.drawCircle({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        radius: 64,
+        color: 'white',
+      });
+
+      expect(renderer.ctx.fillStyle).toBe('#ffffff');
+      expect(mockCtxArc).toHaveBeenCalledWith(
+        canvas.width / 2,
+        canvas.height / 2,
+        64,
+        0,
+        2 * Math.PI,
+      );
+      expect(mockCtxFill).toHaveBeenCalled();
     });
   });
 });

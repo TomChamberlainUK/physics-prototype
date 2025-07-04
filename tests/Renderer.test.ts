@@ -47,6 +47,20 @@ describe('Renderer', () => {
     });
   });
 
+  describe('clear()', () => {
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+    });
+
+    it('Should clear the canvas', () => {
+      const mockCtxClearRect = vi.spyOn(renderer.ctx, 'clearRect');
+
+      renderer.clear();
+
+      expect(mockCtxClearRect).toHaveBeenCalledWith(0, 0, canvas.width, canvas.height);
+    });
+  });
+
   describe('drawCircle()', () => {
     beforeEach(() => {
       renderer = new Renderer(canvas);

@@ -23,6 +23,10 @@ export default class Renderer {
     this.ctx = ctx;
   }
 
+  clear() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
   drawCircle({
     x = 0,
     y = 0,

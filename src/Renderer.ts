@@ -30,7 +30,9 @@ export default class Renderer {
     color,
   }: DrawCircleProps) {
     this.ctx.fillStyle = color;
+    this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    this.ctx.closePath();
     this.ctx.fill();
   }
 }

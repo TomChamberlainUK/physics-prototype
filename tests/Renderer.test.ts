@@ -1,5 +1,6 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import Renderer from '#/Renderer';
+import { expectCallOrder } from './utils';
 
 describe('Renderer', () => {
   let renderer: Renderer;
@@ -53,6 +54,8 @@ describe('Renderer', () => {
 
     it('Should draw a circle on the canvas', () => {
       const mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
+      const mockCtxBeginPath = vi.spyOn(renderer.ctx, 'beginPath');
+      const mockCtxClosePath = vi.spyOn(renderer.ctx, 'closePath');
       const mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
 
       renderer.drawCircle({
@@ -63,6 +66,7 @@ describe('Renderer', () => {
       });
 
       expect(renderer.ctx.fillStyle).toBe('#ffffff');
+      expect(mockCtxBeginPath).toHaveBeenCalled();
       expect(mockCtxArc).toHaveBeenCalledWith(
         canvas.width / 2,
         canvas.height / 2,
@@ -70,7 +74,14 @@ describe('Renderer', () => {
         0,
         2 * Math.PI,
       );
+      expect(mockCtxClosePath).toHaveBeenCalled();
       expect(mockCtxFill).toHaveBeenCalled();
+      expectCallOrder([
+        mockCtxBeginPath,
+        mockCtxArc,
+        mockCtxClosePath,
+        mockCtxFill,
+      ]);
     });
   });
 });

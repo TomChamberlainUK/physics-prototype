@@ -1,6 +1,6 @@
 type DrawCircleProps = {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
   radius: number;
   color: string;
 };
@@ -23,7 +23,12 @@ export default class Renderer {
     this.ctx = ctx;
   }
 
-  drawCircle({ x, y, radius, color }: DrawCircleProps) {
+  drawCircle({
+    x = 0,
+    y = 0,
+    radius,
+    color,
+  }: DrawCircleProps) {
     this.ctx.fillStyle = color;
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.fill();

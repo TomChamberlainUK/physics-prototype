@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type Component from './Component';
+import type { Component } from '#/components';
 
 export default class Entity {
   id: string;
@@ -16,11 +16,11 @@ export default class Entity {
     }
   }
 
-  getComponent(name: string) {
+  getComponent<T extends Component>(name: string): T {
     if (!this.components.has(name)) {
       throw new Error(`Could not find component "${name}" on entity "${this.id}"`);
     }
-    return this.components.get(name);
+    return this.components.get(name) as T;
   }
 
   hasComponent(name: string) {

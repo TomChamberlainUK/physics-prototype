@@ -16,6 +16,12 @@ export default class Entity {
     }
   }
 
+  addComponents(components: Component[]) {
+    for (const component of components) {
+      this.addComponent(component);
+    }
+  }
+
   getComponent<T extends Component>(name: string): T {
     if (!this.components.has(name)) {
       throw new Error(`Could not find component "${name}" on entity "${this.id}"`);

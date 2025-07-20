@@ -29,6 +29,20 @@ describe('Entity', () => {
     });
   });
 
+  describe('addComponents()', () => {
+    it('Should add multiple components to the entity', () => {
+      const components = [
+        new Component('Component1'),
+        new Component('Component2'),
+        new Component('Component3'),
+      ];
+      entity.addComponents(components);
+      for (const { name: componentName } of components) {
+        expect(entity.hasComponent(componentName)).toBe(true);
+      }
+    });
+  });
+
   describe('getComponent()', () => {
     it('Should return the component if it exists', () => {
       entity.addComponent(component);

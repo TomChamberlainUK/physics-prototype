@@ -1,5 +1,8 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import Renderer from '#/Renderer';
+import Scene from '#/Scene';
+import Entity from '#/Entity';
+import { Geometry2dComponent, Transform2dComponent } from '#/components';
 import { expectCallOrder } from './utils';
 
 describe('Renderer', () => {
@@ -96,6 +99,52 @@ describe('Renderer', () => {
         mockCtxClosePath,
         mockCtxFill,
       ]);
+    });
+  });
+
+  describe('render()', () => {
+    let clearSpy: MockInstance<typeof renderer.clear>;
+    let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
+
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+      clearSpy = vi.spyOn(renderer, 'clear');
+      drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
+    });
+
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('Should clear the canvas', () => {
+      const scene = new Scene();
+      renderer.render(scene);
+      expect(clearSpy).toHaveBeenCalled();
+    });
+
+    it('Should draw a circle for each entity with Transform2d and Geometry2d components', () => {
+      const position = { x: 100, y: 150 };
+      const color = 'red';
+      const radius = 50;
+      const scene = new Scene();
+      const entity = new Entity();
+      entity.addComponent(new Transform2dComponent({ position }));
+      entity.addComponent(new Geometry2dComponent({ color, radius }));
+      scene.addEntity(entity);
+      renderer.render(scene);
+      expect(drawCircleSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, radius, color });
+    });
+
+    it('Should skip entities without Transform2d or Geometry2d components', () => {
+      const scene = new Scene();
+      const entity = new Entity();
+      scene.addEntity(entity);
+      renderer.render(scene);
+      expect(drawCircleSpy).not.toHaveBeenCalled();
     });
   });
 });

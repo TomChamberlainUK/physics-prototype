@@ -1,3 +1,6 @@
+import type { Geometry2dComponent, Transform2dComponent } from './components';
+import type Scene from './Scene';
+
 type DrawCircleProps = {
   x?: number;
   y?: number;
@@ -38,5 +41,24 @@ export default class Renderer {
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
+  }
+
+  render(scene: Scene) {
+    this.clear();
+    for (const entity of scene.entities) {
+      if (!entity.hasComponent('Transform2d') || !entity.hasComponent('Geometry2d')) {
+        continue;
+      }
+
+      const transform = entity.getComponent<Transform2dComponent>('Transform2d');
+      const geometry = entity.getComponent<Geometry2dComponent>('Geometry2d');
+
+      this.drawCircle({
+        x: transform.position.x,
+        y: transform.position.y,
+        radius: geometry.radius,
+        color: geometry.color,
+      });
+    }
   }
 }

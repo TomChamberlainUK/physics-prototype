@@ -44,11 +44,6 @@ describe('Game', () => {
           renderer,
           scene,
         });
-
-        requestAnimationFrameSpy.mockImplementationOnce((cb) => {
-          cb(0);
-          return 1;
-        });
       });
 
       afterEach(() => {
@@ -72,7 +67,8 @@ describe('Game', () => {
           renderer,
           scene,
         });
-        game.isRunning = true;
+        game.start();
+        requestAnimationFrameSpy.mockClear();
       });
 
       it('Should not start a new game loop', () => {
@@ -107,7 +103,7 @@ describe('Game', () => {
     });
 
     it('Should set the game state to not running', () => {
-      game.isRunning = true;
+      game.start();
       game.stop();
       expect(game.isRunning).toBe(false);
     });
@@ -142,11 +138,8 @@ describe('Game', () => {
           renderer,
           scene,
         });
-        game.isRunning = true;
-        requestAnimationFrameSpy.mockImplementationOnce((cb) => {
-          cb(0);
-          return 1;
-        });
+        game.start();
+        requestAnimationFrameSpy.mockClear();
       });
 
       afterEach(() => {
@@ -175,11 +168,9 @@ describe('Game', () => {
           renderer,
           scene,
         });
-        game.isRunning = false;
       });
 
       it('Should not update the scene', () => {
-        const sceneUpdateSpy = vi.spyOn(scene, 'update');
         game.step();
         expect(sceneUpdateSpy).not.toHaveBeenCalled();
       });

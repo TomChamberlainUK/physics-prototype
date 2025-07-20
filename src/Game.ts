@@ -9,7 +9,7 @@ type Props = {
 export default class Game {
   renderer: Renderer;
   scene: Scene;
-  isRunning: boolean = false;
+  #isRunning: boolean = false;
   #frameId: number | null = null;
 
   constructor({ renderer, scene }: Props) {
@@ -18,14 +18,18 @@ export default class Game {
     this.step = this.step.bind(this);
   }
 
+  get isRunning() {
+    return this.#isRunning;
+  }
+
   start() {
-    if (this.isRunning) return;
-    this.isRunning = true;
+    if (this.#isRunning) return;
+    this.#isRunning = true;
     this.#frameId = requestAnimationFrame(this.step);
   }
 
   stop() {
-    this.isRunning = false;
+    this.#isRunning = false;
     if (this.#frameId === null) {
       return;
     }
@@ -34,7 +38,7 @@ export default class Game {
   }
 
   step() {
-    if (!this.isRunning) return;
+    if (!this.#isRunning) return;
     this.scene.update();
     this.renderer.render(this.scene);
     this.#frameId = requestAnimationFrame(this.step);

@@ -3,7 +3,7 @@ import Entity from '#/Entity';
 import { describe, expect, it } from 'vitest';
 
 describe('Entity', () => {
-  describe('constructor', () => {
+  describe('constructor()', () => {
     it('Should instantiate', () => {
       const entity = new Entity();
       expect(entity).toBeInstanceOf(Entity);
@@ -12,7 +12,7 @@ describe('Entity', () => {
     });
   });
 
-  describe('addComponent', () => {
+  describe('addComponent()', () => {
     it('Should add a component to the entity', () => {
       const entity = new Entity();
       const component = new Component('TestComponent');
@@ -22,7 +22,7 @@ describe('Entity', () => {
     });
   });
 
-  describe('getComponent', () => {
+  describe('getComponent()', () => {
     it('Should return the component if it exists', () => {
       const entity = new Entity();
       const component = new Component('TestComponent');
@@ -39,7 +39,7 @@ describe('Entity', () => {
     });
   });
 
-  describe('hasComponent', () => {
+  describe('hasComponent()', () => {
     it('Should return true if the component exists', () => {
       const entity = new Entity();
       const component = new Component('TestComponent', {});
@@ -53,7 +53,7 @@ describe('Entity', () => {
     });
   });
 
-  describe('removeComponent', () => {
+  describe('removeComponent()', () => {
     it('Should remove a component from the entity', () => {
       const entity = new Entity();
       const component = new Component('TestComponent', {});

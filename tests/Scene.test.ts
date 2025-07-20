@@ -5,7 +5,7 @@ import Entity from '#/Entity';
 describe('Scene', () => {
   let scene: Scene;
 
-  describe('constructor', () => {
+  describe('constructor()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
@@ -17,7 +17,7 @@ describe('Scene', () => {
     });
   });
 
-  describe('addEntity', () => {
+  describe('addEntity()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
@@ -29,7 +29,7 @@ describe('Scene', () => {
     });
   });
 
-  describe('addSystem', () => {
+  describe('addSystem()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
@@ -41,7 +41,7 @@ describe('Scene', () => {
     });
   });
 
-  describe('update', () => {
+  describe('update()', () => {
     beforeEach(() => {
       scene = new Scene();
     });

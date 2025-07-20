@@ -1,4 +1,4 @@
-import Component from '#/Component';
+import { Component } from '#/components';
 import Entity from '#/Entity';
 import { describe, expect, it } from 'vitest';
 
@@ -15,7 +15,7 @@ describe('Entity', () => {
   describe('addComponent', () => {
     it('Should add a component to the entity', () => {
       const entity = new Entity();
-      const component = new Component('TestComponent', {});
+      const component = new Component('TestComponent');
       entity.addComponent(component);
       const addedComponent = entity.components.get('TestComponent');
       expect(addedComponent).toBe(component);
@@ -25,7 +25,7 @@ describe('Entity', () => {
   describe('getComponent', () => {
     it('Should return the component if it exists', () => {
       const entity = new Entity();
-      const component = new Component('TestComponent', {});
+      const component = new Component('TestComponent');
       entity.addComponent(component);
       const retrievedComponent = entity.getComponent('TestComponent');
       expect(retrievedComponent).toBe(component);

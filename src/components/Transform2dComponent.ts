@@ -1,20 +1,21 @@
+import { Vector2d } from '#/maths';
 import Component from './Component';
 
 type ConstructorProps = {
-  position?: { x: number; y: number };
+  position?: Vector2d;
   rotation?: number;
-  scale?: { x: number; y: number };
+  scale?: Vector2d;
 };
 
 export default class Transform2dComponent extends Component {
-  position: { x: number; y: number };
+  position: Vector2d;
   rotation: number;
-  scale: { x: number; y: number };
+  scale: Vector2d;
 
   constructor({
-    position = { x: 0, y: 0 },
+    position = new Vector2d(),
     rotation = 0,
-    scale = { x: 1, y: 1 },
+    scale = new Vector2d(1, 1),
   }: ConstructorProps = {}) {
     super('Transform2d');
     this.position = position;

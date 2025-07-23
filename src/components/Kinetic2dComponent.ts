@@ -1,19 +1,20 @@
+import { Vector2d } from '#/maths';
 import Component from './Component';
 
 type ConstructorProps = {
-  velocity?: { x: number; y: number };
-  acceleration?: { x: number; y: number };
+  velocity?: Vector2d;
+  acceleration?: Vector2d;
   mass?: number;
 };
 
 export default class Kinetic2dComponent extends Component {
-  velocity: { x: number; y: number };
-  acceleration: { x: number; y: number };
+  velocity: Vector2d;
+  acceleration: Vector2d;
   mass: number;
 
   constructor({
-    velocity = { x: 0, y: 0 },
-    acceleration = { x: 0, y: 0 },
+    velocity = new Vector2d(),
+    acceleration = new Vector2d(),
     mass = 1,
   }: ConstructorProps = {}) {
     super('Kinetic2d');

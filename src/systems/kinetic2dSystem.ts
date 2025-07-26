@@ -8,7 +8,7 @@ export default function kinetic2dSystem(entities: Entity[]) {
     }
     const transform = entity.getComponent<Transform2dComponent>('Transform2d');
     const kinetic = entity.getComponent<Kinetic2dComponent>('Kinetic2d');
-    transform.position.x += kinetic.velocity.x;
-    transform.position.y += kinetic.velocity.y;
+    kinetic.velocity = kinetic.velocity.add(kinetic.acceleration);
+    transform.position = transform.position.add(kinetic.velocity);
   }
 }

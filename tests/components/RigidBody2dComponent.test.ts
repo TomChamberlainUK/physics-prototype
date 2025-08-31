@@ -13,6 +13,9 @@ describe('RigidBody2dComponent', () => {
     expect(rigidBody2dComponent.acceleration).toBeInstanceOf(Vector2d);
     expect(rigidBody2dComponent.acceleration.x).toBe(0);
     expect(rigidBody2dComponent.acceleration.y).toBe(0);
+    expect(rigidBody2dComponent.force).toBeInstanceOf(Vector2d);
+    expect(rigidBody2dComponent.force.x).toBe(0);
+    expect(rigidBody2dComponent.force.y).toBe(0);
     expect(rigidBody2dComponent.impulse).toBeInstanceOf(Vector2d);
     expect(rigidBody2dComponent.impulse.x).toBe(0);
     expect(rigidBody2dComponent.impulse.y).toBe(0);

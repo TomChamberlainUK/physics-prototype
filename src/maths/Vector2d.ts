@@ -60,6 +60,14 @@ export default class Vector2d {
     return this.getMagnitudeSquared();
   }
 
+  getUnit(): Vector2d {
+    const magnitude = this.getMagnitude();
+    if (magnitude === 0) {
+      return new Vector2d();
+    }
+    return this.divide(magnitude);
+  }
+
   static dotProduct(
     vector1: Vector2d,
     vector2: Vector2d,

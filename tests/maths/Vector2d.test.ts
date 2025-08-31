@@ -117,6 +117,25 @@ describe('Vector2d', () => {
     });
   });
 
+  describe('getUnit()', () => {
+    it('Should return a unit vector representing the direction', () => {
+      const vector = new Vector2d(3, 4);
+      const unit = vector.getUnit();
+      expect(unit).toBeInstanceOf(Vector2d);
+      expect(unit.getMagnitude()).toBeCloseTo(1);
+      expect(unit.x).toBe(0.6);
+      expect(unit.y).toBe(0.8);
+    });
+
+    it('Should return a zero vector when the original vector is zero', () => {
+      const vector = new Vector2d(0, 0);
+      const unit = vector.getUnit();
+      expect(unit).toBeInstanceOf(Vector2d);
+      expect(unit.x).toBe(0);
+      expect(unit.y).toBe(0);
+    });
+  });
+
   describe('static dotProduct()', () => {
     it('Should return the dot product of two vectors', () => {
       const vector1 = new Vector2d(1, 2);

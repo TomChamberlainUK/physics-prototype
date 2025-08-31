@@ -1,5 +1,6 @@
 import type Entity from '#/Entity';
 import type { Kinetic2dComponent, Transform2dComponent } from '#/components';
+import Vector2d from '#/maths/Vector2d';
 
 export default function kinetic2dSystem(entities: Entity[]) {
   for (const entity of entities) {
@@ -8,6 +9,8 @@ export default function kinetic2dSystem(entities: Entity[]) {
     }
     const transform = entity.getComponent<Transform2dComponent>('Transform2d');
     const kinetic = entity.getComponent<Kinetic2dComponent>('Kinetic2d');
+    kinetic.velocity = kinetic.velocity.add(kinetic.impulse);
+    kinetic.impulse = new Vector2d();
     kinetic.velocity = kinetic.velocity.add(kinetic.acceleration);
     transform.position = transform.position.add(kinetic.velocity);
   }

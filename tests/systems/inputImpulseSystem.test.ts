@@ -1,4 +1,4 @@
-import { Kinetic2dComponent } from '#/components';
+import { InputImpulseComponent, Kinetic2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { KeyboardInput } from '#/input';
 import inputImpulseSystem from '#/systems/inputImpulseSystem';
@@ -63,7 +63,8 @@ describe('inputImpulseSystem()', () => {
   it.each(cases)('Should apply correct impulse for $name', ({ keys, expected, close }) => {
     const entity = new Entity();
     const kinetic2dComponent = new Kinetic2dComponent();
-    entity.addComponent(kinetic2dComponent);
+    const inputImpulseComponent = new InputImpulseComponent();
+    entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
     const input = {
       isPressed: (key: string) => keys.includes(key),
     } as unknown as KeyboardInput;
@@ -77,7 +78,8 @@ describe('inputImpulseSystem()', () => {
   it('Should normalize diagonal movement', () => {
     const entity = new Entity();
     const kinetic2dComponent = new Kinetic2dComponent();
-    entity.addComponent(kinetic2dComponent);
+    const inputImpulseComponent = new InputImpulseComponent();
+    entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
     const input = {
       isPressed: (key: string) => ['w', 'd'].includes(key),
     } as unknown as KeyboardInput;
@@ -100,7 +102,8 @@ describe('inputImpulseSystem()', () => {
       const kinetic2dComponent = new Kinetic2dComponent({
         mass,
       });
-      entity.addComponent(kinetic2dComponent);
+      const inputImpulseComponent = new InputImpulseComponent();
+      entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
       const input = {
         isPressed: (key: string) => key === 'w',
       } as unknown as KeyboardInput;
@@ -109,5 +112,18 @@ describe('inputImpulseSystem()', () => {
 
       expect(kinetic2dComponent.impulse.y).toBeCloseTo(expectedY);
     }
+  });
+
+  it('Should not apply impulse to entities without the InputImpulse component', () => {
+    const entity = new Entity();
+    const kinetic2dComponent = new Kinetic2dComponent();
+    entity.addComponent(kinetic2dComponent);
+    const input = {
+      isPressed: (key: string) => key === 'w',
+    } as unknown as KeyboardInput;
+
+    inputImpulseSystem([entity], input);
+
+    expect(kinetic2dComponent.impulse.y).toBeCloseTo(0);
   });
 });

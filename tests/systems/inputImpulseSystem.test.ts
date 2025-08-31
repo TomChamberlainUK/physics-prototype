@@ -1,4 +1,4 @@
-import { InputImpulseComponent, Kinetic2dComponent } from '#/components';
+import { InputImpulseComponent, RigidBody2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { KeyboardInput } from '#/input';
 import inputImpulseSystem from '#/systems/inputImpulseSystem';
@@ -62,31 +62,31 @@ describe('inputImpulseSystem()', () => {
 
   it.each(cases)('Should apply correct impulse for $name', ({ keys, expected, close }) => {
     const entity = new Entity();
-    const kinetic2dComponent = new Kinetic2dComponent();
+    const rigidBody2dComponent = new RigidBody2dComponent();
     const inputImpulseComponent = new InputImpulseComponent();
-    entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
+    entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
     const input = {
       isPressed: (key: string) => keys.includes(key),
     } as unknown as KeyboardInput;
 
     inputImpulseSystem([entity], input);
 
-    expect(kinetic2dComponent.impulse.x).toBeCloseTo(expected.x, 3);
-    expect(kinetic2dComponent.impulse.y).toBeCloseTo(expected.y, 3);
+    expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expected.x, 3);
+    expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expected.y, 3);
   });
 
   it('Should normalize diagonal movement', () => {
     const entity = new Entity();
-    const kinetic2dComponent = new Kinetic2dComponent();
+    const rigidBody2dComponent = new RigidBody2dComponent();
     const inputImpulseComponent = new InputImpulseComponent();
-    entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
+    entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
     const input = {
       isPressed: (key: string) => ['w', 'd'].includes(key),
     } as unknown as KeyboardInput;
 
     inputImpulseSystem([entity], input);
 
-    const magnitude = kinetic2dComponent.impulse.getMagnitude();
+    const magnitude = rigidBody2dComponent.impulse.getMagnitude();
     expect(magnitude).toBeCloseTo(1);
   });
 
@@ -99,31 +99,31 @@ describe('inputImpulseSystem()', () => {
 
     for (const { mass, expectedY } of cases) {
       const entity = new Entity();
-      const kinetic2dComponent = new Kinetic2dComponent({
+      const rigidBody2dComponent = new RigidBody2dComponent({
         mass,
       });
       const inputImpulseComponent = new InputImpulseComponent();
-      entity.addComponents([kinetic2dComponent, inputImpulseComponent]);
+      entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
       const input = {
         isPressed: (key: string) => key === 'w',
       } as unknown as KeyboardInput;
 
       inputImpulseSystem([entity], input);
 
-      expect(kinetic2dComponent.impulse.y).toBeCloseTo(expectedY);
+      expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedY);
     }
   });
 
   it('Should not apply impulse to entities without the InputImpulse component', () => {
     const entity = new Entity();
-    const kinetic2dComponent = new Kinetic2dComponent();
-    entity.addComponent(kinetic2dComponent);
+    const rigidBody2dComponent = new RigidBody2dComponent();
+    entity.addComponent(rigidBody2dComponent);
     const input = {
       isPressed: (key: string) => key === 'w',
     } as unknown as KeyboardInput;
 
     inputImpulseSystem([entity], input);
 
-    expect(kinetic2dComponent.impulse.y).toBeCloseTo(0);
+    expect(rigidBody2dComponent.impulse.y).toBeCloseTo(0);
   });
 });

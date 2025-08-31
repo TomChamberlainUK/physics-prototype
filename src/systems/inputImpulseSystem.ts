@@ -1,15 +1,15 @@
-import type { Kinetic2dComponent } from '#/components';
+import type { RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import type { KeyboardInput } from '#/input';
 import Vector2d from '#/maths/Vector2d';
 
 export default function inputImpulseSystem(entities: Entity[], input: KeyboardInput) {
   for (const entity of entities) {
-    if (!entity.hasComponent('Kinetic2d') || !entity.hasComponent('InputImpulse')) {
+    if (!entity.hasComponent('RigidBody2d') || !entity.hasComponent('InputImpulse')) {
       continue;
     }
-    const kinetic = entity.getComponent<Kinetic2dComponent>('Kinetic2d');
-    const inverseMass = 1 / kinetic.mass;
+    const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
+    const inverseMass = 1 / rigidBody.mass;
     const force = 1;
     const direction = new Vector2d({ x: 0, y: 0 });
     if (input.isPressed('w')) {
@@ -26,6 +26,6 @@ export default function inputImpulseSystem(entities: Entity[], input: KeyboardIn
     }
     const normalizedDirection = direction.getUnit();
     const impulse = normalizedDirection.multiply(force * inverseMass);
-    kinetic.impulse = kinetic.impulse.add(impulse);
+    rigidBody.impulse = rigidBody.impulse.add(impulse);
   }
 }

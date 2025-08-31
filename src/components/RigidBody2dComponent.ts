@@ -20,7 +20,7 @@ export default class Kinetic2dComponent extends Component {
     impulse = new Vector2d(),
     mass = 1,
   }: ConstructorProps = {}) {
-    super('Kinetic2d');
+    super('RigidBody2d');
     this.velocity = velocity;
     this.acceleration = acceleration;
     this.impulse = impulse;

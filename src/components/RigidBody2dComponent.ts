@@ -8,7 +8,7 @@ type ConstructorProps = {
   mass?: number;
 };
 
-export default class Kinetic2dComponent extends Component {
+export default class RigidBody2dComponent extends Component {
   velocity: Vector2d;
   acceleration: Vector2d;
   impulse: Vector2d;

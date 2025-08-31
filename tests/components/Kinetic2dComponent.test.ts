@@ -13,6 +13,9 @@ describe('Kinetic2dComponent', () => {
     expect(kinetic2dComponent.acceleration).toBeInstanceOf(Vector2d);
     expect(kinetic2dComponent.acceleration.x).toBe(0);
     expect(kinetic2dComponent.acceleration.y).toBe(0);
+    expect(kinetic2dComponent.impulse).toBeInstanceOf(Vector2d);
+    expect(kinetic2dComponent.impulse.x).toBe(0);
+    expect(kinetic2dComponent.impulse.y).toBe(0);
     expect(kinetic2dComponent.mass).toBe(1);
   });
 });

@@ -33,6 +33,10 @@ export default class Entity {
     return this.components.has(name);
   }
 
+  hasComponents(names: string[]) {
+    return names.every(name => this.hasComponent(name));
+  }
+
   removeComponent(name: string) {
     if (!this.components.has(name)) {
       throw new Error(`Could not remove component "${name}" from entity "${this.id}" because it does not exist`);

@@ -67,6 +67,28 @@ describe('Entity', () => {
     });
   });
 
+  describe('hasComponents()', () => {
+    it('Should return true if all components exist', () => {
+      const componentNames = [
+        'Component1',
+        'Component2',
+        'Component3'
+      ];
+      entity.addComponents(componentNames.map(name => new Component(name)));
+      expect(entity.hasComponents(componentNames)).toBe(true);
+    });
+
+    it('Should return false if not all components exist', () => {
+      const componentNames = [
+        'Component1',
+        'Component2',
+        'Component3'
+      ];
+      entity.addComponents(componentNames.map(name => new Component(name)));
+      expect(entity.hasComponents([...componentNames, 'Component4'])).toBe(false);
+    });
+  });
+
   describe('removeComponent()', () => {
     it('Should remove a component from the entity', () => {
       entity.addComponent(component);

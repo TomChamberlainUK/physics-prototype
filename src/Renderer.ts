@@ -46,7 +46,7 @@ export default class Renderer {
   render(scene: Scene) {
     this.clear();
     for (const entity of scene.entities) {
-      if (!entity.hasComponent('Transform2d') || !entity.hasComponent('Geometry2d')) {
+      if (!entity.hasComponents(['Transform2d', 'Geometry2d'])) {
         continue;
       }
 

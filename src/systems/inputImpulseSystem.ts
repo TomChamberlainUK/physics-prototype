@@ -5,7 +5,7 @@ import Vector2d from '#/maths/Vector2d';
 
 export default function inputImpulseSystem(entities: Entity[], input: KeyboardInput) {
   for (const entity of entities) {
-    if (!entity.hasComponent('RigidBody2d') || !entity.hasComponent('InputImpulse')) {
+    if (!entity.hasComponents(['RigidBody2d', 'InputImpulse'])) {
       continue;
     }
     const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');

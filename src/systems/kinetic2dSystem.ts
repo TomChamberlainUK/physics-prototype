@@ -4,7 +4,7 @@ import Vector2d from '#/maths/Vector2d';
 
 export default function kinetic2dSystem(entities: Entity[]) {
   for (const entity of entities) {
-    if (!entity.hasComponent('Transform2d') || !entity.hasComponent('RigidBody2d')) {
+    if (!entity.hasComponents(['Transform2d', 'RigidBody2d'])) {
       continue;
     }
     const transform = entity.getComponent<Transform2dComponent>('Transform2d');

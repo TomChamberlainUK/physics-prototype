@@ -7,6 +7,8 @@ type ConstructorProps = {
   force?: Vector2d;
   impulse?: Vector2d;
   mass?: number;
+  restitution?: number;
+  friction?: number;
 };
 
 export default class RigidBody2dComponent extends Component {
@@ -16,6 +18,8 @@ export default class RigidBody2dComponent extends Component {
   impulse: Vector2d;
   mass: number;
   inverseMass: number;
+  restitution: number;
+  friction: number;
 
   constructor({
     velocity = new Vector2d(),
@@ -23,6 +27,8 @@ export default class RigidBody2dComponent extends Component {
     force = new Vector2d(),
     impulse = new Vector2d(),
     mass = 1,
+    restitution = 0.8,
+    friction = 0.3,
   }: ConstructorProps = {}) {
     super('RigidBody2d');
     this.velocity = velocity;
@@ -31,5 +37,7 @@ export default class RigidBody2dComponent extends Component {
     this.impulse = impulse;
     this.mass = mass;
     this.inverseMass = 1 / mass;
+    this.restitution = restitution;
+    this.friction = friction;
   }
 }

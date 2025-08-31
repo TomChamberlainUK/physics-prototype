@@ -9,7 +9,6 @@ export default function inputImpulseSystem(entities: Entity[], input: KeyboardIn
       continue;
     }
     const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
-    const inverseMass = 1 / rigidBody.mass;
     const force = 1;
     const direction = new Vector2d({ x: 0, y: 0 });
     if (input.isPressed('w')) {
@@ -25,7 +24,7 @@ export default function inputImpulseSystem(entities: Entity[], input: KeyboardIn
       direction.x += 1;
     }
     const normalizedDirection = direction.getUnit();
-    const impulse = normalizedDirection.multiply(force * inverseMass);
+    const impulse = normalizedDirection.multiply(force * rigidBody.inverseMass);
     rigidBody.impulse = rigidBody.impulse.add(impulse);
   }
 }

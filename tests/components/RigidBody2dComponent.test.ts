@@ -17,5 +17,6 @@ describe('RigidBody2dComponent', () => {
     expect(rigidBody2dComponent.impulse.x).toBe(0);
     expect(rigidBody2dComponent.impulse.y).toBe(0);
     expect(rigidBody2dComponent.mass).toBe(1);
+    expect(rigidBody2dComponent.inverseMass).toBe(1);
   });
 });

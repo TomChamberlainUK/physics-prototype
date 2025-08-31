@@ -13,6 +13,7 @@ export default class Kinetic2dComponent extends Component {
   acceleration: Vector2d;
   impulse: Vector2d;
   mass: number;
+  inverseMass: number;
 
   constructor({
     velocity = new Vector2d(),
@@ -25,5 +26,6 @@ export default class Kinetic2dComponent extends Component {
     this.acceleration = acceleration;
     this.impulse = impulse;
     this.mass = mass;
+    this.inverseMass = 1 / mass;
   }
 }

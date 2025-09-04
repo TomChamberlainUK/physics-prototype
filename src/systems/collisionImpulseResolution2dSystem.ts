@@ -1,6 +1,6 @@
 import type { RigidBody2dComponent } from '#/components';
 import Vector2d from '#/maths/Vector2d';
-import type { CollisionPair } from './collisionDetection2dSystem/types';
+import type { CollisionPair } from '#/types';
 
 export default function collisionImpulseResolution2dSystem(collisionPairs: CollisionPair[]) {
   const filteredCollisionPairs = collisionPairs.filter(({ entityA, entityB }) => (

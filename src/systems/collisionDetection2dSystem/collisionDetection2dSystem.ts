@@ -1,6 +1,6 @@
 import type Entity from '#/Entity';
 import { getCollision } from './logic';
-import type { CollisionPair } from './types';
+import type { CollisionPair } from '#/types';
 
 export default function collisionDetection2dSystem(entities: Entity[]) {
   const filteredEntities = entities.filter(entity => (

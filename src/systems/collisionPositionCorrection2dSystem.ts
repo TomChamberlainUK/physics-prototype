@@ -1,5 +1,5 @@
 import { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import type { CollisionPair } from './collisionDetection2dSystem/types';
+import type { CollisionPair } from '#/types';
 
 export default function collisionPositionCorrection2dSystem(collisionPairs: CollisionPair[]) {
   const filteredCollisionPairs = collisionPairs.filter(({ entityA, entityB }) => (

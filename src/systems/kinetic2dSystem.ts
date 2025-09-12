@@ -1,8 +1,10 @@
 import type Entity from '#/Entity';
 import type { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import Vector2d from '#/maths/Vector2d';
+import type { Context } from '#/types';
 
-export default function kinetic2dSystem(entities: Entity[]) {
+export default function kinetic2dSystem(entities: Entity[], { deltaTime }: Context) {
+  if (!deltaTime) return;
   for (const entity of entities) {
     if (!entity.hasComponents(['Transform2d', 'RigidBody2d'])) {
       continue;
@@ -11,7 +13,7 @@ export default function kinetic2dSystem(entities: Entity[]) {
     const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
     rigidBody.velocity = rigidBody.velocity.add(rigidBody.impulse);
     rigidBody.impulse = new Vector2d();
-    rigidBody.velocity = rigidBody.velocity.add(rigidBody.acceleration);
-    transform.position = transform.position.add(rigidBody.velocity);
+    rigidBody.velocity = rigidBody.velocity.add(rigidBody.acceleration.multiply(deltaTime));
+    transform.position = transform.position.add(rigidBody.velocity.multiply(deltaTime));
   }
 }

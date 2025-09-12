@@ -1,66 +1,67 @@
 import { InputImpulseComponent, RigidBody2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { KeyboardInput } from '#/input';
+import Vector2d from '#/maths/Vector2d';
 import inputImpulseSystem from '#/systems/inputImpulseSystem';
 import { describe, expect, it } from 'vitest';
 
 describe('inputImpulseSystem()', () => {
-  type TestCase = {
-    name: string;
-    keys: string[];
-    expected: { x: number; y: number };
-    close?: boolean;
-  };
+  const force = 3600;
+  const deltaTime = 1 / 60;
 
-  const cases: TestCase[] = [
+  function getExpectedImpulse(direction: Vector2d, mass: number) {
+    const directionUnit = direction.getUnit();
+    const inverseMass = 1 / mass;
+    return directionUnit.multiply(force * deltaTime * inverseMass);
+  }
+
+  it.each([
     {
       name: 'no keys',
       keys: [],
-      expected: { x: 0, y: 0 },
+      direction: { x: 0, y: 0 },
     },
     {
       name: 'w',
       keys: ['w'],
-      expected: { x: 0, y: -1 },
+      direction: { x: 0, y: -1 },
     },
     {
       name: 's',
       keys: ['s'],
-      expected: { x: 0, y: 1 },
+      direction: { x: 0, y: 1 },
     },
     {
       name: 'a',
       keys: ['a'],
-      expected: { x: -1, y: 0 },
+      direction: { x: -1, y: 0 },
     },
     {
       name: 'd',
       keys: ['d'],
-      expected: { x: 1, y: 0 },
+      direction: { x: 1, y: 0 },
     },
     {
       name: 'w + d',
       keys: ['w', 'd'],
-      expected: { x: 0.7071, y: -0.7071 },
+      direction: { x: 1, y: -1 },
     },
     {
       name: 'w + a',
       keys: ['w', 'a'],
-      expected: { x: -0.7071, y: -0.7071 },
+      direction: { x: -1, y: -1 },
     },
     {
       name: 's + d',
       keys: ['s', 'd'],
-      expected: { x: 0.7071, y: 0.7071 },
+      direction: { x: 1, y: 1 },
     },
     {
       name: 's + a',
       keys: ['s', 'a'],
-      expected: { x: -0.7071, y: 0.7071 },
+      direction: { x: -1, y: 1 },
     },
-  ];
-
-  it.each(cases)('Should apply correct impulse for $name', ({ keys, expected, close }) => {
+  ])('Should apply correct impulse for $name', ({ keys, direction }) => {
     const entity = new Entity();
     const rigidBody2dComponent = new RigidBody2dComponent();
     const inputImpulseComponent = new InputImpulseComponent();
@@ -69,10 +70,15 @@ describe('inputImpulseSystem()', () => {
       isPressed: (key: string) => keys.includes(key),
     } as unknown as KeyboardInput;
 
-    inputImpulseSystem([entity], input);
+    inputImpulseSystem([entity], { input, deltaTime });
 
-    expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expected.x, 3);
-    expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expected.y, 3);
+    const expectedImpulse = getExpectedImpulse(
+      new Vector2d(direction),
+      rigidBody2dComponent.mass
+    );
+
+    expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
+    expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
   });
 
   it('Should normalize diagonal movement', () => {
@@ -84,20 +90,32 @@ describe('inputImpulseSystem()', () => {
       isPressed: (key: string) => ['w', 'd'].includes(key),
     } as unknown as KeyboardInput;
 
-    inputImpulseSystem([entity], input);
+    inputImpulseSystem([entity], { input, deltaTime });
 
+    const singleDirectionImpulse = getExpectedImpulse(
+      new Vector2d({ x: 0, y: -1 }),
+      rigidBody2dComponent.mass
+    );
+    const diagonalDirectionImpulse = getExpectedImpulse(
+      new Vector2d({ x: 1, y: -1 }),
+      rigidBody2dComponent.mass
+    );
+
+    const singleDirectionImpulseMagnitude = singleDirectionImpulse.getMagnitude();
+    const diagonalDirectionImpulseMagnitude = diagonalDirectionImpulse.getMagnitude();
     const magnitude = rigidBody2dComponent.impulse.getMagnitude();
-    expect(magnitude).toBeCloseTo(1);
+
+    // The impulse magnitude when moving diagonally should be roughly equal to the impulse magnitude when moving in a single direction
+    expect(diagonalDirectionImpulseMagnitude).toBeCloseTo(singleDirectionImpulseMagnitude);
+
+    // The actual impulse applied to the rigid body should match the single direction impulse
+    expect(magnitude).toBeCloseTo(singleDirectionImpulseMagnitude);
   });
 
   it('Should apply impulse scaled by inverse mass', () => {
-    const cases = [
-      { mass: 1, expectedY: -1 },
-      { mass: 2, expectedY: -0.5 },
-      { mass: 0.5, expectedY: -2 },
-    ];
-
-    for (const { mass, expectedY } of cases) {
+    const direction = new Vector2d({ x: 0, y: -1 });
+    
+    for (const mass of [1, 2, 4]) {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent({
         mass,
@@ -108,9 +126,12 @@ describe('inputImpulseSystem()', () => {
         isPressed: (key: string) => key === 'w',
       } as unknown as KeyboardInput;
 
-      inputImpulseSystem([entity], input);
+      inputImpulseSystem([entity], { input, deltaTime });
 
-      expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedY);
+      const expectedImpulse = getExpectedImpulse(direction, mass);
+
+      expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
+      expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
     }
   });
 
@@ -121,8 +142,9 @@ describe('inputImpulseSystem()', () => {
     const input = {
       isPressed: (key: string) => key === 'w',
     } as unknown as KeyboardInput;
+    const deltaTime = 1 / 60;
 
-    inputImpulseSystem([entity], input);
+    inputImpulseSystem([entity], { input, deltaTime });
 
     expect(rigidBody2dComponent.impulse.y).toBeCloseTo(0);
   });

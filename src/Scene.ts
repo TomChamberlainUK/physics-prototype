@@ -1,13 +1,19 @@
 import type Entity from './Entity';
+import type { Context } from './types';
 
-type System = (entities: Entity[]) => void;
+type System = (entities: Entity[], context: Context) => void;
 
 export default class Scene {
   entities: Entity[];
   systems: System[] = [];
+  context: Context = {};
 
   constructor() {
     this.entities = [];
+  }
+
+  setContext(context: Context) {
+    this.context = context;
   }
 
   addEntity(entity: Entity) {
@@ -18,9 +24,12 @@ export default class Scene {
     this.systems.push(system);
   }
 
-  update() {
+  update(deltaTime: number) {
     for (const system of this.systems) {
-      system(this.entities);
+      system(this.entities, {
+        ...this.context,
+        deltaTime,
+      });
     }
   }
 }

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Scene from '#/Scene';
 import Entity from '#/Entity';
+import { KeyboardInput } from '#/input';
+import Scene from '#/Scene';
 
 describe('Scene', () => {
   let scene: Scene;
@@ -14,6 +15,21 @@ describe('Scene', () => {
       expect(scene).toBeInstanceOf(Scene);
       expect(scene.entities).toEqual([]);
       expect(scene.systems).toEqual([]);
+    });
+  });
+
+  describe('setContext()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should set the context', () => {
+      const context = {
+        deltaTime: 1 / 60,
+        input: new KeyboardInput(),
+      };
+      scene.setContext(context);
+      expect(scene.context).toEqual(context);
     });
   });
 
@@ -46,19 +62,22 @@ describe('Scene', () => {
       scene = new Scene();
     });
 
-    it('Should call all systems with the current entities', () => {
+    it('Should call all systems with the current entities and context', () => {
       const entity = new Entity();
+      const context = { input: new KeyboardInput() };
+      const deltaTime = 1 / 60;
       const system1 = vi.fn();
       const system2 = vi.fn();
       const system3 = vi.fn();
+      scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.update();
-      expect(system1).toHaveBeenCalledWith([entity]);
-      expect(system2).toHaveBeenCalledWith([entity]);
-      expect(system3).toHaveBeenCalledWith([entity]);
+      scene.update(deltaTime);
+      expect(system1).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+      expect(system2).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+      expect(system3).toHaveBeenCalledWith([entity], { ...context, deltaTime });
     });
   });
 });

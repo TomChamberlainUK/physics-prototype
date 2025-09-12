@@ -5,6 +5,9 @@ import { kinetic2dSystem } from '#/systems';
 import { describe, expect, it } from 'vitest';
 
 describe('kinetic2dSystem', () => {
+  const physicsHz = 60;
+  const deltaTime = 1 / physicsHz;
+
   it('Should increase an entity\'s velocity by its impulse and then reduce its impulse to zero', () => {
     const entity = new Entity();
     const transformComponent = new Transform2dComponent();
@@ -15,7 +18,7 @@ describe('kinetic2dSystem', () => {
       transformComponent,
       rigidBody2dComponent,
     ]);
-    kinetic2dSystem([entity]);
+    kinetic2dSystem([entity], { deltaTime });
     expect(rigidBody2dComponent.velocity).toBeInstanceOf(Vector2d);
     expect(rigidBody2dComponent.velocity.x).toBe(1);
     expect(rigidBody2dComponent.velocity.y).toBe(2);
@@ -24,38 +27,50 @@ describe('kinetic2dSystem', () => {
     expect(rigidBody2dComponent.impulse.y).toBe(0);
   });
 
-  it('Should increase an entity\'s velocity by its acceleration', () => {
+  it('Should increase an entity\'s velocity by its acceleration multiplied by deltaTime', () => {
+    const initialVelocity = new Vector2d({ x: 1, y: 2 });
+    const acceleration = new Vector2d({ x: 0.5, y: 1 });
+    const expectedVelocity = initialVelocity.add(acceleration.multiply(deltaTime));
+
     const entity = new Entity();
     const transformComponent = new Transform2dComponent();
     const rigidBody2dComponent = new RigidBody2dComponent({
-      acceleration: new Vector2d({ x: 0, y: 0 }),
-      velocity: new Vector2d({ x: 1, y: 2 }),
+      acceleration,
+      velocity: initialVelocity,
     });
     entity.addComponents([
       transformComponent,
       rigidBody2dComponent,
     ]);
-    kinetic2dSystem([entity]);
+
+    kinetic2dSystem([entity], { deltaTime });
+
     expect(rigidBody2dComponent.velocity).toBeInstanceOf(Vector2d);
-    expect(rigidBody2dComponent.velocity.x).toBe(1);
-    expect(rigidBody2dComponent.velocity.y).toBe(2);
+    expect(rigidBody2dComponent.velocity.x).toBe(expectedVelocity.x);
+    expect(rigidBody2dComponent.velocity.y).toBe(expectedVelocity.y);
   });
 
-  it('Should increase an entity\'s position by its velocity', () => {
+  it('Should increase an entity\'s position by its velocity multiplied by deltaTime', () => {
+    const initialPosition = new Vector2d({ x: 0, y: 0 });
+    const initialVelocity = new Vector2d({ x: 1, y: 2 });
+    const expectedPosition = initialPosition.add(initialVelocity.multiply(deltaTime));
+
     const entity = new Entity();
     const transformComponent = new Transform2dComponent({
-      position: new Vector2d({ x: 0, y: 0 }),
+      position: initialPosition,
     });
     const rigidBody2dComponent = new RigidBody2dComponent({
-      velocity: new Vector2d({ x: 1, y: 2 }),
+      velocity: initialVelocity,
     });
     entity.addComponents([
       transformComponent,
       rigidBody2dComponent,
     ]);
-    kinetic2dSystem([entity]);
+
+    kinetic2dSystem([entity], { deltaTime });
+
     expect(transformComponent.position).toBeInstanceOf(Vector2d);
-    expect(transformComponent.position.x).toBe(1);
-    expect(transformComponent.position.y).toBe(2);
+    expect(transformComponent.position.x).toBe(expectedPosition.x);
+    expect(transformComponent.position.y).toBe(expectedPosition.y);
   });
 });

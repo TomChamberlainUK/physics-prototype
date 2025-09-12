@@ -133,11 +133,22 @@ describe('Game', () => {
     });
 
     describe('When the game is running', () => {
+      const physicsHz = 60;
+      const fixedDelta = 1 / physicsHz;
+
+      let performanceNowSpy: MockInstance<typeof performance.now>;
+
+      beforeAll(() => {
+        performanceNowSpy = vi.spyOn(performance, 'now');
+      });
+
       beforeEach(() => {
         game = new Game({
           renderer,
           scene,
+          physicsHz,
         });
+        performanceNowSpy.mockReturnValueOnce(0);
         game.start();
         requestAnimationFrameSpy.mockClear();
       });
@@ -146,9 +157,22 @@ describe('Game', () => {
         vi.clearAllMocks();
       });
 
-      it('Should update the scene', () => {
+      it('Should update the scene when enough time has passed', () => {
+        performanceNowSpy.mockReturnValueOnce(fixedDelta * 1000);
         game.step();
         expect(sceneUpdateSpy).toHaveBeenCalled();
+      });
+
+      it('Should update the scene multiple times if enough time has passed', () => {
+        performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
+        game.step();
+        expect(sceneUpdateSpy).toHaveBeenCalledTimes(3);
+      });
+
+      it('Should not update the scene when not enough time has passed', () => {
+        performanceNowSpy.mockReturnValueOnce(0);
+        game.step();
+        expect(sceneUpdateSpy).not.toHaveBeenCalled();
       });
 
       it('Should render the scene', () => {

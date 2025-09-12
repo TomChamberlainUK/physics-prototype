@@ -2,6 +2,7 @@ import type Renderer from './Renderer';
 import type Scene from './Scene';
 
 type Props = {
+  physicsHz?: number;
   renderer: Renderer;
   scene: Scene;
 };
@@ -9,13 +10,25 @@ type Props = {
 export default class Game {
   renderer: Renderer;
   scene: Scene;
-  #isRunning: boolean = false;
+  #fixedDeltaTime: number;
   #frameId: number | null = null;
+  #isRunning: boolean = false;
+  #lastFrameTimestamp: number;
+  #maxFrameTime: number;
+  #timeAccumulator: number;
 
-  constructor({ renderer, scene }: Props) {
+  constructor({
+    renderer,
+    scene,
+    physicsHz = 60
+  }: Props) {
     this.renderer = renderer;
     this.scene = scene;
     this.step = this.step.bind(this);
+    this.#fixedDeltaTime = 1 / physicsHz;
+    this.#maxFrameTime = 0.25;
+    this.#timeAccumulator = 0;
+    this.#lastFrameTimestamp = performance.now() / 1000;
   }
 
   get isRunning() {
@@ -25,21 +38,35 @@ export default class Game {
   start() {
     if (this.#isRunning) return;
     this.#isRunning = true;
+    this.#timeAccumulator = 0;
+    this.#lastFrameTimestamp = performance.now() / 1000;
     this.#frameId = requestAnimationFrame(this.step);
   }
 
   stop() {
     this.#isRunning = false;
-    if (this.#frameId === null) {
-      return;
-    }
+    if (this.#frameId === null) return;
     cancelAnimationFrame(this.#frameId);
     this.#frameId = null;
   }
 
   step() {
     if (!this.#isRunning) return;
-    this.scene.update();
+
+    const currentFrameTimestamp = performance.now() / 1000;
+    let frameTime = currentFrameTimestamp - this.#lastFrameTimestamp;
+    if (frameTime > this.#maxFrameTime) {
+      frameTime = this.#maxFrameTime; // avoid spiral of death
+    }
+    this.#lastFrameTimestamp = currentFrameTimestamp;
+
+    this.#timeAccumulator += frameTime;
+
+    while (this.#timeAccumulator >= this.#fixedDeltaTime) {
+      this.scene.update(this.#fixedDeltaTime);
+      this.#timeAccumulator -= this.#fixedDeltaTime;
+    }
+
     this.renderer.render(this.scene);
     this.#frameId = requestAnimationFrame(this.step);
   }

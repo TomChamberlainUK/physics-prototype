@@ -51,13 +51,13 @@ describe('Scene', () => {
     });
 
     it('Should add a system to the scene', () => {
-      const system = vi.fn();
+      const system = { update: vi.fn(), type: 'physics' };
       scene.addSystem(system);
       expect(scene.systems).toContain(system);
     });
   });
 
-  describe('update()', () => {
+  describe('updatePhysics()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
@@ -66,18 +66,41 @@ describe('Scene', () => {
       const entity = new Entity();
       const context = { input: new KeyboardInput() };
       const deltaTime = 1 / 60;
-      const system1 = vi.fn();
-      const system2 = vi.fn();
-      const system3 = vi.fn();
+      const system1 = { update: vi.fn(), type: 'physics' };
+      const system2 = { update: vi.fn(), type: 'physics' };
+      const system3 = { update: vi.fn(), type: 'physics' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.update(deltaTime);
-      expect(system1).toHaveBeenCalledWith([entity], { ...context, deltaTime });
-      expect(system2).toHaveBeenCalledWith([entity], { ...context, deltaTime });
-      expect(system3).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+      scene.updatePhysics(deltaTime);
+      expect(system1.update).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+      expect(system2.update).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+      expect(system3.update).toHaveBeenCalledWith([entity], { ...context, deltaTime });
+    });
+  });
+
+  describe('updateRender()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should call all render systems with the current entities and context', () => {
+      const entity = new Entity();
+      const context = { input: new KeyboardInput() };
+      const system1 = { update: vi.fn(), type: 'render' };
+      const system2 = { update: vi.fn(), type: 'render' };
+      const system3 = { update: vi.fn(), type: 'render' };
+      scene.setContext(context);
+      scene.addEntity(entity);
+      scene.addSystem(system1);
+      scene.addSystem(system2);
+      scene.addSystem(system3);
+      scene.updateRender();
+      expect(system1.update).toHaveBeenCalledWith([entity], context);
+      expect(system2.update).toHaveBeenCalledWith([entity], context);
+      expect(system3.update).toHaveBeenCalledWith([entity], context);
     });
   });
 });

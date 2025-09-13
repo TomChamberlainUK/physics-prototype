@@ -118,13 +118,15 @@ describe('Game', () => {
   });
 
   describe('step()', () => {
-    let sceneUpdateSpy: MockInstance<typeof scene.update>;
+    let sceneUpdatePhysicsSpy: MockInstance<typeof scene.updatePhysics>;
+    let sceneUpdateRenderSpy: MockInstance<typeof scene.updateRender>;
     let rendererRenderSpy: MockInstance<typeof renderer.render>;
     let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
 
     beforeAll(() => {
       requestAnimationFrameSpy = vi.spyOn(window, 'requestAnimationFrame');
-      sceneUpdateSpy = vi.spyOn(scene, 'update');
+      sceneUpdatePhysicsSpy = vi.spyOn(scene, 'updatePhysics');
+      sceneUpdateRenderSpy = vi.spyOn(scene, 'updateRender');
       rendererRenderSpy = vi.spyOn(renderer, 'render');
     });
 
@@ -157,22 +159,27 @@ describe('Game', () => {
         vi.clearAllMocks();
       });
 
-      it('Should update the scene when enough time has passed', () => {
+      it('Should update the scene physics systems when enough time has passed', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 1000);
         game.step();
-        expect(sceneUpdateSpy).toHaveBeenCalled();
+        expect(sceneUpdatePhysicsSpy).toHaveBeenCalled();
       });
 
-      it('Should update the scene multiple times if enough time has passed', () => {
+      it('Should update the scene physics systems multiple times if enough time has passed', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
         game.step();
-        expect(sceneUpdateSpy).toHaveBeenCalledTimes(3);
+        expect(sceneUpdatePhysicsSpy).toHaveBeenCalledTimes(3);
       });
 
-      it('Should not update the scene when not enough time has passed', () => {
+      it('Should not update the scene physics systems when not enough time has passed', () => {
         performanceNowSpy.mockReturnValueOnce(0);
         game.step();
-        expect(sceneUpdateSpy).not.toHaveBeenCalled();
+        expect(sceneUpdatePhysicsSpy).not.toHaveBeenCalled();
+      });
+
+      it('Should update the scene render systems', () => {
+        game.step();
+        expect(sceneUpdateRenderSpy).toHaveBeenCalled();
       });
 
       it('Should render the scene with an alpha interpolation value', () => {
@@ -197,9 +204,14 @@ describe('Game', () => {
         });
       });
 
-      it('Should not update the scene', () => {
+      it('Should not update the scene physics systems', () => {
         game.step();
-        expect(sceneUpdateSpy).not.toHaveBeenCalled();
+        expect(sceneUpdatePhysicsSpy).not.toHaveBeenCalled();
+      });
+
+      it('Should not update the scene render systems', () => {
+        game.step();
+        expect(sceneUpdateRenderSpy).not.toHaveBeenCalled();
       });
 
       it('Should not render the scene', () => {

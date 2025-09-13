@@ -63,11 +63,10 @@ export default class Game {
 
     this.#timeAccumulator += frameTime;
 
-    const interpolationSystem = new InterpolationSync2dSystem();
-    interpolationSystem.update(this.scene.entities);
+    this.scene.updateRender();
 
     while (this.#timeAccumulator >= this.#fixedDeltaTime) {
-      this.scene.update(this.#fixedDeltaTime);
+      this.scene.updatePhysics(this.#fixedDeltaTime);
       this.#timeAccumulator -= this.#fixedDeltaTime;
     }
 

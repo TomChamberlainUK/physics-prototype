@@ -1,7 +1,6 @@
 import type Entity from './Entity';
+import type System from './systems/System';
 import type { Context } from './types';
-
-type System = (entities: Entity[], context: Context) => void;
 
 export default class Scene {
   entities: Entity[];
@@ -24,12 +23,18 @@ export default class Scene {
     this.systems.push(system);
   }
 
-  update(deltaTime: number) {
+  updatePhysics(deltaTime: number) {
+    this.context.deltaTime = deltaTime;
     for (const system of this.systems) {
-      system(this.entities, {
-        ...this.context,
-        deltaTime,
-      });
+      if (system.type !== 'physics') continue;
+      system.update(this.entities, this.context);
+    }
+  }
+
+  updateRender() {
+    for (const system of this.systems) {
+      if (system.type !== 'render') continue;
+      system.update(this.entities, this.context);
     }
   }
 }

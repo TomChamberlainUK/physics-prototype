@@ -1,7 +1,7 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
-import { getCollision } from '#/systems/collisionDetection2dSystem/logic';
+import { getCollision } from '#/systems/CollisionDetection2dSystemNew/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('getCollision', () => {

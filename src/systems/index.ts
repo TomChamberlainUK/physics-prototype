@@ -1,6 +1,6 @@
-export { default as collisionDetection2dSystem } from './collisionDetection2dSystem';
-export { default as collisionImpulseResolution2dSystem } from './collisionImpulseResolution2dSystem';
-export { default as collisionPositionCorrection2dSystem } from './collisionPositionCorrection2dSystem';
-export { default as inputImpulseSystem } from './inputImpulseSystem';
+export { default as CollisionDetection2dSystem } from './CollisionDetection2dSystemNew';
+export { default as CollisionImpulseResolution2dSystem } from './CollisionImpulseResolution2dSystemNew';
+export { default as CollisionPositionCorrection2dSystem } from './CollisionPositionCorrection2dSystemNew';
+export { default as InputImpulseSystem } from './InputImpulseSystemNew';
 export { default as InterpolationSync2dSystem } from './InterpolationSync2dSystem';
-export { default as kinetic2dSystem } from './kinetic2dSystem';
+export { default as Kinetic2dSystem } from './Kinetic2dSystemNew';

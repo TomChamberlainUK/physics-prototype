@@ -1,0 +1,1 @@
+export { default } from './CollisionDetection2dSystemNew';

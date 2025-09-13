@@ -175,9 +175,12 @@ describe('Game', () => {
         expect(sceneUpdateSpy).not.toHaveBeenCalled();
       });
 
-      it('Should render the scene', () => {
+      it('Should render the scene with an alpha interpolation value', () => {
+        const accumulatedTime = fixedDelta / 2;
+        const expectedAlpha = accumulatedTime / fixedDelta;
+        performanceNowSpy.mockReturnValueOnce(accumulatedTime * 1000);
         game.step();
-        expect(rendererRenderSpy).toHaveBeenCalledWith(scene);
+        expect(rendererRenderSpy).toHaveBeenCalledWith(scene, expectedAlpha);
       });
 
       it('Should recursively call itself every frame', () => {

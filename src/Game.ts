@@ -1,5 +1,6 @@
 import type Renderer from './Renderer';
 import type Scene from './Scene';
+import { InterpolationSync2dSystem } from './systems';
 
 type Props = {
   physicsHz?: number;
@@ -62,12 +63,17 @@ export default class Game {
 
     this.#timeAccumulator += frameTime;
 
+    const interpolationSystem = new InterpolationSync2dSystem();
+    interpolationSystem.update(this.scene.entities);
+
     while (this.#timeAccumulator >= this.#fixedDeltaTime) {
       this.scene.update(this.#fixedDeltaTime);
       this.#timeAccumulator -= this.#fixedDeltaTime;
     }
 
-    this.renderer.render(this.scene);
+    const alpha = this.#timeAccumulator / this.#fixedDeltaTime;
+
+    this.renderer.render(this.scene, alpha);
     this.#frameId = requestAnimationFrame(this.step);
   }
 }

@@ -43,7 +43,7 @@ export default class Renderer {
     this.ctx.fill();
   }
 
-  render(scene: Scene) {
+  render(scene: Scene, alpha: number) {
     this.clear();
     for (const entity of scene.entities) {
       if (!entity.hasComponents(['Transform2d', 'Geometry2d'])) {
@@ -53,9 +53,12 @@ export default class Renderer {
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
       const geometry = entity.getComponent<Geometry2dComponent>('Geometry2d');
 
+      const x = transform.previousPosition.x + (transform.position.x - transform.previousPosition.x) * alpha;
+      const y = transform.previousPosition.y + (transform.position.y - transform.previousPosition.y) * alpha;
+
       this.drawCircle({
-        x: transform.position.x,
-        y: transform.position.y,
+        x,
+        y,
         radius: geometry.radius,
         color: geometry.color,
       });

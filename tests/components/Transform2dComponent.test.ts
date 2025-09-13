@@ -10,6 +10,9 @@ describe('Transform2dComponent', () => {
     expect(transform2dComponent.position).toBeInstanceOf(Vector2d);
     expect(transform2dComponent.position.x).toBe(0);
     expect(transform2dComponent.position.y).toBe(0);
+    expect(transform2dComponent.previousPosition).toBeInstanceOf(Vector2d);
+    expect(transform2dComponent.previousPosition.x).toBe(0);
+    expect(transform2dComponent.previousPosition.y).toBe(0);
     expect(transform2dComponent.rotation).toBe(0);
     expect(transform2dComponent.scale).toBeInstanceOf(Vector2d);
     expect(transform2dComponent.scale.x).toBe(1);

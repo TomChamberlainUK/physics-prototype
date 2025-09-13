@@ -4,6 +4,7 @@ import Scene from '#/Scene';
 import Entity from '#/Entity';
 import { Geometry2dComponent, Transform2dComponent } from '#/components';
 import { expectCallOrder } from './utils';
+import { Vector2d } from '#/maths';
 
 describe('Renderer', () => {
   let renderer: Renderer;
@@ -122,12 +123,12 @@ describe('Renderer', () => {
 
     it('Should clear the canvas', () => {
       const scene = new Scene();
-      renderer.render(scene);
+      renderer.render(scene, 0);
       expect(clearSpy).toHaveBeenCalled();
     });
 
     it('Should draw a circle for each entity with Transform2d and Geometry2d components', () => {
-      const position = { x: 100, y: 150 };
+      const position = new Vector2d({ x: 100, y: 150 });
       const color = 'red';
       const radius = 50;
       const scene = new Scene();
@@ -135,15 +136,38 @@ describe('Renderer', () => {
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({ color, radius }));
       scene.addEntity(entity);
-      renderer.render(scene);
+      renderer.render(scene, 0);
       expect(drawCircleSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, radius, color });
+    });
+
+    it('Should interpolate the entity position based on the alpha value', () => {
+      const previousPosition = new Vector2d({ x: 100, y: 150 });
+      const currentPosition = new Vector2d({ x: 200, y: 250 });
+      const color = 'red';
+      const radius = 50;
+      const alpha = 0.5;
+      const expectedX = previousPosition.x + (currentPosition.x - previousPosition.x) * alpha;
+      const expectedY = previousPosition.y + (currentPosition.y - previousPosition.y) * alpha;
+      const scene = new Scene();
+      const entity = new Entity();
+      const transform2dComponent = new Transform2dComponent();
+      const geometry2dComponent = new Geometry2dComponent({ color, radius });
+      entity.addComponents([
+        transform2dComponent,
+        geometry2dComponent
+      ]);
+      transform2dComponent.previousPosition = previousPosition;
+      transform2dComponent.position = currentPosition;
+      scene.addEntity(entity);
+      renderer.render(scene, alpha);
+      expect(drawCircleSpy).toHaveBeenCalledWith({ x: expectedX, y: expectedY, radius, color });
     });
 
     it('Should skip entities without Transform2d or Geometry2d components', () => {
       const scene = new Scene();
       const entity = new Entity();
       scene.addEntity(entity);
-      renderer.render(scene);
+      renderer.render(scene, 0);
       expect(drawCircleSpy).not.toHaveBeenCalled();
     });
   });

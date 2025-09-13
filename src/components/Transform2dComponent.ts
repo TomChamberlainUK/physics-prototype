@@ -9,6 +9,7 @@ type ConstructorProps = {
 
 export default class Transform2dComponent extends Component {
   position: Vector2d;
+  previousPosition: Vector2d;
   rotation: number;
   scale: Vector2d;
 
@@ -19,6 +20,7 @@ export default class Transform2dComponent extends Component {
   }: ConstructorProps = {}) {
     super('Transform2d');
     this.position = position;
+    this.previousPosition = new Vector2d(position);
     this.rotation = rotation;
     this.scale = scale;
   }

@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, t
 import { Collider2dComponent, RigidBody2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { CollisionDetection2dSystem } from '#/systems';
-import * as getCollision from '#/systems/CollisionDetection2dSystemNew/logic/getCollision';
+import * as getCollision from '#/systems/CollisionDetection2dSystem/logic/getCollision';
 import { Vector2d } from '#/maths';
 
 describe('CollisionDetection2dSystem', () => {

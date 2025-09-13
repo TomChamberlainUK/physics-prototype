@@ -1,10 +1,10 @@
-import { Collider2dComponent, RigidBody2dComponent, Transform2dComponent } from '#/components';
+import { RigidBody2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { CollisionImpulseResolution2dSystem } from '#/systems';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-describe('collisionImpulseResolution2dSystem', () => {
+describe('CollisionImpulseResolution2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
       const system = new CollisionImpulseResolution2dSystem();

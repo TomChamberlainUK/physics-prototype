@@ -1,13 +1,6 @@
 import type { Geometry2dComponent, Transform2dComponent } from './components';
 import type Scene from './Scene';
 
-type DrawCircleProps = {
-  x?: number;
-  y?: number;
-  radius: number;
-  color: string;
-};
-
 export default class Renderer {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -35,12 +28,36 @@ export default class Renderer {
     y = 0,
     radius,
     color,
-  }: DrawCircleProps) {
+  }: {
+    x?: number;
+    y?: number;
+    radius: number;
+    color: string;
+  }) {
     this.ctx.fillStyle = color;
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
+  }
+
+  drawBox({
+    x = 0,
+    y = 0,
+    width,
+    height,
+    color,
+  }: {
+    x?: number;
+    y?: number;
+    width: number;
+    height: number;
+    color: string;
+  }) {
+    const topLeftX = x - width / 2;
+    const topLeftY = y - height / 2;
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(topLeftX, topLeftY, width, height);
   }
 
   render(scene: Scene, alpha: number) {
@@ -56,12 +73,25 @@ export default class Renderer {
       const x = transform.previousPosition.x + (transform.position.x - transform.previousPosition.x) * alpha;
       const y = transform.previousPosition.y + (transform.position.y - transform.previousPosition.y) * alpha;
 
-      this.drawCircle({
-        x,
-        y,
-        radius: geometry.radius,
-        color: geometry.color,
-      });
+      switch (geometry.shape.type) {
+        case 'circle':
+          this.drawCircle({
+            x,
+            y,
+            radius: geometry.shape.radius,
+            color: geometry.color,
+          });
+          break;
+        case 'box':
+          this.drawBox({
+            x,
+            y,
+            width: geometry.shape.width,
+            height: geometry.shape.height,
+            color: geometry.color,
+          });
+          break;
+      }
     }
   }
 }

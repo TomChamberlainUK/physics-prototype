@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import Renderer from '#/Renderer';
 import Scene from '#/Scene';
 import Entity from '#/Entity';
@@ -66,16 +66,30 @@ describe('Renderer', () => {
   });
 
   describe('drawCircle()', () => {
+    let mockCtxArc: MockInstance<typeof renderer.ctx.arc>;
+    let mockCtxBeginPath: MockInstance<typeof renderer.ctx.beginPath>;
+    let mockCtxClosePath: MockInstance<typeof renderer.ctx.closePath>;
+    let mockCtxFill: MockInstance<typeof renderer.ctx.fill>;
+
+    beforeAll(() => {
+      mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
+      mockCtxBeginPath = vi.spyOn(renderer.ctx, 'beginPath');
+      mockCtxClosePath = vi.spyOn(renderer.ctx, 'closePath');
+      mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
+    });
+
     beforeEach(() => {
       renderer = new Renderer(canvas);
     });
 
-    it('Should draw a circle on the canvas', () => {
-      const mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
-      const mockCtxBeginPath = vi.spyOn(renderer.ctx, 'beginPath');
-      const mockCtxClosePath = vi.spyOn(renderer.ctx, 'closePath');
-      const mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
+    afterAll(() => {
+      mockCtxArc.mockRestore();
+      mockCtxBeginPath.mockRestore();
+      mockCtxClosePath.mockRestore();
+      mockCtxFill.mockRestore();
+    });
 
+    it('Should draw a circle on the canvas', () => {
       renderer.drawCircle({
         x: canvas.width / 2,
         y: canvas.height / 2,
@@ -103,13 +117,53 @@ describe('Renderer', () => {
     });
   });
 
+  describe('drawBox()', () => {
+    let mockCtxFillRect: MockInstance<typeof renderer.ctx.fillRect>;
+
+    beforeAll(() => {
+      mockCtxFillRect = vi.spyOn(renderer.ctx, 'fillRect');
+    });
+
+    afterAll(() => {
+      mockCtxFillRect.mockRestore();
+    });
+
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+    });
+
+    it('Should draw a box on the canvas', () => {
+      const centerX = 100;
+      const centerY = 150;
+      const width = 200;
+      const height = 100;
+
+      renderer.drawBox({
+        x: centerX,
+        y: centerY,
+        width,
+        height,
+        color: 'blue',
+      });
+
+      expect(mockCtxFillRect).toHaveBeenCalledWith(
+        centerX - width / 2,
+        centerY - height / 2,
+        width,
+        height
+      );
+    });
+  });
+
   describe('render()', () => {
     let clearSpy: MockInstance<typeof renderer.clear>;
+    let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
 
     beforeEach(() => {
       renderer = new Renderer(canvas);
       clearSpy = vi.spyOn(renderer, 'clear');
+      drawBoxSpy = vi.spyOn(renderer, 'drawBox');
       drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
     });
 
@@ -127,17 +181,44 @@ describe('Renderer', () => {
       expect(clearSpy).toHaveBeenCalled();
     });
 
-    it('Should draw a circle for each entity with Transform2d and Geometry2d components', () => {
+    it('Should draw a circle for any entity with circular geometry', () => {
       const position = new Vector2d({ x: 100, y: 150 });
       const color = 'red';
       const radius = 50;
       const scene = new Scene();
       const entity = new Entity();
       entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({ color, radius }));
+      entity.addComponent(new Geometry2dComponent({
+        color,
+        shape: {
+          type: 'circle',
+          radius,
+        },
+      }));
       scene.addEntity(entity);
       renderer.render(scene, 0);
       expect(drawCircleSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, radius, color });
+    });
+
+    it('Should draw a box for any entity with box geometry', () => {
+      const position = new Vector2d({ x: 200, y: 250 });
+      const color = 'blue';
+      const width = 120;
+      const height = 80;
+      const scene = new Scene();
+      const entity = new Entity();
+      entity.addComponent(new Transform2dComponent({ position }));
+      entity.addComponent(new Geometry2dComponent({
+        color,
+        shape: {
+          type: 'box',
+          width,
+          height,
+        },
+      }));
+      scene.addEntity(entity);
+      renderer.render(scene, 0);
+      expect(drawBoxSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, width, height, color });
     });
 
     it('Should interpolate the entity position based on the alpha value', () => {
@@ -151,7 +232,13 @@ describe('Renderer', () => {
       const scene = new Scene();
       const entity = new Entity();
       const transform2dComponent = new Transform2dComponent();
-      const geometry2dComponent = new Geometry2dComponent({ color, radius });
+      const geometry2dComponent = new Geometry2dComponent({
+        color,
+        shape: {
+          type: 'circle',
+          radius,
+        },
+      });
       entity.addComponents([
         transform2dComponent,
         geometry2dComponent
@@ -160,7 +247,12 @@ describe('Renderer', () => {
       transform2dComponent.position = currentPosition;
       scene.addEntity(entity);
       renderer.render(scene, alpha);
-      expect(drawCircleSpy).toHaveBeenCalledWith({ x: expectedX, y: expectedY, radius, color });
+      expect(drawCircleSpy).toHaveBeenCalledWith({
+        x: expectedX,
+        y: expectedY,
+        radius,
+        color,
+      });
     });
 
     it('Should skip entities without Transform2d or Geometry2d components', () => {

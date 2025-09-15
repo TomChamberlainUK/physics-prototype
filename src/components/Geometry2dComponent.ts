@@ -1,22 +1,21 @@
 import Component from './Component';
+import type { Shape } from '#/types';
 
 type Props = {
   color?: string;
-  radius?: number;
+  shape: Shape;
 };
 
 export default class Geometry2dComponent extends Component {
-  type: string;
-  radius: number;
+  shape: Shape;
   color: string;
 
   constructor({
     color = 'white',
-    radius = 32,
-  }: Props = {}) {
+    shape,
+  }: Props) {
     super('Geometry2d');
     this.color = color;
-    this.radius = radius;
-    this.type = 'circle';
+    this.shape = shape;
   }
 }

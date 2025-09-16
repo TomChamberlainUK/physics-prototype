@@ -1,18 +1,12 @@
+import type { Shape } from '#/types';
 import Component from './Component';
 
-type CircleCollider = {
-  type: 'circle';
-  radius: number;
-};
-
-type ColliderShape = CircleCollider;
-
 type Props = {
-  shape: ColliderShape;
+  shape: Shape;
 }
 
 export default class Collider2dComponent extends Component {
-  shape: ColliderShape;
+  shape: Shape;
 
   constructor({ shape }: Props) {
     super('Collider2d');

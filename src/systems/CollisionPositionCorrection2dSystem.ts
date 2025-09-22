@@ -19,7 +19,7 @@ export default class CollisionPositionCorrection2dSystem extends System {
 
       const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
 
-      if (totalInverseMass === 0) return; // Both static
+      if (totalInverseMass === 0) continue; // Both static
 
       const correction = normal.multiply(overlap / totalInverseMass);
 

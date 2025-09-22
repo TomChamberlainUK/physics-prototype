@@ -17,13 +17,13 @@ export default class CollisionImpulseResolution2dSystem extends System {
       const rigidBodyB = entityB.getComponent<RigidBody2dComponent>('RigidBody2d');
 
       const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
-      if (totalInverseMass === 0) return; // Both static
+      if (totalInverseMass === 0) continue; // Both static
 
       // Calculate relative velocity
       const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
       const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
     
-      if (velocityAlongNormal > 0) return; // Already separating
+      if (velocityAlongNormal > 0) continue; // Already separating
     
       // Calculate restitution (bounciness)
       const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);

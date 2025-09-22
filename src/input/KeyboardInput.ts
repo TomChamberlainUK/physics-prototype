@@ -6,10 +6,12 @@ export default class KeyboardInput {
   constructor() {
     this.#keys = new Set<string>();
     this.#keydownHandler = (event) => {
-      this.pressKey(event.key);
+      const key = event.key.toLowerCase();
+      this.pressKey(key);
     };
     this.#keyupHandler = (event) => {
-      this.releaseKey(event.key);
+      const key = event.key.toLowerCase();
+      this.releaseKey(key);
     };
   }
 

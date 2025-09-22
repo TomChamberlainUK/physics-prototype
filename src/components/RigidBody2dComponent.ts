@@ -36,7 +36,9 @@ export default class RigidBody2dComponent extends Component {
     this.force = force;
     this.impulse = impulse;
     this.mass = mass;
-    this.inverseMass = 1 / mass;
+    this.inverseMass = mass !== 0
+      ? 1 / mass
+      : 0;
     this.restitution = restitution;
     this.friction = friction;
   }

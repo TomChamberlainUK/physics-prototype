@@ -14,8 +14,11 @@ export default class InputImpulseSystem extends System {
         continue;
       }
       const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
-      const force = 3600; // Assuming 60Hz physics update rate
+      let force = 3600; // Assuming 60Hz physics update rate
       const direction = new Vector2d({ x: 0, y: 0 });
+      if (input.isPressed('shift')) {
+        force *= 2;
+      }
       if (input.isPressed('w')) {
         direction.y -= 1;
       }

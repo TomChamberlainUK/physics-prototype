@@ -96,6 +96,26 @@ describe('InputImpulseSystem', () => {
       expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
     });
+
+    it('Should double the impulse when shift is pressed', () => {
+      const entity = new Entity();
+      const rigidBody2dComponent = new RigidBody2dComponent();
+      const inputImpulseComponent = new InputImpulseComponent();
+      entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
+      const input = {
+        isPressed: (key: string) => ['w', 'shift'].includes(key),
+      } as unknown as KeyboardInput;
+  
+      inputImpulseSystem.update([entity], { input, deltaTime });
+  
+      const expectedImpulse = getExpectedImpulse(
+        new Vector2d({ x: 0, y: -1 }),
+        rigidBody2dComponent.mass
+      ).multiply(2);
+  
+      expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
+      expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
+    });
   
     it('Should normalize diagonal movement', () => {
       const entity = new Entity();

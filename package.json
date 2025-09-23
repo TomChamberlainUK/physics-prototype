@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "pnpm --recursive run lint",
     "test": "vitest run",
-    "test:dev": "vitest --watch"
+    "test:dev": "vitest --watch",
+    "typecheck": "pnpm --recursive run typecheck"
   },
   "keywords": [],
   "author": "",

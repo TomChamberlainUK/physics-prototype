@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:dev": "vitest --watch"
+    "test:dev": "vitest --watch",
+    "typecheck": "tsc"
   },
   "imports": {
     "#/*": "./src/*"

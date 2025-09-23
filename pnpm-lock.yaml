@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(jsdom@26.1.0)
 
   apps/sandbox:
     devDependencies:

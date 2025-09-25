@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "pnpm --recursive run lint",
+    "lint:fix": "pnpm --recursive run lint:fix",
     "sandbox:dev": "pnpm --filter sandbox run dev",
     "test": "vitest run",
     "test:dev": "vitest --watch",

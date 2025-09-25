@@ -9,7 +9,6 @@ describe('getCircleCircleCollision', () => {
 
   let entityA: Entity;
   let entityB: Entity;
-  let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
 
   beforeEach(() => {
@@ -26,7 +25,6 @@ describe('getCircleCircleCollision', () => {
         new Transform2dComponent(),
       ]);
     });
-    transformA = entityA.getComponent('Transform2d');
     transformB = entityB.getComponent('Transform2d');
   });
 

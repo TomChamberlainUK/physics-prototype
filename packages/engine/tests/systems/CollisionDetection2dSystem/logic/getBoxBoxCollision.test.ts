@@ -12,16 +12,16 @@ describe('getBoxBoxCollision', () => {
   beforeEach(() => {
     entityA = new Entity();
     entityB = new Entity();
-    [entityA, entityB].forEach(entity => {
+    [entityA, entityB].forEach((entity) => {
       entity.addComponents([
         new Collider2dComponent({
           shape: {
             type: 'box',
             width: 32,
-            height: 32
-          }
+            height: 32,
+          },
         }),
-        new Transform2dComponent()
+        new Transform2dComponent(),
       ]);
     });
     transformA = entityA.getComponent('Transform2d');
@@ -39,7 +39,7 @@ describe('getBoxBoxCollision', () => {
     expect(result).toEqual({
       isColliding: true,
       normal: { x: -1, y: 0 },
-      overlap: 16
+      overlap: 16,
     });
   });
 
@@ -52,7 +52,7 @@ describe('getBoxBoxCollision', () => {
     const result = getBoxBoxCollision(entityA, entityB);
 
     expect(result).toEqual({
-      isColliding: false
+      isColliding: false,
     });
   });
 });

@@ -25,12 +25,12 @@ export default function getCircleCircleCollision(entityA: Entity, entityB: Entit
       return {
         isColliding: true,
         normal,
-        overlap
+        overlap,
       };
     }
   }
 
   return {
-    isColliding: false
+    isColliding: false,
   };
 }

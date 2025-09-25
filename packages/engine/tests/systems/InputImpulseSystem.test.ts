@@ -20,7 +20,7 @@ describe('InputImpulseSystem', () => {
     const deltaTime = 1 / 60;
 
     let inputImpulseSystem: InputImpulseSystem;
-    
+
     function getExpectedImpulse(direction: Vector2d, mass: number) {
       const directionUnit = direction.getUnit();
       const inverseMass = 1 / mass;
@@ -30,7 +30,7 @@ describe('InputImpulseSystem', () => {
     beforeEach(() => {
       inputImpulseSystem = new InputImpulseSystem();
     });
-  
+
     it.each([
       {
         name: 'no keys',
@@ -85,14 +85,14 @@ describe('InputImpulseSystem', () => {
       const input = {
         isPressed: (key: string) => keys.includes(key),
       } as unknown as KeyboardInput;
-  
+
       inputImpulseSystem.update([entity], { input, deltaTime });
-  
+
       const expectedImpulse = getExpectedImpulse(
         new Vector2d(direction),
-        rigidBody2dComponent.mass
+        rigidBody2dComponent.mass,
       );
-  
+
       expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
     });
@@ -105,18 +105,18 @@ describe('InputImpulseSystem', () => {
       const input = {
         isPressed: (key: string) => ['w', 'shift'].includes(key),
       } as unknown as KeyboardInput;
-  
+
       inputImpulseSystem.update([entity], { input, deltaTime });
-  
+
       const expectedImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
-        rigidBody2dComponent.mass
+        rigidBody2dComponent.mass,
       ).multiply(2);
-  
+
       expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
     });
-  
+
     it('Should normalize diagonal movement', () => {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent();
@@ -125,32 +125,32 @@ describe('InputImpulseSystem', () => {
       const input = {
         isPressed: (key: string) => ['w', 'd'].includes(key),
       } as unknown as KeyboardInput;
-  
+
       inputImpulseSystem.update([entity], { input, deltaTime });
-  
+
       const singleDirectionImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
-        rigidBody2dComponent.mass
+        rigidBody2dComponent.mass,
       );
       const diagonalDirectionImpulse = getExpectedImpulse(
         new Vector2d({ x: 1, y: -1 }),
-        rigidBody2dComponent.mass
+        rigidBody2dComponent.mass,
       );
-  
+
       const singleDirectionImpulseMagnitude = singleDirectionImpulse.getMagnitude();
       const diagonalDirectionImpulseMagnitude = diagonalDirectionImpulse.getMagnitude();
       const magnitude = rigidBody2dComponent.impulse.getMagnitude();
-  
+
       // The impulse magnitude when moving diagonally should be roughly equal to the impulse magnitude when moving in a single direction
       expect(diagonalDirectionImpulseMagnitude).toBeCloseTo(singleDirectionImpulseMagnitude);
-  
+
       // The actual impulse applied to the rigid body should match the single direction impulse
       expect(magnitude).toBeCloseTo(singleDirectionImpulseMagnitude);
     });
-  
+
     it('Should apply impulse scaled by inverse mass', () => {
       const direction = new Vector2d({ x: 0, y: -1 });
-      
+
       for (const mass of [1, 2, 4]) {
         const entity = new Entity();
         const rigidBody2dComponent = new RigidBody2dComponent({
@@ -161,16 +161,16 @@ describe('InputImpulseSystem', () => {
         const input = {
           isPressed: (key: string) => key === 'w',
         } as unknown as KeyboardInput;
-  
+
         inputImpulseSystem.update([entity], { input, deltaTime });
-  
+
         const expectedImpulse = getExpectedImpulse(direction, mass);
-  
+
         expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
         expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
       }
     });
-  
+
     it('Should not apply impulse to entities without the InputImpulse component', () => {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent();
@@ -179,9 +179,9 @@ describe('InputImpulseSystem', () => {
         isPressed: (key: string) => key === 'w',
       } as unknown as KeyboardInput;
       const deltaTime = 1 / 60;
-  
+
       inputImpulseSystem.update([entity], { input, deltaTime });
-  
+
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(0);
     });
   });

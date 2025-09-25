@@ -21,7 +21,7 @@ export default class Game {
   constructor({
     renderer,
     scene,
-    physicsHz = 60
+    physicsHz = 60,
   }: Props) {
     this.renderer = renderer;
     this.scene = scene;

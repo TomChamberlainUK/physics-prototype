@@ -15,15 +15,15 @@ describe('getCircleCircleCollision', () => {
   beforeEach(() => {
     entityA = new Entity();
     entityB = new Entity();
-    [entityA, entityB].forEach(entity => {
+    [entityA, entityB].forEach((entity) => {
       entity.addComponents([
         new Collider2dComponent({
           shape: {
             type: 'circle',
-            radius
-          }
+            radius,
+          },
         }),
-        new Transform2dComponent()
+        new Transform2dComponent(),
       ]);
     });
     transformA = entityA.getComponent('Transform2d');
@@ -34,24 +34,24 @@ describe('getCircleCircleCollision', () => {
     const overlap = 16;
     transformB.position = new Vector2d({
       x: (radius * 2) - overlap,
-      y: 0
+      y: 0,
     });
     const result = getCircleCircleCollision(entityA, entityB);
     expect(result).toEqual({
       isColliding: true,
       normal: new Vector2d({ x: -1, y: 0 }),
-      overlap
+      overlap,
     });
   });
 
   it('Should return no collision data when passed two non-colliding circles', () => {
     transformB.position = new Vector2d({
       x: (radius * 2) + 100,
-      y: 0
+      y: 0,
     });
     const result = getCircleCircleCollision(entityA, entityB);
     expect(result).toEqual({
-      isColliding: false
+      isColliding: false,
     });
   });
 });

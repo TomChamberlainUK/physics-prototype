@@ -22,7 +22,7 @@ export default class CollisionDetection2dSystem {
           entityA,
           entityB,
           normal: normal!,
-          overlap: overlap!
+          overlap: overlap!,
         });
       }
     }

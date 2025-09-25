@@ -26,6 +26,6 @@ export default function getCollision(entityA: Entity, entityB: Entity) {
   }
 
   return {
-    isColliding: false
+    isColliding: false,
   };
 }

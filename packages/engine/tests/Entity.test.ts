@@ -72,7 +72,7 @@ describe('Entity', () => {
       const componentNames = [
         'Component1',
         'Component2',
-        'Component3'
+        'Component3',
       ];
       entity.addComponents(componentNames.map(name => new Component(name)));
       expect(entity.hasComponents(componentNames)).toBe(true);
@@ -82,7 +82,7 @@ describe('Entity', () => {
       const componentNames = [
         'Component1',
         'Component2',
-        'Component3'
+        'Component3',
       ];
       entity.addComponents(componentNames.map(name => new Component(name)));
       expect(entity.hasComponents([...componentNames, 'Component4'])).toBe(false);

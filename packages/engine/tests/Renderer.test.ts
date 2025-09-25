@@ -150,7 +150,7 @@ describe('Renderer', () => {
         centerX - width / 2,
         centerY - height / 2,
         width,
-        height
+        height,
       );
     });
   });
@@ -241,7 +241,7 @@ describe('Renderer', () => {
       });
       entity.addComponents([
         transform2dComponent,
-        geometry2dComponent
+        geometry2dComponent,
       ]);
       transform2dComponent.previousPosition = previousPosition;
       transform2dComponent.position = currentPosition;

@@ -18,9 +18,9 @@ describe('CollisionDetection2dSystem', () => {
     let collisionDetection2dSystem: CollisionDetection2dSystem;
     let entityA: Entity;
     let entityB: Entity;
-  
+
     let getCollisionSpy: MockInstance<typeof getCollision.default>;
-  
+
     beforeAll(() => {
       getCollisionSpy = vi.spyOn(getCollision, 'default');
     });
@@ -28,33 +28,33 @@ describe('CollisionDetection2dSystem', () => {
     beforeEach(() => {
       collisionDetection2dSystem = new CollisionDetection2dSystem();
     });
-  
+
     afterEach(() => {
       getCollisionSpy.mockReset();
     });
-  
+
     afterAll(() => {
       getCollisionSpy.mockRestore();
     });
-  
+
     describe('When passed entities with required components', () => {
       beforeEach(() => {
         entityA = new Entity();
         entityB = new Entity();
-        [entityA, entityB].forEach(entity => {
+        [entityA, entityB].forEach((entity) => {
           entity.addComponents([
             new Collider2dComponent({
               shape: {
                 type: 'circle',
-                radius: 16
-              }
+                radius: 16,
+              },
             }),
             new RigidBody2dComponent(),
             new Transform2dComponent(),
           ]);
         });
       });
-  
+
       it('Should check for collisions between entities', () => {
         collisionDetection2dSystem.update([entityA, entityB], {});
         expect(getCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
@@ -62,40 +62,40 @@ describe('CollisionDetection2dSystem', () => {
 
       it('Should update context collision pairs for colliding entities', () => {
         const context = {
-          collisionPairs: []
+          collisionPairs: [],
         };
         getCollisionSpy.mockImplementationOnce(() => ({
           isColliding: true,
           normal: new Vector2d({ x: 1, y: 0 }),
-          overlap: 5
+          overlap: 5,
         }));
         collisionDetection2dSystem.update([entityA, entityB], context);
         expect(context.collisionPairs).toEqual([{
           entityA,
           entityB,
           normal: { x: 1, y: 0 },
-          overlap: 5
+          overlap: 5,
         }]);
       });
 
       it('Should not update context collision pairs for non-colliding entities', () => {
         getCollisionSpy.mockImplementationOnce(() => ({
-          isColliding: false
+          isColliding: false,
         }));
         const context = {
-          collisionPairs: []
+          collisionPairs: [],
         };
         collisionDetection2dSystem.update([entityA, entityB], context);
         expect(context.collisionPairs).toEqual([]);
       });
     });
-  
+
     describe('When passed entities without required components', () => {
       beforeEach(() => {
         entityA = new Entity();
         entityB = new Entity();
       });
-  
+
       it('Should not check for collisions', () => {
         collisionDetection2dSystem.update([entityA, entityB], {});
         expect(getCollisionSpy).not.toHaveBeenCalled();
@@ -103,7 +103,7 @@ describe('CollisionDetection2dSystem', () => {
 
       it('Should not update context collision pairs', () => {
         const context = {
-          collisionPairs: []
+          collisionPairs: [],
         };
         collisionDetection2dSystem.update([entityA, entityB], context);
         expect(context.collisionPairs).toEqual([]);

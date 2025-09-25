@@ -1,6 +1,5 @@
 import type Renderer from './Renderer';
 import type Scene from './Scene';
-import { InterpolationSync2dSystem } from './systems';
 
 type Props = {
   physicsHz?: number;

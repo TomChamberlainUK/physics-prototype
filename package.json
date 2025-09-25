@@ -1,40 +1,24 @@
 {
   "name": "physics-prototype",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "vite build",
-    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
-    "dev": "vite",
-    "lint": "eslint .",
-    "preview": "vite preview",
+    "lint": "pnpm --recursive run lint",
+    "sandbox:dev": "pnpm --filter sandbox run dev",
     "test": "vitest run",
-    "test:dev": "vitest --watch"
+    "test:dev": "vitest --watch",
+    "typecheck": "pnpm --recursive run typecheck"
   },
-  "imports": {
-    "#/*": "./src/*"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.8.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "@eslint/js": "^9.30.0",
-    "@stylistic/eslint-plugin": "^5.1.0",
-    "@sveltejs/vite-plugin-svelte": "^5.1.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/svelte": "^5.2.8",
-    "@tsconfig/svelte": "^5.0.4",
-    "eslint": "^9.30.0",
-    "eslint-plugin-svelte": "^3.10.1",
-    "globals": "^16.2.0",
-    "jsdom": "^26.1.0",
-    "svelte": "^5.34.7",
-    "svelte-check": "^4.2.2",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.35.0",
-    "vite": "^7.0.0",
-    "vitest": "^3.2.4",
-    "vitest-canvas-mock": "^0.3.3"
-  },
-  "dependencies": {
-    "uuid": "^11.1.0"
+    "vitest": "^3.2.4"
   }
 }

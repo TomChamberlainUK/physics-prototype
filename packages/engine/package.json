@@ -1,0 +1,40 @@
+{
+  "name": "engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:dev": "vitest --watch",
+    "typecheck": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.8.1",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.0",
+    "@stylistic/eslint-plugin": "^5.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "eslint": "^9.30.0",
+    "globals": "^16.2.0",
+    "jsdom": "^26.1.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.35.0",
+    "vitest": "^3.2.4",
+    "vitest-canvas-mock": "^0.3.3"
+  }
+}

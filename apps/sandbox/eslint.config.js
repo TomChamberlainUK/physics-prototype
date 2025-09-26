@@ -1,11 +1,12 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import stylistic from '@stylistic/eslint-plugin';
+import { defineConfig } from 'eslint/config';
 import svelte from 'eslint-plugin-svelte';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
 
-export default tseslint.config(
+export default defineConfig(
   js.configs.recommended,
   {
     ignores: ['src/*'],
@@ -31,6 +32,16 @@ export default tseslint.config(
         extraFileExtensions: ['.svelte'],
         parser: tseslint.parser,
         svelteConfig,
+      },
+    },
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ['*.js'],
+        },
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },

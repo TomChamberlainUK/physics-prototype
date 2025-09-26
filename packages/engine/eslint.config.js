@@ -1,9 +1,10 @@
 import js from '@eslint/js';
-import globals from 'globals';
 import stylistic from '@stylistic/eslint-plugin';
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig([
   js.configs.recommended,
   {
     ignores: ['src/*'],
@@ -20,4 +21,14 @@ export default tseslint.config(
     jsx: false,
   }),
   tseslint.configs.recommended,
-);
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ['*.js'],
+        },
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+]);

@@ -32,21 +32,21 @@ describe('getCollision', () => {
 
   it.each([
     {
-      isColliding: true
+      isColliding: true,
     },
     {
-      isColliding: false
-    }
+      isColliding: false,
+    },
   ])('Should return collision data for two circles when isColliding is $isColliding', ({ isColliding }) => {
     const radius = 16;
 
-    [entityA, entityB].forEach(entity => {
+    [entityA, entityB].forEach((entity) => {
       entity.addComponents([
         new Collider2dComponent({
           shape: {
             type: 'circle',
-            radius
-          }
+            radius,
+          },
         }),
       ]);
     });
@@ -64,19 +64,19 @@ describe('getCollision', () => {
     },
     {
       isColliding: false,
-    }
+    },
   ])('Should return collision data for two boxes when isColliding is $isColliding', ({ isColliding }) => {
     const width = 32;
     const height = 32;
 
-    [entityA, entityB].forEach(entity => {
+    [entityA, entityB].forEach((entity) => {
       entity.addComponents([
         new Collider2dComponent({
           shape: {
             type: 'box',
             width,
-            height
-          }
+            height,
+          },
         }),
       ]);
     });
@@ -87,34 +87,34 @@ describe('getCollision', () => {
     expect(getBoxBoxCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
     expect(result.isColliding).toEqual(isColliding);
   });
-  
+
   it.each([
     {
       isColliding: true,
     },
     {
       isColliding: false,
-    }
+    },
   ])('Should return collision data for a box and a circle when isColliding is $isColliding', ({ isColliding }) => {
     const boxWidth = 32;
     const boxHeight = 32;
     const circleRadius = 16;
-    
+
     entityA.addComponents([
       new Collider2dComponent({
         shape: {
           type: 'box',
           width: boxWidth,
-          height: boxHeight
-        }
+          height: boxHeight,
+        },
       }),
     ]);
     entityB.addComponents([
       new Collider2dComponent({
         shape: {
           type: 'circle',
-          radius: circleRadius
-        }
+          radius: circleRadius,
+        },
       }),
     ]);
 
@@ -131,18 +131,18 @@ describe('getCollision', () => {
     },
     {
       isColliding: false,
-    }
+    },
   ])('Should return collision data for a circle and a box when isColliding is $isColliding', ({ isColliding }) => {
     const boxWidth = 32;
     const boxHeight = 32;
     const circleRadius = 16;
-    
+
     entityA.addComponents([
       new Collider2dComponent({
         shape: {
           type: 'circle',
-          radius: circleRadius
-        }
+          radius: circleRadius,
+        },
       }),
     ]);
     entityB.addComponents([
@@ -150,8 +150,8 @@ describe('getCollision', () => {
         shape: {
           type: 'box',
           width: boxWidth,
-          height: boxHeight
-        }
+          height: boxHeight,
+        },
       }),
     ]);
 

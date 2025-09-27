@@ -21,13 +21,15 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) 
     circleCollider = colliderB;
     circleTransform = transformB;
     delta = boxTransform.position.subtract(circleTransform.position);
-  } else if (colliderA.shape.type === 'circle' && colliderB.shape.type === 'box') {
+  }
+  else if (colliderA.shape.type === 'circle' && colliderB.shape.type === 'box') {
     boxCollider = colliderB;
     boxTransform = transformB;
     circleCollider = colliderA;
     circleTransform = transformA;
     delta = circleTransform.position.subtract(boxTransform.position);
-  } else {
+  }
+  else {
     return { isColliding: false };
   }
 
@@ -39,7 +41,7 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) 
 
   const closestPointOnBox = new Vector2d({
     x: Math.max(-halfWidth, Math.min(delta.x, halfWidth)),
-    y: Math.max(-halfHeight, Math.min(delta.y, halfHeight))
+    y: Math.max(-halfHeight, Math.min(delta.y, halfHeight)),
   });
 
   const deltaToClosestPointOnBox = delta.subtract(closestPointOnBox);
@@ -55,11 +57,11 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) 
     if (distance === 0) {
       const distanceToNearestVerticalSide = Math.min(
         Math.abs(delta.x - halfWidth),
-        Math.abs(delta.x + halfWidth)
+        Math.abs(delta.x + halfWidth),
       );
       const distanceToNearestHorizontalSide = Math.min(
         Math.abs(delta.y - halfHeight),
-        Math.abs(delta.y + halfHeight)
+        Math.abs(delta.y + halfHeight),
       );
       if (distanceToNearestVerticalSide < distanceToNearestHorizontalSide) {
         normal = new Vector2d({
@@ -68,7 +70,8 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) 
             : -1,
           y: 0,
         });
-      } else {
+      }
+      else {
         normal = new Vector2d({
           x: 0,
           y: delta.y > 0
@@ -76,18 +79,19 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) 
             : -1,
         });
       }
-    } else {
+    }
+    else {
       normal = deltaToClosestPointOnBox.getUnit();
     }
 
     return {
       isColliding: true,
       normal,
-      overlap
+      overlap,
     };
   }
 
   return {
-    isColliding: false
+    isColliding: false,
   };
 }

@@ -17,18 +17,18 @@ describe('InterpolationSync2dSystemNew', () => {
     it('Should update entities Transform2d previousPosition to match position', () => {
       const originalPosition = new Vector2d({ x: 0, y: 0 });
       const currentPosition = new Vector2d({ x: 5, y: 10 });
-  
+
       const entity = new Entity();
       const transform2dComponent = new Transform2dComponent();
       entity.addComponent(transform2dComponent);
       transform2dComponent.previousPosition = originalPosition;
       transform2dComponent.position = currentPosition;
-  
+
       expect(transform2dComponent.previousPosition).toEqual(originalPosition);
-  
+
       const system = new InterpolationSync2dSystem();
       system.update([entity]);
-  
+
       expect(transform2dComponent.previousPosition).toEqual(currentPosition);
     });
   });

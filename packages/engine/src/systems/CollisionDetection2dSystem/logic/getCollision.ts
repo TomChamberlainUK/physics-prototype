@@ -15,6 +15,10 @@ export default function getCollision(entityA: Entity, entityB: Entity) {
           return getBoxBoxCollision(entityA, entityB);
         case 'circle':
           return getBoxCircleCollision(entityA, entityB);
+        default:
+          return {
+            isColliding: false,
+          };
       }
     case 'circle':
       switch (colliderB.shape.type) {
@@ -22,10 +26,10 @@ export default function getCollision(entityA: Entity, entityB: Entity) {
           return getCircleCircleCollision(entityA, entityB);
         case 'box':
           return getBoxCircleCollision(entityA, entityB);
+        default:
+          return {
+            isColliding: false,
+          };
       }
   }
-
-  return {
-    isColliding: false
-  };
 }

@@ -14,12 +14,6 @@ importers:
 
   apps/sandbox:
     devDependencies:
-      '@eslint/js':
-        specifier: ^9.30.0
-        version: 9.36.0
-      '@stylistic/eslint-plugin':
-        specifier: ^5.1.0
-        version: 5.4.0(eslint@9.36.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^5.1.0
         version: 5.1.1(svelte@5.39.5)(vite@7.1.7)
@@ -38,12 +32,9 @@ importers:
       eslint:
         specifier: ^9.30.0
         version: 9.36.0
-      eslint-plugin-svelte:
-        specifier: ^3.10.1
-        version: 3.12.4(eslint@9.36.0)(svelte@5.39.5)
-      globals:
-        specifier: ^16.2.0
-        version: 16.4.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
@@ -56,9 +47,6 @@ importers:
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
-      typescript-eslint:
-        specifier: ^8.35.0
-        version: 8.44.1(eslint@9.36.0)(typescript@5.8.3)
       vite:
         specifier: ^7.0.0
         version: 7.1.7
@@ -75,36 +63,48 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
     devDependencies:
-      '@eslint/js':
-        specifier: ^9.30.0
-        version: 9.36.0
-      '@stylistic/eslint-plugin':
-        specifier: ^5.1.0
-        version: 5.4.0(eslint@9.36.0)
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.8.0
       eslint:
         specifier: ^9.30.0
         version: 9.36.0
-      globals:
-        specifier: ^16.2.0
-        version: 16.4.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../eslint-config-custom
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
-      typescript-eslint:
-        specifier: ^8.35.0
-        version: 8.44.1(eslint@9.36.0)(typescript@5.8.3)
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(jsdom@26.1.0)
       vitest-canvas-mock:
         specifier: ^0.3.3
         version: 0.3.3(vitest@3.2.4(jsdom@26.1.0))
+
+  packages/eslint-config-custom:
+    dependencies:
+      '@eslint/js':
+        specifier: ^9.30.0
+        version: 9.36.0
+      '@stylistic/eslint-plugin':
+        specifier: ^5.1.0
+        version: 5.4.0(eslint@9.36.0)
+      eslint:
+        specifier: '>= 9.3.0'
+        version: 9.36.0
+      eslint-plugin-svelte:
+        specifier: ^3.10.1
+        version: 3.12.4(eslint@9.36.0)(svelte@5.39.5)
+      globals:
+        specifier: ^16.2.0
+        version: 16.4.0
+      typescript-eslint:
+        specifier: ^8.35.0
+        version: 8.44.1(eslint@9.36.0)(typescript@5.8.3)
 
 packages:
 

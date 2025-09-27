@@ -22,16 +22,16 @@ export default class CollisionImpulseResolution2dSystem extends System {
       // Calculate relative velocity
       const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
       const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
-    
+
       if (velocityAlongNormal > 0) continue; // Already separating
-    
+
       // Calculate restitution (bounciness)
       const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
-    
+
       // Calculate impulse scalar
       const impulseMagnitude = -(1 + restitution) * velocityAlongNormal / totalInverseMass;
       const impulse = normal.multiply(impulseMagnitude);
-    
+
       // Apply impulse to velocities
       rigidBodyA.impulse = rigidBodyA.impulse.add(impulse.multiply(rigidBodyA.inverseMass));
       rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse.multiply(rigidBodyB.inverseMass));

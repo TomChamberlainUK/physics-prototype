@@ -26,15 +26,16 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity) {
           x: delta.x < 0
             ? -1
             : 1,
-          y: 0
+          y: 0,
         });
 
         return {
           isColliding: true,
           normal,
-          overlap
+          overlap,
         };
-      } else {
+      }
+      else {
         const overlap = overlapY;
         const normal = new Vector2d({
           x: 0,
@@ -53,6 +54,6 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity) {
   }
 
   return {
-    isColliding: false
+    isColliding: false,
   };
 }

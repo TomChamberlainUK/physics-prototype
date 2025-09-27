@@ -1,6 +1,5 @@
 import type Renderer from './Renderer';
 import type Scene from './Scene';
-import { InterpolationSync2dSystem } from './systems';
 
 type Props = {
   physicsHz?: number;
@@ -21,7 +20,7 @@ export default class Game {
   constructor({
     renderer,
     scene,
-    physicsHz = 60
+    physicsHz = 60,
   }: Props) {
     this.renderer = renderer;
     this.scene = scene;

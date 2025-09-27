@@ -21,18 +21,18 @@ describe('getBoxCircleCollision', () => {
           type: 'box',
           width: 32,
           height: 32,
-        }
+        },
       }),
-      transform2dComponentA
+      transform2dComponentA,
     ]);
     entityB.addComponents([
       new Collider2dComponent({
         shape: {
           type: 'circle',
           radius: 16,
-        }
+        },
       }),
-      transform2dComponentB
+      transform2dComponentB,
     ]);
   });
 

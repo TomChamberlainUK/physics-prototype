@@ -1,23 +1,19 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import stylistic from '@stylistic/eslint-plugin';
-import tseslint from 'typescript-eslint';
+import { defineConfig } from 'eslint/config';
+import { browser } from 'eslint-config-custom';
 
-export default tseslint.config(
-  js.configs.recommended,
+export default defineConfig([
+  ...browser,
   {
-    ignores: ['src/*'],
-    languageOptions: { globals: globals.node },
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: [
+            '*.js',
+            'vitest.config.ts',
+          ],
+        },
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
   },
-  {
-    files: ['src/*'],
-    languageOptions: { globals: globals.browser },
-  },
-  stylistic.configs.customize({
-    indent: 2,
-    semi: true,
-    quotes: 'single',
-    jsx: false,
-  }),
-  tseslint.configs.recommended,
-);
+]);

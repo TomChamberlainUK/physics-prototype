@@ -8,6 +8,7 @@
         "../../packages/engine/src/*" // allow to import from engine in the sandbox
       ],
     },
+    "tsBuildInfoFile": ".tsbuild/app.tsbuildinfo"
   },
   "include": ["src"]
 }

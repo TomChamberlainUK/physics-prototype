@@ -23,9 +23,6 @@ importers:
       '@testing-library/svelte':
         specifier: ^5.2.8
         version: 5.2.8(svelte@5.39.5)(vite@7.1.7)(vitest@3.2.4(jsdom@26.1.0))
-      '@tsconfig/svelte':
-        specifier: ^5.0.4
-        version: 5.0.5
       engine:
         specifier: workspace:*
         version: link:../../packages/engine
@@ -44,6 +41,9 @@ importers:
       svelte-check:
         specifier: ^4.2.2
         version: 4.3.2(picomatch@4.0.3)(svelte@5.39.5)(typescript@5.8.3)
+      tsconfig:
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -75,6 +75,9 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -105,6 +108,8 @@ importers:
       typescript-eslint:
         specifier: ^8.35.0
         version: 8.44.1(eslint@9.36.0)(typescript@5.8.3)
+
+  packages/tsconfig: {}
 
 packages:
 
@@ -548,9 +553,6 @@ packages:
         optional: true
       vitest:
         optional: true
-
-  '@tsconfig/svelte@5.0.5':
-    resolution: {integrity: sha512-48fAnUjKye38FvMiNOj0J9I/4XlQQiZlpe9xaNPfe8vy2Y1hFBt8g1yqf2EGjVvHavo4jf2lC+TQyENCr4BJBQ==}
 
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
@@ -1887,8 +1889,6 @@ snapshots:
     optionalDependencies:
       vite: 7.1.7
       vitest: 3.2.4(jsdom@26.1.0)
-
-  '@tsconfig/svelte@5.0.5': {}
 
   '@types/aria-query@5.0.4': {}
 

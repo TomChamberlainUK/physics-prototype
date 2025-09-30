@@ -17,6 +17,14 @@ describe('expectCallOrder', () => {
       mock3,
     ]);
 
+    if (
+      !mock1.mock.invocationCallOrder[0]
+      || !mock2.mock.invocationCallOrder[0]
+      || !mock3.mock.invocationCallOrder[0]
+    ) {
+      throw new Error('Mock functions were not called');
+    }
+
     expect(mock1.mock.invocationCallOrder[0]).toBeLessThan(mock2.mock.invocationCallOrder[0]);
     expect(mock2.mock.invocationCallOrder[0]).toBeLessThan(mock3.mock.invocationCallOrder[0]);
   });

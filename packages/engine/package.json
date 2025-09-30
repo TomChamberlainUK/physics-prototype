@@ -9,7 +9,7 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:dev": "vitest --watch",
-    "typecheck": "tsc"
+    "typecheck": "tsc --build"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +32,7 @@
     "eslint": "^9.30.0",
     "eslint-config-custom": "workspace:*",
     "jsdom": "^26.1.0",
+    "tsconfig": "workspace:*",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4",
     "vitest-canvas-mock": "^0.3.3"

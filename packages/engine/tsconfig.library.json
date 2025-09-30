@@ -6,7 +6,7 @@
     "paths": {
       "#/*": ["src/*"],
     },
-    "tsBuildInfoFile": ".tsbuild/test.tsbuildinfo"
+    "tsBuildInfoFile": ".tsbuild/library.tsbuildinfo"
   },
-  "include": ["src", "tests"]
+  "include": ["src"]
 }

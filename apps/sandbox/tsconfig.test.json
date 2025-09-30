@@ -1,20 +1,12 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
+  "extends": "tsconfig/svelte.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
     "types": ["@testing-library/jest-dom"],
-    "composite": true,
     "baseUrl": ".",
     "paths": {
       "#/*": ["src/*"],
     },
+    "tsBuildInfoFile": ".tsbuild/test.tsbuildinfo"
   },
   "include": ["src", "tests"]
 }

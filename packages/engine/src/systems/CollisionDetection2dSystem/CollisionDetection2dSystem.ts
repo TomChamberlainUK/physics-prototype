@@ -14,6 +14,9 @@ export default class CollisionDetection2dSystem {
       for (let j = i + 1; j < filteredEntities.length; j++) {
         const entityA = filteredEntities[i];
         const entityB = filteredEntities[j];
+        if (!entityA || !entityB) {
+          continue;
+        }
         const { isColliding, normal, overlap } = getCollision(entityA, entityB);
         if (!isColliding) {
           continue;

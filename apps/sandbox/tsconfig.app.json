@@ -1,18 +1,12 @@
 {
-  "extends": "@tsconfig/svelte/tsconfig.json",
+  "extends": "tsconfig/svelte.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "composite": true,
     "baseUrl": ".",
     "paths": {
-      "#/*": ["src/*"],
+      "#/*": [
+        "src/*",
+        "../../packages/engine/src/*" // allow to import from engine in the sandbox
+      ],
     },
   },
   "include": ["src"]

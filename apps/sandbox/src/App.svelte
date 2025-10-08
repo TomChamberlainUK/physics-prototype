@@ -1,6 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Renderer } from 'engine';
+  import {
+    Renderer,
+    Game,
+    KeyboardInput,
+  } from 'engine';
+  import { SandboxScene } from './scenes';
 
   let canvas: HTMLCanvasElement;
 
@@ -11,12 +16,22 @@
 
     const renderer = new Renderer(canvas);
 
-    renderer.drawCircle({
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      radius: 64,
-      color: 'white',
+    const input = new KeyboardInput();
+    input.enable();
+
+    const scene = new SandboxScene({
+      input,
+      height: canvas.height,
+      width: canvas.width,
     });
+
+    const game = new Game({
+      renderer,
+      scene,
+      physicsHz: 120,
+    });
+
+    game.start();
   });
 </script>
 

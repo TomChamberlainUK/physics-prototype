@@ -10,7 +10,7 @@ export default class PlayerEntity extends Entity {
     position = new Vector2d({ x: 0, y: 0 }),
     radius = 16,
   }: Props = {}) {
-    super();
+    super({ name: 'player-entity' });
     this.addComponents([
       new Transform2dComponent({
         position,

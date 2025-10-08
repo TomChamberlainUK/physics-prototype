@@ -4,6 +4,7 @@ type Props = {
   position?: Vector2d;
   radius?: number;
   color?: string;
+  name?: string;
 };
 
 export default class CircleEntity extends Entity {
@@ -11,8 +12,9 @@ export default class CircleEntity extends Entity {
     position = new Vector2d({ x: 0, y: 0 }),
     radius = 16,
     color = 'white',
+    name,
   }: Props = {}) {
-    super();
+    super({ name });
     this.addComponents([
       new Transform2dComponent({
         position,

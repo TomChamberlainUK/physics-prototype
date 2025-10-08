@@ -6,6 +6,7 @@ type Props = {
   height?: number;
   mass?: number;
   color?: string;
+  name?: string;
 };
 
 export default class BoxEntity extends Entity {
@@ -15,8 +16,9 @@ export default class BoxEntity extends Entity {
     height = 16,
     mass = 16,
     color = 'white',
+    name,
   }: Props = {}) {
-    super();
+    super({ name });
     this.addComponents([
       new Transform2dComponent({
         position,

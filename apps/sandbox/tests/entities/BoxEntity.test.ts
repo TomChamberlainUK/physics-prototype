@@ -8,6 +8,12 @@ describe('BoxEntity', () => {
     expect(player).toBeInstanceOf(BoxEntity);
   });
 
+  it('Should have a name', () => {
+    const name = 'box-entity';
+    const player = new BoxEntity({ name });
+    expect(player.name).toBe(name);
+  });
+
   it('Should have a transform component', () => {
     const position = { x: 10, y: 20 };
     const player = new BoxEntity({

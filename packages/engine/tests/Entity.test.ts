@@ -7,9 +7,12 @@ describe('Entity', () => {
   let component: Component;
 
   const componentName = 'TestComponent';
+  const entityName = 'TestEntity';
 
   beforeEach(() => {
-    entity = new Entity();
+    entity = new Entity({
+      name: entityName,
+    });
     component = new Component(componentName);
   });
 
@@ -18,6 +21,7 @@ describe('Entity', () => {
       expect(entity).toBeInstanceOf(Entity);
       expect(entity.id).toBeTypeOf('string');
       expect(entity.components).toBeInstanceOf(Map);
+      expect(entity.name).toBe(entityName);
     });
   });
 

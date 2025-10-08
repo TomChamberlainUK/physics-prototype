@@ -1,13 +1,19 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Component } from '#/components';
 
+type Params = {
+  name?: string;
+};
+
 export default class Entity {
   id: string;
   components: Map<string, Component>;
+  name?: string;
 
-  constructor() {
+  constructor({ name }: Params = {}) {
     this.id = uuidv4();
     this.components = new Map();
+    this.name = name;
   }
 
   addComponent(component: Component) {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Renderer } from 'engine';
+  import SandboxGame from './SandboxGame';
 
   let canvas: HTMLCanvasElement;
 
@@ -9,14 +9,9 @@
       throw new Error('Canvas element not found');
     }
 
-    const renderer = new Renderer(canvas);
+    const game = new SandboxGame({ canvas });
 
-    renderer.drawCircle({
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      radius: 64,
-      color: 'white',
-    });
+    game.start();
   });
 </script>
 

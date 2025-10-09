@@ -1,11 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import {
-    Renderer,
-    Game,
-    KeyboardInput,
-  } from 'engine';
-  import { SandboxScene } from './scenes';
+  import SandboxGame from './SandboxGame';
 
   let canvas: HTMLCanvasElement;
 
@@ -14,22 +9,7 @@
       throw new Error('Canvas element not found');
     }
 
-    const renderer = new Renderer(canvas);
-
-    const input = new KeyboardInput();
-    input.enable();
-
-    const scene = new SandboxScene({
-      input,
-      height: canvas.height,
-      width: canvas.width,
-    });
-
-    const game = new Game({
-      renderer,
-      scene,
-      physicsHz: 120,
-    });
+    const game = new SandboxGame({ canvas });
 
     game.start();
   });

@@ -26,7 +26,11 @@ describe('Renderer', () => {
     });
 
     afterEach(() => {
-      vi.clearAllMocks();
+      canvasGetContextSpy.mockClear();
+    });
+
+    afterAll(() => {
+      canvasGetContextSpy.mockRestore();
     });
 
     it('Should instantiate', () => {
@@ -143,12 +147,16 @@ describe('Renderer', () => {
       mockCtxFillRect = vi.spyOn(renderer.ctx, 'fillRect');
     });
 
-    afterAll(() => {
-      mockCtxFillRect.mockRestore();
-    });
-
     beforeEach(() => {
       renderer = new Renderer(canvas);
+    });
+
+    afterEach(() => {
+      mockCtxFillRect.mockClear();
+    });
+
+    afterAll(() => {
+      mockCtxFillRect.mockRestore();
     });
 
     it('Should draw a box on the canvas', () => {
@@ -189,11 +197,17 @@ describe('Renderer', () => {
     });
 
     afterEach(() => {
-      vi.clearAllMocks();
+      clearSpy.mockClear();
+      drawBoxSpy.mockClear();
+      drawCircleSpy.mockClear();
+      resetOriginSpy.mockClear();
     });
 
-    afterEach(() => {
-      vi.restoreAllMocks();
+    afterAll(() => {
+      clearSpy.mockRestore();
+      drawBoxSpy.mockRestore();
+      drawCircleSpy.mockRestore();
+      resetOriginSpy.mockRestore();
     });
 
     it('Should clear the canvas', () => {

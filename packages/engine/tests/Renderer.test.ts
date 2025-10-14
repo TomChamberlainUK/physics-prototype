@@ -183,6 +183,9 @@ describe('Renderer', () => {
   });
 
   describe('render()', () => {
+    let scene: Scene;
+    let entity: Entity;
+
     let clearSpy: MockInstance<typeof renderer.clear>;
     let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
@@ -190,6 +193,8 @@ describe('Renderer', () => {
 
     beforeEach(() => {
       renderer = new Renderer(canvas);
+      scene = new Scene();
+      entity = new Entity();
       clearSpy = vi.spyOn(renderer, 'clear');
       drawBoxSpy = vi.spyOn(renderer, 'drawBox');
       drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
@@ -211,13 +216,11 @@ describe('Renderer', () => {
     });
 
     it('Should clear the canvas', () => {
-      const scene = new Scene();
       renderer.render(scene, 0);
       expect(clearSpy).toHaveBeenCalled();
     });
 
     it('Should reset the canvas origin', () => {
-      const scene = new Scene();
       renderer.render(scene, 0);
       expect(resetOriginSpy).toHaveBeenCalled();
     });
@@ -226,8 +229,6 @@ describe('Renderer', () => {
       const position = new Vector2d({ x: 100, y: 150 });
       const color = 'red';
       const radius = 50;
-      const scene = new Scene();
-      const entity = new Entity();
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
         color,
@@ -246,8 +247,6 @@ describe('Renderer', () => {
       const color = 'blue';
       const width = 120;
       const height = 80;
-      const scene = new Scene();
-      const entity = new Entity();
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
         color,
@@ -270,8 +269,6 @@ describe('Renderer', () => {
       const alpha = 0.5;
       const expectedX = previousPosition.x + (currentPosition.x - previousPosition.x) * alpha;
       const expectedY = previousPosition.y + (currentPosition.y - previousPosition.y) * alpha;
-      const scene = new Scene();
-      const entity = new Entity();
       const transform2dComponent = new Transform2dComponent();
       const geometry2dComponent = new Geometry2dComponent({
         color,
@@ -297,8 +294,6 @@ describe('Renderer', () => {
     });
 
     it('Should skip entities without Transform2d or Geometry2d components', () => {
-      const scene = new Scene();
-      const entity = new Entity();
       scene.addEntity(entity);
       renderer.render(scene, 0);
       expect(drawCircleSpy).not.toHaveBeenCalled();

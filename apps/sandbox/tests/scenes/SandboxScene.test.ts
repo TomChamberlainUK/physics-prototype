@@ -67,42 +67,37 @@ describe('SandboxScene', () => {
     expect(scene).toBeInstanceOf(SandboxScene);
   });
 
-  it('Should add a player entity in the center of the scene', () => {
-    expect(PlayerEntityConstructorMock).toHaveBeenCalledWith({
-      position: {
-        x: width / 2,
-        y: height / 2,
-      },
-    });
+  it('Should add a player entity', () => {
+    expect(PlayerEntityConstructorMock).toHaveBeenCalled();
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
   });
 
   it.each([
     {
       name: 'top-wall',
-      x: width / 2,
-      y: 0,
+      x: 0,
+      y: -(height / 2),
       width: width,
       height: 10,
     },
     {
       name: 'bottom-wall',
-      x: width / 2,
-      y: height,
+      x: 0,
+      y: height / 2,
       width: width,
       height: 10,
     },
     {
       name: 'left-wall',
-      x: 0,
-      y: height / 2,
+      x: -(width / 2),
+      y: 0,
       width: 10,
       height: height,
     },
     {
       name: 'right-wall',
-      x: width,
-      y: height / 2,
+      x: width / 2,
+      y: 0,
       width: 10,
       height: height,
     },

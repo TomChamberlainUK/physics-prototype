@@ -52,15 +52,34 @@ describe('Renderer', () => {
   });
 
   describe('clear()', () => {
+    let mockCtxClearRect: MockInstance<typeof renderer.ctx.clearRect>;
+    let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
+
+    beforeAll(() => {
+      mockCtxClearRect = vi.spyOn(renderer.ctx, 'clearRect');
+      mockCtxSetTransform = vi.spyOn(renderer.ctx, 'setTransform');
+    });
+
     beforeEach(() => {
       renderer = new Renderer(canvas);
+      renderer.clear();
+    });
+
+    afterEach(() => {
+      mockCtxClearRect.mockClear();
+      mockCtxSetTransform.mockClear();
+    });
+
+    afterAll(() => {
+      mockCtxClearRect.mockRestore();
+      mockCtxSetTransform.mockRestore();
+    });
+
+    it('Should reset the canvas transform to top-left-origin', () => {
+      expect(mockCtxSetTransform).toHaveBeenCalledWith(1, 0, 0, 1, 0, 0);
     });
 
     it('Should clear the canvas', () => {
-      const mockCtxClearRect = vi.spyOn(renderer.ctx, 'clearRect');
-
-      renderer.clear();
-
       expect(mockCtxClearRect).toHaveBeenCalledWith(0, 0, canvas.width, canvas.height);
     });
   });
@@ -159,12 +178,14 @@ describe('Renderer', () => {
     let clearSpy: MockInstance<typeof renderer.clear>;
     let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
+    let resetOriginSpy: MockInstance<typeof renderer.resetOrigin>;
 
     beforeEach(() => {
       renderer = new Renderer(canvas);
       clearSpy = vi.spyOn(renderer, 'clear');
       drawBoxSpy = vi.spyOn(renderer, 'drawBox');
       drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
+      resetOriginSpy = vi.spyOn(renderer, 'resetOrigin');
     });
 
     afterEach(() => {
@@ -179,6 +200,12 @@ describe('Renderer', () => {
       const scene = new Scene();
       renderer.render(scene, 0);
       expect(clearSpy).toHaveBeenCalled();
+    });
+
+    it('Should reset the canvas origin', () => {
+      const scene = new Scene();
+      renderer.render(scene, 0);
+      expect(resetOriginSpy).toHaveBeenCalled();
     });
 
     it('Should draw a circle for any entity with circular geometry', () => {
@@ -261,6 +288,39 @@ describe('Renderer', () => {
       scene.addEntity(entity);
       renderer.render(scene, 0);
       expect(drawCircleSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('resetOrigin()', () => {
+    let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
+    let mockCtxTranslate: MockInstance<typeof renderer.ctx.translate>;
+
+    beforeAll(() => {
+      mockCtxSetTransform = vi.spyOn(renderer.ctx, 'setTransform');
+      mockCtxTranslate = vi.spyOn(renderer.ctx, 'translate');
+    });
+
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+      renderer.resetOrigin();
+    });
+
+    afterEach(() => {
+      mockCtxSetTransform.mockClear();
+      mockCtxTranslate.mockClear();
+    });
+
+    afterAll(() => {
+      mockCtxSetTransform.mockRestore();
+      mockCtxTranslate.mockRestore();
+    });
+
+    it('Should reset the canvas origin to the center corner', () => {
+      expect(renderer.ctx.setTransform).toHaveBeenCalledWith(1, 0, 0, 1, 0, 0);
+      expect(renderer.ctx.translate).toHaveBeenCalledWith(
+        renderer.canvas.width / 2,
+        renderer.canvas.height / 2,
+      );
     });
   });
 });

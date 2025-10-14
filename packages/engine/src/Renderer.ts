@@ -20,6 +20,7 @@ export default class Renderer {
   }
 
   clear() {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
@@ -62,6 +63,8 @@ export default class Renderer {
 
   render(scene: Scene, alpha: number) {
     this.clear();
+    this.resetOrigin();
+
     for (const entity of scene.entities) {
       if (!entity.hasComponents(['Transform2d', 'Geometry2d'])) {
         continue;
@@ -93,5 +96,10 @@ export default class Renderer {
           break;
       }
     }
+  }
+
+  resetOrigin() {
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
   }
 }

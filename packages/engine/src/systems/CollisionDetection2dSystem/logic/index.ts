@@ -4,3 +4,4 @@ export { default as getBoxCircleCollision } from './getBoxCircleCollision';
 export { default as getBroadPhasePairs } from './getBroadPhasePairs';
 export { default as getCircleCircleCollision } from './getCircleCircleCollision';
 export { default as getCollision } from './getCollision';
+export { default as getNarrowPhasePairs } from './getNarrowPhasePairs';

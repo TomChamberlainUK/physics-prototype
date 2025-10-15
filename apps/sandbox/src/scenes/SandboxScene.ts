@@ -1,4 +1,4 @@
-import { CollisionDetection2dSystem, CollisionImpulseResolution2dSystem, CollisionPositionCorrection2dSystem, InputImpulseSystem, InterpolationSync2dSystem, KeyboardInput, Kinetic2dSystem, Scene, Vector2d } from 'engine';
+import { AABBUpdate2dSystem, CollisionDetection2dSystem, CollisionImpulseResolution2dSystem, CollisionPositionCorrection2dSystem, InputImpulseSystem, InterpolationSync2dSystem, KeyboardInput, Kinetic2dSystem, Scene, Vector2d } from 'engine';
 import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
 
 type Props = {
@@ -76,6 +76,7 @@ export default class SandboxScene extends Scene {
 
     this.addSystem(new InterpolationSync2dSystem());
     this.addSystem(new InputImpulseSystem());
+    this.addSystem(new AABBUpdate2dSystem());
     this.addSystem(new CollisionDetection2dSystem());
     this.addSystem(new CollisionImpulseResolution2dSystem());
     this.addSystem(new CollisionPositionCorrection2dSystem());

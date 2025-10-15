@@ -1,9 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, RigidBody2dComponent, Transform2dComponent } from '#/components';
+import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { CollisionDetection2dSystem } from '#/systems';
-import * as getCollision from '#/systems/CollisionDetection2dSystem/logic/getCollision';
 import { Vector2d } from '#/maths';
+import { CollisionDetection2dSystem } from '#/systems';
+import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
+import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
 
 describe('CollisionDetection2dSystem', () => {
   describe('constructor()', () => {
@@ -15,97 +16,93 @@ describe('CollisionDetection2dSystem', () => {
   });
 
   describe('update()', () => {
-    let collisionDetection2dSystem: CollisionDetection2dSystem;
+    let system: CollisionDetection2dSystem;
     let entityA: Entity;
     let entityB: Entity;
 
-    let getCollisionSpy: MockInstance<typeof getCollision.default>;
+    let getBroadPhasePairsSpy: MockInstance<typeof getBroadPhasePhasePairsModule.default>;
+    let getNarrowPhasePairsSpy: MockInstance<typeof getNarrowPhasePairsModule.default>;
 
     beforeAll(() => {
-      getCollisionSpy = vi.spyOn(getCollision, 'default');
+      getBroadPhasePairsSpy = vi.spyOn(getBroadPhasePhasePairsModule, 'default');
+      getNarrowPhasePairsSpy = vi.spyOn(getNarrowPhasePairsModule, 'default');
     });
 
     beforeEach(() => {
-      collisionDetection2dSystem = new CollisionDetection2dSystem();
+      system = new CollisionDetection2dSystem();
+      entityA = new Entity();
+      entityB = new Entity();
     });
 
     afterEach(() => {
-      getCollisionSpy.mockReset();
+      getBroadPhasePairsSpy.mockClear();
+      getNarrowPhasePairsSpy.mockClear();
     });
 
     afterAll(() => {
-      getCollisionSpy.mockRestore();
+      getBroadPhasePairsSpy.mockRestore();
+      getNarrowPhasePairsSpy.mockRestore();
     });
 
-    describe('When passed entities with required components', () => {
+    describe('When passed entities with valid components', () => {
       beforeEach(() => {
-        entityA = new Entity();
-        entityB = new Entity();
-        [entityA, entityB].forEach((entity) => {
+        for (const entity of [entityA, entityB]) {
           entity.addComponents([
             new Collider2dComponent({
               shape: {
-                type: 'circle',
-                radius: 16,
+                type: 'box',
+                width: 32,
+                height: 32,
               },
             }),
-            new RigidBody2dComponent(),
             new Transform2dComponent(),
           ]);
-        });
+        }
       });
 
-      it('Should check for collisions between entities', () => {
-        collisionDetection2dSystem.update([entityA, entityB], {});
-        expect(getCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
+      it('Should get candidate pairs via broad phase detection', () => {
+        system.update([entityA, entityB], {});
+        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([entityA, entityB]);
       });
 
-      it('Should update context collision pairs for colliding entities', () => {
-        const context = {
-          collisionPairs: [],
-        };
-        getCollisionSpy.mockImplementationOnce(() => ({
-          isColliding: true,
-          normal: new Vector2d({ x: 1, y: 0 }),
-          overlap: 5,
-        }));
-        collisionDetection2dSystem.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual([{
+      it('Should get collision pairs from candidate pairs via broad phase detection', () => {
+        getBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
+        system.update([entityA, entityB], {});
+        expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
+      });
+
+      it('Should update context collision pairs', () => {
+        const collisionPairs = [{
           entityA,
           entityB,
-          normal: { x: 1, y: 0 },
-          overlap: 5,
-        }]);
-      });
-
-      it('Should not update context collision pairs for non-colliding entities', () => {
-        getCollisionSpy.mockImplementationOnce(() => ({
-          isColliding: false,
-        }));
+          normal: new Vector2d({ x: 0, y: 1 }),
+          overlap: 1,
+        }];
         const context = {
           collisionPairs: [],
         };
-        collisionDetection2dSystem.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual([]);
+        getNarrowPhasePairsSpy.mockReturnValueOnce(collisionPairs);
+        system.update([entityA, entityB], context);
+        expect(context.collisionPairs).toEqual(collisionPairs);
       });
     });
 
-    describe('When passed entities without required components', () => {
-      beforeEach(() => {
-        entityA = new Entity();
-        entityB = new Entity();
+    describe('When passed entities without valid components', () => {
+      it('Should not get candidate pairs via broad phase detection', () => {
+        system.update([entityA, entityB], {});
+        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
-      it('Should not check for collisions', () => {
-        collisionDetection2dSystem.update([entityA, entityB], {});
-        expect(getCollisionSpy).not.toHaveBeenCalled();
+      it('Should not get collision pairs from candidate pairs via narrow phase detection', () => {
+        system.update([entityA, entityB], {});
+        expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
       it('Should not update context collision pairs', () => {
         const context = {
           collisionPairs: [],
         };
-        collisionDetection2dSystem.update([entityA, entityB], context);
+        system.update([entityA, entityB], context);
         expect(context.collisionPairs).toEqual([]);
       });
     });

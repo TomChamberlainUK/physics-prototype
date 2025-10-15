@@ -1,3 +1,4 @@
+export { default as AABBUpdate2dSystem } from './AABBUpdate2dSystem';
 export { default as CollisionDetection2dSystem } from './CollisionDetection2dSystem';
 export { default as CollisionImpulseResolution2dSystem } from './CollisionImpulseResolution2dSystem';
 export { default as CollisionPositionCorrection2dSystem } from './CollisionPositionCorrection2dSystem';

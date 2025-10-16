@@ -8,6 +8,7 @@ import {
   InterpolationSync2dSystem,
   KeyboardInput,
   Kinetic2dSystem,
+  Render2dSystem,
 } from 'engine';
 
 describe('SandboxScene', () => {
@@ -162,6 +163,10 @@ describe('SandboxScene', () => {
     {
       name: 'kinetic2d',
       System: Kinetic2dSystem,
+    },
+    {
+      name: 'render2d',
+      System: Render2dSystem,
     },
   ])('Should add a $name system to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));

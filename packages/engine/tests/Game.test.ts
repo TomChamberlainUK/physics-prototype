@@ -118,16 +118,16 @@ describe('Game', () => {
   });
 
   describe('step()', () => {
+    let sceneUpdateSyncSpy: MockInstance<typeof scene.updateSync>;
     let sceneUpdatePhysicsSpy: MockInstance<typeof scene.updatePhysics>;
     let sceneUpdateRenderSpy: MockInstance<typeof scene.updateRender>;
-    let rendererRenderSpy: MockInstance<typeof renderer.render>;
     let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
 
     beforeAll(() => {
       requestAnimationFrameSpy = vi.spyOn(window, 'requestAnimationFrame');
+      sceneUpdateSyncSpy = vi.spyOn(scene, 'updateSync');
       sceneUpdatePhysicsSpy = vi.spyOn(scene, 'updatePhysics');
       sceneUpdateRenderSpy = vi.spyOn(scene, 'updateRender');
-      rendererRenderSpy = vi.spyOn(renderer, 'render');
     });
 
     afterAll(() => {
@@ -159,6 +159,11 @@ describe('Game', () => {
         vi.clearAllMocks();
       });
 
+      it('Should update the scene sync systems', () => {
+        game.step();
+        expect(sceneUpdateSyncSpy).toHaveBeenCalled();
+      });
+
       it('Should update the scene physics systems when enough time has passed', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 1000);
         game.step();
@@ -178,16 +183,11 @@ describe('Game', () => {
       });
 
       it('Should update the scene render systems', () => {
-        game.step();
-        expect(sceneUpdateRenderSpy).toHaveBeenCalled();
-      });
-
-      it('Should render the scene with an alpha interpolation value', () => {
         const accumulatedTime = fixedDelta / 2;
         const expectedAlpha = accumulatedTime / fixedDelta;
         performanceNowSpy.mockReturnValueOnce(accumulatedTime * 1000);
         game.step();
-        expect(rendererRenderSpy).toHaveBeenCalledWith(scene, expectedAlpha);
+        expect(sceneUpdateRenderSpy).toHaveBeenCalledWith({ alpha: expectedAlpha, renderer });
       });
 
       it('Should recursively call itself every frame', () => {
@@ -204,6 +204,11 @@ describe('Game', () => {
         });
       });
 
+      it('Should not update the scene sync systems', () => {
+        game.step();
+        expect(sceneUpdateSyncSpy).not.toHaveBeenCalled();
+      });
+
       it('Should not update the scene physics systems', () => {
         game.step();
         expect(sceneUpdatePhysicsSpy).not.toHaveBeenCalled();
@@ -212,11 +217,6 @@ describe('Game', () => {
       it('Should not update the scene render systems', () => {
         game.step();
         expect(sceneUpdateRenderSpy).not.toHaveBeenCalled();
-      });
-
-      it('Should not render the scene', () => {
-        game.step();
-        expect(rendererRenderSpy).not.toHaveBeenCalled();
       });
 
       it('Should not recursively call itself every frame', () => {

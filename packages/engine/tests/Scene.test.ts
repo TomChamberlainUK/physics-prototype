@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Entity from '#/Entity';
 import { KeyboardInput } from '#/input';
 import Scene from '#/Scene';
+import Renderer from '#/Renderer';
 
 describe('Scene', () => {
   let scene: Scene;
@@ -57,6 +58,29 @@ describe('Scene', () => {
     });
   });
 
+  describe('updateSync()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should call all sync systems with the current entities and context', () => {
+      const entity = new Entity();
+      const context = { input: new KeyboardInput() };
+      const system1 = { update: vi.fn(), type: 'sync' };
+      const system2 = { update: vi.fn(), type: 'sync' };
+      const system3 = { update: vi.fn(), type: 'sync' };
+      scene.setContext(context);
+      scene.addEntity(entity);
+      scene.addSystem(system1);
+      scene.addSystem(system2);
+      scene.addSystem(system3);
+      scene.updateSync();
+      expect(system1.update).toHaveBeenCalledWith([entity], context);
+      expect(system2.update).toHaveBeenCalledWith([entity], context);
+      expect(system3.update).toHaveBeenCalledWith([entity], context);
+    });
+  });
+
   describe('updatePhysics()', () => {
     beforeEach(() => {
       scene = new Scene();
@@ -82,7 +106,11 @@ describe('Scene', () => {
   });
 
   describe('updateRender()', () => {
+    let renderer: Renderer;
+
     beforeEach(() => {
+      const canvas = document.createElement('canvas');
+      renderer = new Renderer(canvas);
       scene = new Scene();
     });
 
@@ -97,10 +125,10 @@ describe('Scene', () => {
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.updateRender();
-      expect(system1.update).toHaveBeenCalledWith([entity], context);
-      expect(system2.update).toHaveBeenCalledWith([entity], context);
-      expect(system3.update).toHaveBeenCalledWith([entity], context);
+      scene.updateRender({ alpha: 1, renderer });
+      expect(system1.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
+      expect(system2.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
+      expect(system3.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
     });
   });
 });

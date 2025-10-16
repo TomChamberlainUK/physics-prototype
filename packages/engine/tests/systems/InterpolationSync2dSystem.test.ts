@@ -9,7 +9,7 @@ describe('InterpolationSync2dSystemNew', () => {
     it('Should instantiate', () => {
       const system = new InterpolationSync2dSystem();
       expect(system).toBeInstanceOf(InterpolationSync2dSystem);
-      expect(system.type).toBe('render');
+      expect(system.type).toBe('sync');
     });
   });
 

@@ -5,3 +5,4 @@ export { default as CollisionPositionCorrection2dSystem } from './CollisionPosit
 export { default as InputImpulseSystem } from './InputImpulseSystem';
 export { default as InterpolationSync2dSystem } from './InterpolationSync2dSystem';
 export { default as Kinetic2dSystem } from './Kinetic2dSystem';
+export { default as Render2dSystem } from './Render2dSystem';

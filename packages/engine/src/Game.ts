@@ -62,7 +62,7 @@ export default class Game {
 
     this.#timeAccumulator += frameTime;
 
-    this.scene.updateRender();
+    this.scene.updateSync();
 
     while (this.#timeAccumulator >= this.#fixedDeltaTime) {
       this.scene.updatePhysics(this.#fixedDeltaTime);
@@ -70,8 +70,8 @@ export default class Game {
     }
 
     const alpha = this.#timeAccumulator / this.#fixedDeltaTime;
+    this.scene.updateRender({ alpha, renderer: this.renderer });
 
-    this.renderer.render(this.scene, alpha);
     this.#frameId = requestAnimationFrame(this.step);
   }
 }

@@ -39,7 +39,9 @@ export default class Scene {
     }
   }
 
-  updateRender() {
+  updateRender({ alpha, renderer }: { alpha: number; renderer: Renderer }) {
+    this.context.alpha = alpha;
+    this.context.renderer = renderer;
     for (const system of this.systems) {
       if (system.type !== 'render') continue;
       system.update(this.entities, this.context);

@@ -106,7 +106,11 @@ describe('Scene', () => {
   });
 
   describe('updateRender()', () => {
+    let renderer: Renderer;
+
     beforeEach(() => {
+      const canvas = document.createElement('canvas');
+      renderer = new Renderer(canvas);
       scene = new Scene();
     });
 
@@ -121,10 +125,10 @@ describe('Scene', () => {
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.updateRender();
-      expect(system1.update).toHaveBeenCalledWith([entity], context);
-      expect(system2.update).toHaveBeenCalledWith([entity], context);
-      expect(system3.update).toHaveBeenCalledWith([entity], context);
+      scene.updateRender({ alpha: 1, renderer });
+      expect(system1.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
+      expect(system2.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
+      expect(system3.update).toHaveBeenCalledWith([entity], { ...context, alpha: 1, renderer });
     });
   });
 });

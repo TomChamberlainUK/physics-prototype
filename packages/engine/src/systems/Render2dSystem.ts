@@ -1,6 +1,7 @@
 import type Entity from '#/Entity';
 import System from './System';
 import type { Context, Geometry2dComponent, Transform2dComponent } from '..';
+import { lerp } from '#/utils';
 
 export default class Render2dSystem extends System {
   type = 'render';
@@ -20,8 +21,8 @@ export default class Render2dSystem extends System {
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
       const geometry = entity.getComponent<Geometry2dComponent>('Geometry2d');
 
-      const x = transform.previousPosition.x + (transform.position.x - transform.previousPosition.x) * alpha;
-      const y = transform.previousPosition.y + (transform.position.y - transform.previousPosition.y) * alpha;
+      const x = lerp(transform.previousPosition.x, transform.position.x, alpha);
+      const y = lerp(transform.previousPosition.y, transform.position.y, alpha);
 
       switch (geometry.shape.type) {
         case 'circle':

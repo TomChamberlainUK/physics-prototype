@@ -1,9 +1,10 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { Geometry2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import Renderer from '#/Renderer';
 import Render2dSystem from '#/systems/Render2dSystem';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import * as lerpModule from '#/utils/lerp';
 
 describe('Renderer2dSystem', () => {
   let canvas: HTMLCanvasElement;
@@ -35,6 +36,11 @@ describe('Renderer2dSystem', () => {
 
     let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
+    let lerpSpy: MockInstance<typeof lerpModule.default>;
+
+    beforeAll(() => {
+      lerpSpy = vi.spyOn(lerpModule, 'default');
+    });
 
     beforeEach(() => {
       entity = new Entity();
@@ -46,11 +52,13 @@ describe('Renderer2dSystem', () => {
     afterEach(() => {
       drawBoxSpy.mockClear();
       drawCircleSpy.mockClear();
+      lerpSpy.mockClear();
     });
 
     afterAll(() => {
       drawBoxSpy.mockRestore();
       drawCircleSpy.mockRestore();
+      lerpSpy.mockRestore();
     });
 
     it('Should draw a circle for any entity with circular geometry', () => {
@@ -99,12 +107,14 @@ describe('Renderer2dSystem', () => {
     });
 
     it('Should interpolate the entity position based on the alpha value', () => {
-      const previousPosition = new Vector2d({ x: 100, y: 150 });
-      const currentPosition = new Vector2d({ x: 200, y: 250 });
       const radius = 50;
       const alpha = 0.5;
-      const expectedX = previousPosition.x + (currentPosition.x - previousPosition.x) * alpha;
-      const expectedY = previousPosition.y + (currentPosition.y - previousPosition.y) * alpha;
+      const previousPosition = new Vector2d({ x: 0, y: 0 });
+      const currentPosition = new Vector2d({ x: 100, y: 100 });
+      const expectedX = 50;
+      const expectedY = 50;
+      lerpSpy.mockImplementationOnce(() => expectedX);
+      lerpSpy.mockImplementationOnce(() => expectedY);
       const transform2dComponent = new Transform2dComponent();
       const geometry2dComponent = new Geometry2dComponent({
         shape: {
@@ -119,6 +129,8 @@ describe('Renderer2dSystem', () => {
       transform2dComponent.previousPosition = previousPosition;
       transform2dComponent.position = currentPosition;
       system.update([entity], { alpha, renderer });
+      expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
+      expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
       expect(drawCircleSpy).toHaveBeenCalledWith({
         x: expectedX,
         y: expectedY,

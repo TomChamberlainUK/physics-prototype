@@ -1,6 +1,7 @@
 import SandboxScene from '#/scenes/SandboxScene';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  AABBUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -148,6 +149,10 @@ describe('SandboxScene', () => {
     {
       name: 'inputImpulse',
       System: InputImpulseSystem,
+    },
+    {
+      name: 'aabbUpdate2d',
+      System: AABBUpdate2dSystem,
     },
     {
       name: 'collisionDetection2d',

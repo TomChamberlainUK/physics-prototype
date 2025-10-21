@@ -26,6 +26,10 @@ describe('Renderer2dSystem', () => {
   });
 
   describe('update()', () => {
+    const color = 'black';
+    const strokeColor = 'white';
+    const position = new Vector2d({ x: 100, y: 150 });
+
     let entity: Entity;
     let system: Render2dSystem;
 
@@ -50,29 +54,33 @@ describe('Renderer2dSystem', () => {
     });
 
     it('Should draw a circle for any entity with circular geometry', () => {
-      const position = new Vector2d({ x: 100, y: 150 });
-      const color = 'red';
       const radius = 50;
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
         color,
+        strokeColor,
         shape: {
           type: 'circle',
           radius,
         },
       }));
       system.update([entity], { alpha: 1, renderer });
-      expect(drawCircleSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, radius, color });
+      expect(drawCircleSpy).toHaveBeenCalledWith({
+        x: position.x,
+        y: position.y,
+        radius,
+        color,
+        strokeColor,
+      });
     });
 
     it('Should draw a box for any entity with box geometry', () => {
-      const position = new Vector2d({ x: 200, y: 250 });
-      const color = 'blue';
       const width = 120;
       const height = 80;
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
         color,
+        strokeColor,
         shape: {
           type: 'box',
           width,
@@ -80,7 +88,14 @@ describe('Renderer2dSystem', () => {
         },
       }));
       system.update([entity], { alpha: 1, renderer });
-      expect(drawBoxSpy).toHaveBeenCalledWith({ x: position.x, y: position.y, width, height, color });
+      expect(drawBoxSpy).toHaveBeenCalledWith({
+        x: position.x,
+        y: position.y,
+        width,
+        height,
+        color,
+        strokeColor,
+      });
     });
 
     it('Should interpolate the entity position based on the alpha value', () => {

@@ -30,6 +30,7 @@ export default class Render2dSystem extends System {
             y,
             radius: geometry.shape.radius,
             color: geometry.color,
+            strokeColor: geometry.strokeColor,
           });
           break;
         case 'box':
@@ -39,6 +40,7 @@ export default class Render2dSystem extends System {
             width: geometry.shape.width,
             height: geometry.shape.height,
             color: geometry.color,
+            strokeColor: geometry.strokeColor,
           });
           break;
       }

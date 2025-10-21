@@ -3,7 +3,7 @@ import { Collider2dComponent, Entity, Geometry2dComponent, RigidBody2dComponent,
 type Props = {
   position?: Vector2d;
   radius?: number;
-  color?: string;
+  fillColor?: string;
   name?: string;
 };
 
@@ -11,7 +11,7 @@ export default class CircleEntity extends Entity {
   constructor({
     position = new Vector2d({ x: 0, y: 0 }),
     radius = 16,
-    color = 'white',
+    fillColor = 'white',
     name,
   }: Props = {}) {
     super({ name });
@@ -20,7 +20,7 @@ export default class CircleEntity extends Entity {
         position,
       }),
       new Geometry2dComponent({
-        color,
+        fillColor,
         shape: {
           type: 'circle',
           radius: radius,

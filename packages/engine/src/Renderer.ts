@@ -25,20 +25,22 @@ export default class Renderer {
     x = 0,
     y = 0,
     radius,
-    color,
+    fillColor,
     strokeColor,
   }: {
     x?: number;
     y?: number;
     radius: number;
-    color: string;
+    fillColor?: string;
     strokeColor?: string;
   }) {
-    this.ctx.fillStyle = color;
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.closePath();
-    this.ctx.fill();
+    if (fillColor) {
+      this.ctx.fillStyle = fillColor;
+      this.ctx.fill();
+    }
     if (strokeColor) {
       this.ctx.strokeStyle = strokeColor;
       this.ctx.stroke();
@@ -50,20 +52,22 @@ export default class Renderer {
     y = 0,
     width,
     height,
-    color,
+    fillColor,
     strokeColor,
   }: {
     x?: number;
     y?: number;
     width: number;
     height: number;
-    color: string;
+    fillColor?: string;
     strokeColor?: string;
   }) {
     const topLeftX = x - width / 2;
     const topLeftY = y - height / 2;
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(topLeftX, topLeftY, width, height);
+    if (fillColor) {
+      this.ctx.fillStyle = fillColor;
+      this.ctx.fillRect(topLeftX, topLeftY, width, height);
+    }
     if (strokeColor) {
       this.ctx.strokeStyle = strokeColor;
       this.ctx.strokeRect(topLeftX, topLeftY, width, height);

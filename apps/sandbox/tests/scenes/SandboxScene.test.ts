@@ -117,7 +117,7 @@ describe('SandboxScene', () => {
         x,
         y,
       },
-      color: 'grey',
+      fillColor: 'grey',
       name,
     });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
@@ -132,7 +132,7 @@ describe('SandboxScene', () => {
           y: expect.any(Number),
         },
         radius: expect.any(Number),
-        color: expect.any(String),
+        fillColor: expect.any(String),
         name,
       }));
       expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });

@@ -26,7 +26,7 @@ describe('Renderer2dSystem', () => {
   });
 
   describe('update()', () => {
-    const color = 'black';
+    const fillColor = 'black';
     const strokeColor = 'white';
     const position = new Vector2d({ x: 100, y: 150 });
 
@@ -57,7 +57,7 @@ describe('Renderer2dSystem', () => {
       const radius = 50;
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
-        color,
+        fillColor,
         strokeColor,
         shape: {
           type: 'circle',
@@ -69,7 +69,7 @@ describe('Renderer2dSystem', () => {
         x: position.x,
         y: position.y,
         radius,
-        color,
+        fillColor,
         strokeColor,
       });
     });
@@ -79,7 +79,7 @@ describe('Renderer2dSystem', () => {
       const height = 80;
       entity.addComponent(new Transform2dComponent({ position }));
       entity.addComponent(new Geometry2dComponent({
-        color,
+        fillColor,
         strokeColor,
         shape: {
           type: 'box',
@@ -93,7 +93,7 @@ describe('Renderer2dSystem', () => {
         y: position.y,
         width,
         height,
-        color,
+        fillColor,
         strokeColor,
       });
     });
@@ -101,14 +101,12 @@ describe('Renderer2dSystem', () => {
     it('Should interpolate the entity position based on the alpha value', () => {
       const previousPosition = new Vector2d({ x: 100, y: 150 });
       const currentPosition = new Vector2d({ x: 200, y: 250 });
-      const color = 'red';
       const radius = 50;
       const alpha = 0.5;
       const expectedX = previousPosition.x + (currentPosition.x - previousPosition.x) * alpha;
       const expectedY = previousPosition.y + (currentPosition.y - previousPosition.y) * alpha;
       const transform2dComponent = new Transform2dComponent();
       const geometry2dComponent = new Geometry2dComponent({
-        color,
         shape: {
           type: 'circle',
           radius,
@@ -125,7 +123,6 @@ describe('Renderer2dSystem', () => {
         x: expectedX,
         y: expectedY,
         radius,
-        color,
       });
     });
 

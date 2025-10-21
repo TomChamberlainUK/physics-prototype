@@ -5,7 +5,7 @@ type Props = {
   width?: number;
   height?: number;
   mass?: number;
-  color?: string;
+  fillColor?: string;
   name?: string;
 };
 
@@ -15,7 +15,7 @@ export default class BoxEntity extends Entity {
     width = 16,
     height = 16,
     mass = 16,
-    color = 'white',
+    fillColor = 'white',
     name,
   }: Props = {}) {
     super({ name });
@@ -24,7 +24,7 @@ export default class BoxEntity extends Entity {
         position,
       }),
       new Geometry2dComponent({
-        color,
+        fillColor,
         shape: {
           type: 'box',
           width,

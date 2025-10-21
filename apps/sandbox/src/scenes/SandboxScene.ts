@@ -53,14 +53,14 @@ export default class SandboxScene extends Scene {
         height: wallHeight,
         mass: 0,
         position: new Vector2d({ x, y }),
-        color: 'grey',
+        fillColor: 'grey',
         name,
       });
       this.addEntity(wallEntity);
     }
 
     for (let i = 0; i < 500; i++) {
-      const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const size = Math.random() * 16;
       const circleEntity = new CircleEntity({
         position: new Vector2d({
@@ -68,7 +68,7 @@ export default class SandboxScene extends Scene {
           y: (Math.random() * height) - (height / 2),
         }),
         radius: size,
-        color,
+        fillColor,
         name: `circle-${i}`,
       });
       this.addEntity(circleEntity);

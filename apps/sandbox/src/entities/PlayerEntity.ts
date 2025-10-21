@@ -16,7 +16,7 @@ export default class PlayerEntity extends Entity {
         position,
       }),
       new Geometry2dComponent({
-        color: 'red',
+        fillColor: 'red',
         shape: {
           type: 'circle',
           radius: radius,

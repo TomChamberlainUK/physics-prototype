@@ -3,6 +3,9 @@ import Renderer from '#/Renderer';
 import { expectCallOrder } from './utils';
 
 describe('Renderer', () => {
+  const fillColor = '#000000';
+  const strokeColor = '#ffffff';
+
   let renderer: Renderer;
   let canvas: HTMLCanvasElement;
 
@@ -124,10 +127,7 @@ describe('Renderer', () => {
         x: canvas.width / 2,
         y: canvas.height / 2,
         radius: 64,
-        color: 'white',
       });
-
-      expect(renderer.ctx.fillStyle).toBe('#ffffff');
       expect(mockCtxBeginPath).toHaveBeenCalled();
       expect(mockCtxArc).toHaveBeenCalledWith(
         canvas.width / 2,
@@ -137,23 +137,38 @@ describe('Renderer', () => {
         2 * Math.PI,
       );
       expect(mockCtxClosePath).toHaveBeenCalled();
-      expect(mockCtxFill).toHaveBeenCalled();
       expectCallOrder([
         mockCtxBeginPath,
         mockCtxArc,
         mockCtxClosePath,
-        mockCtxFill,
       ]);
     });
 
-    describe('When strokeColor is provided', () => {
-      it('Should draw a stroke on the circle', () => {
-        const strokeColor = '#ff0000';
+    describe('When fillColor is provided', () => {
+      it('Should draw a fill on the circle', () => {
         renderer.drawCircle({
           x: canvas.width / 2,
           y: canvas.height / 2,
           radius: 64,
-          color: 'white',
+          fillColor,
+        });
+        expect(renderer.ctx.fillStyle).toBe(fillColor);
+        expect(mockCtxFill).toHaveBeenCalled();
+        expectCallOrder([
+          mockCtxBeginPath,
+          mockCtxArc,
+          mockCtxClosePath,
+          mockCtxFill,
+        ]);
+      });
+    });
+
+    describe('When strokeColor is provided', () => {
+      it('Should draw a stroke on the circle', () => {
+        renderer.drawCircle({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          radius: 64,
           strokeColor,
         });
         expect(renderer.ctx.strokeStyle).toBe(strokeColor);
@@ -162,7 +177,6 @@ describe('Renderer', () => {
           mockCtxBeginPath,
           mockCtxArc,
           mockCtxClosePath,
-          mockCtxFill,
           mockCtxStroke,
         ]);
       });
@@ -174,7 +188,6 @@ describe('Renderer', () => {
           x: canvas.width / 2,
           y: canvas.height / 2,
           radius: 64,
-          color: 'white',
         });
         expect(mockCtxStroke).not.toHaveBeenCalled();
       });
@@ -209,32 +222,44 @@ describe('Renderer', () => {
       mockCtxStrokeRect.mockRestore();
     });
 
-    it('Should draw a box on the canvas', () => {
-      renderer.drawBox({
-        x: centerX,
-        y: centerY,
-        width,
-        height,
-        color: 'blue',
-      });
-
-      expect(mockCtxFillRect).toHaveBeenCalledWith(
-        centerX - width / 2,
-        centerY - height / 2,
-        width,
-        height,
-      );
-    });
-
-    describe('When strokeColor is provided', () => {
-      it('Should draw a box on the canvas with a stroke', () => {
-        const strokeColor = '#0000ff';
+    describe('When fillColor is provided', () => {
+      it('Should draw a box on the canvas with a fill', () => {
         renderer.drawBox({
           x: centerX,
           y: centerY,
           width,
           height,
-          color: 'blue',
+          fillColor,
+        });
+        expect(renderer.ctx.fillStyle).toBe(fillColor);
+        expect(mockCtxFillRect).toHaveBeenCalledWith(
+          centerX - width / 2,
+          centerY - height / 2,
+          width,
+          height,
+        );
+      });
+    });
+
+    describe('When fillColor is not provided', () => {
+      it('Should not draw a box on the canvas with a fill', () => {
+        renderer.drawBox({
+          x: centerX,
+          y: centerY,
+          width,
+          height,
+        });
+        expect(mockCtxFillRect).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('When strokeColor is provided', () => {
+      it('Should draw a box on the canvas with a stroke', () => {
+        renderer.drawBox({
+          x: centerX,
+          y: centerY,
+          width,
+          height,
           strokeColor,
         });
         expect(renderer.ctx.strokeStyle).toBe(strokeColor);
@@ -254,7 +279,6 @@ describe('Renderer', () => {
           y: centerY,
           width,
           height,
-          color: 'blue',
         });
         expect(mockCtxStrokeRect).not.toHaveBeenCalled();
       });

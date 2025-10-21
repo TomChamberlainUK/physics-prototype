@@ -29,7 +29,7 @@ export default class Render2dSystem extends System {
             x,
             y,
             radius: geometry.shape.radius,
-            color: geometry.color,
+            fillColor: geometry.fillColor,
             strokeColor: geometry.strokeColor,
           });
           break;
@@ -39,7 +39,7 @@ export default class Render2dSystem extends System {
             y,
             width: geometry.shape.width,
             height: geometry.shape.height,
-            color: geometry.color,
+            fillColor: geometry.fillColor,
             strokeColor: geometry.strokeColor,
           });
           break;

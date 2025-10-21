@@ -29,7 +29,7 @@ describe('PlayerEntity', () => {
     const player = new PlayerEntity({ radius });
     const geometry = player.getComponent<Geometry2dComponent>('Geometry2d');
     expect(geometry).toBeInstanceOf(Geometry2dComponent);
-    expect(geometry.color).toBe('red');
+    expect(geometry.fillColor).toBe('red');
     expect(geometry.shape.type).toBe('circle');
     expect((geometry.shape as CircleShape).radius).toBe(radius);
   });

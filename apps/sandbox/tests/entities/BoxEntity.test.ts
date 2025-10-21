@@ -28,11 +28,11 @@ describe('BoxEntity', () => {
   it('Should have a geometry component', () => {
     const width = 32;
     const height = 32;
-    const color = 'blue';
-    const player = new BoxEntity({ width, height, color });
+    const fillColor = 'blue';
+    const player = new BoxEntity({ width, height, fillColor });
     const geometry = player.getComponent<Geometry2dComponent>('Geometry2d');
     expect(geometry).toBeInstanceOf(Geometry2dComponent);
-    expect(geometry.color).toBe(color);
+    expect(geometry.fillColor).toBe(fillColor);
     expect(geometry.shape.type).toBe('box');
     expect((geometry.shape as BoxShape).width).toBe(width);
     expect((geometry.shape as BoxShape).height).toBe(height);

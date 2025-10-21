@@ -89,16 +89,26 @@ describe('Renderer', () => {
     let mockCtxBeginPath: MockInstance<typeof renderer.ctx.beginPath>;
     let mockCtxClosePath: MockInstance<typeof renderer.ctx.closePath>;
     let mockCtxFill: MockInstance<typeof renderer.ctx.fill>;
+    let mockCtxStroke: MockInstance<typeof renderer.ctx.stroke>;
 
     beforeAll(() => {
       mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
       mockCtxBeginPath = vi.spyOn(renderer.ctx, 'beginPath');
       mockCtxClosePath = vi.spyOn(renderer.ctx, 'closePath');
       mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
+      mockCtxStroke = vi.spyOn(renderer.ctx, 'stroke');
     });
 
     beforeEach(() => {
       renderer = new Renderer(canvas);
+    });
+
+    afterEach(() => {
+      mockCtxArc.mockClear();
+      mockCtxBeginPath.mockClear();
+      mockCtxClosePath.mockClear();
+      mockCtxFill.mockClear();
+      mockCtxStroke.mockClear();
     });
 
     afterAll(() => {
@@ -106,6 +116,7 @@ describe('Renderer', () => {
       mockCtxBeginPath.mockRestore();
       mockCtxClosePath.mockRestore();
       mockCtxFill.mockRestore();
+      mockCtxStroke.mockRestore();
     });
 
     it('Should draw a circle on the canvas', () => {
@@ -133,6 +144,40 @@ describe('Renderer', () => {
         mockCtxClosePath,
         mockCtxFill,
       ]);
+    });
+
+    describe('When strokeColor is provided', () => {
+      it('Should draw a stroke on the circle', () => {
+        const strokeColor = '#ff0000';
+        renderer.drawCircle({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          radius: 64,
+          color: 'white',
+          strokeColor,
+        });
+        expect(renderer.ctx.strokeStyle).toBe(strokeColor);
+        expect(mockCtxStroke).toHaveBeenCalled();
+        expectCallOrder([
+          mockCtxBeginPath,
+          mockCtxArc,
+          mockCtxClosePath,
+          mockCtxFill,
+          mockCtxStroke,
+        ]);
+      });
+    });
+
+    describe('When strokeColor is not provided', () => {
+      it('Should not draw a stroke on the circle', () => {
+        renderer.drawCircle({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          radius: 64,
+          color: 'white',
+        });
+        expect(mockCtxStroke).not.toHaveBeenCalled();
+      });
     });
   });
 

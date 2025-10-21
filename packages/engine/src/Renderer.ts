@@ -26,17 +26,23 @@ export default class Renderer {
     y = 0,
     radius,
     color,
+    strokeColor,
   }: {
     x?: number;
     y?: number;
     radius: number;
     color: string;
+    strokeColor?: string;
   }) {
     this.ctx.fillStyle = color;
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
+    if (strokeColor) {
+      this.ctx.strokeStyle = strokeColor;
+      this.ctx.stroke();
+    }
   }
 
   drawBox({

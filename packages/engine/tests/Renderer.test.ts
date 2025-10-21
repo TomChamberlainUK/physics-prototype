@@ -137,10 +137,17 @@ describe('Renderer', () => {
   });
 
   describe('drawBox()', () => {
+    const centerX = 100;
+    const centerY = 150;
+    const width = 200;
+    const height = 100;
+
     let mockCtxFillRect: MockInstance<typeof renderer.ctx.fillRect>;
+    let mockCtxStrokeRect: MockInstance<typeof renderer.ctx.strokeRect>;
 
     beforeAll(() => {
       mockCtxFillRect = vi.spyOn(renderer.ctx, 'fillRect');
+      mockCtxStrokeRect = vi.spyOn(renderer.ctx, 'strokeRect');
     });
 
     beforeEach(() => {
@@ -149,18 +156,15 @@ describe('Renderer', () => {
 
     afterEach(() => {
       mockCtxFillRect.mockClear();
+      mockCtxStrokeRect.mockClear();
     });
 
     afterAll(() => {
       mockCtxFillRect.mockRestore();
+      mockCtxStrokeRect.mockRestore();
     });
 
     it('Should draw a box on the canvas', () => {
-      const centerX = 100;
-      const centerY = 150;
-      const width = 200;
-      const height = 100;
-
       renderer.drawBox({
         x: centerX,
         y: centerY,
@@ -175,6 +179,40 @@ describe('Renderer', () => {
         width,
         height,
       );
+    });
+
+    describe('When strokeColor is provided', () => {
+      it('Should draw a box on the canvas with a stroke', () => {
+        const strokeColor = '#0000ff';
+        renderer.drawBox({
+          x: centerX,
+          y: centerY,
+          width,
+          height,
+          color: 'blue',
+          strokeColor,
+        });
+        expect(renderer.ctx.strokeStyle).toBe(strokeColor);
+        expect(mockCtxStrokeRect).toHaveBeenCalledWith(
+          centerX - width / 2,
+          centerY - height / 2,
+          width,
+          height,
+        );
+      });
+    });
+
+    describe('When strokeColor is not provided', () => {
+      it('Should not draw a box on the canvas with a stroke', () => {
+        renderer.drawBox({
+          x: centerX,
+          y: centerY,
+          width,
+          height,
+          color: 'blue',
+        });
+        expect(mockCtxStrokeRect).not.toHaveBeenCalled();
+      });
     });
   });
 

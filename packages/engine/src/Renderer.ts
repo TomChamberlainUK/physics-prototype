@@ -45,17 +45,23 @@ export default class Renderer {
     width,
     height,
     color,
+    strokeColor,
   }: {
     x?: number;
     y?: number;
     width: number;
     height: number;
     color: string;
+    strokeColor?: string;
   }) {
     const topLeftX = x - width / 2;
     const topLeftY = y - height / 2;
     this.ctx.fillStyle = color;
     this.ctx.fillRect(topLeftX, topLeftY, width, height);
+    if (strokeColor) {
+      this.ctx.strokeStyle = strokeColor;
+      this.ctx.strokeRect(topLeftX, topLeftY, width, height);
+    }
   }
 
   resetOrigin() {

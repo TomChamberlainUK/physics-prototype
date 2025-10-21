@@ -5,6 +5,7 @@ import { Vector2d } from '#/maths';
 import { CollisionDetection2dSystem } from '#/systems';
 import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
 import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
+import type { BroadPhaseCollisionPair } from '#/types';
 
 describe('CollisionDetection2dSystem', () => {
   describe('constructor()', () => {
@@ -69,6 +70,16 @@ describe('CollisionDetection2dSystem', () => {
         getBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
         system.update([entityA, entityB], {});
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
+      });
+
+      it('Should update context broadPhaseCollisionPairs', () => {
+        const broadPhasePairs: BroadPhaseCollisionPair[] = [[entityA, entityB]];
+        getBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
+        const context = {
+          broadPhaseCollisionPairs: [],
+        };
+        system.update([entityA, entityB], context);
+        expect(context.broadPhaseCollisionPairs).toEqual(broadPhasePairs);
       });
 
       it('Should update context collision pairs', () => {

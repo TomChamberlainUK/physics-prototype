@@ -45,7 +45,7 @@ describe('CollisionPositionCorrection2dSystem', () => {
       const initialDistanceVector = transformA.position.subtract(transformB.position);
       expect(initialDistanceVector.getLength()).toBeLessThan(radius * 2);
       collisionPositionCorrection2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal: initialDistanceVector.getUnit(),
@@ -69,7 +69,7 @@ describe('CollisionPositionCorrection2dSystem', () => {
       const normal = new Vector2d({ x: 1, y: 0 });
 
       collisionPositionCorrection2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal,

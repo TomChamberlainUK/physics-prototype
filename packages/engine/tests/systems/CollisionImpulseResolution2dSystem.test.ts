@@ -39,7 +39,7 @@ describe('CollisionImpulseResolution2dSystem', () => {
       rigidBodyB.restitution = restitution;
       rigidBodyA.velocity = new Vector2d(speed, 0);
       collisionImpulseResolution2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal: new Vector2d({ x: -1, y: 0 }),
@@ -56,7 +56,7 @@ describe('CollisionImpulseResolution2dSystem', () => {
       rigidBodyB.restitution = restitution;
       rigidBodyA.velocity = new Vector2d(speed, 0);
       collisionImpulseResolution2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal: new Vector2d({ x: 1, y: 0 }),
@@ -86,7 +86,7 @@ describe('CollisionImpulseResolution2dSystem', () => {
       const expectedImpulseB = impulse.multiply(-rigidBodyB.inverseMass);
 
       collisionImpulseResolution2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal,
@@ -118,7 +118,7 @@ describe('CollisionImpulseResolution2dSystem', () => {
       const expectedImpulseB = impulse.multiply(-rigidBodyB.inverseMass);
 
       collisionImpulseResolution2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal,

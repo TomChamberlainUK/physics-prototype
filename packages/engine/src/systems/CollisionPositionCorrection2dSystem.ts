@@ -6,9 +6,11 @@ import System from './System';
 export default class CollisionPositionCorrection2dSystem extends System {
   type = 'physics';
 
-  update(_entities: Entity[], { collisionPairs }: Context) {
-    if (!collisionPairs) return;
-    const filteredCollisionPairs = collisionPairs.filter(({ entityA, entityB }) => (
+  update(_entities: Entity[], {
+    narrowPhaseCollisionPairs,
+  }: Context) {
+    if (!narrowPhaseCollisionPairs) return;
+    const filteredCollisionPairs = narrowPhaseCollisionPairs.filter(({ entityA, entityB }) => (
       entityA.hasComponents(['RigidBody2d', 'Transform2d']) && entityB.hasComponents(['RigidBody2d', 'Transform2d'])
     ));
     for (const { entityA, entityB, overlap, normal } of filteredCollisionPairs) {

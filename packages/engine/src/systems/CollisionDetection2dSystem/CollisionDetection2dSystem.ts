@@ -10,8 +10,8 @@ export default class CollisionDetection2dSystem {
       entity.hasComponents(['Collider2d', 'Transform2d'])
     ));
     const broadPhaseCollisionPairs = getBroadPhasePairs(filteredEntities);
-    const collisionPairs = getNarrowPhasePairs(broadPhaseCollisionPairs);
+    const narrowPhaseCollisionPairs = getNarrowPhasePairs(broadPhaseCollisionPairs);
     context.broadPhaseCollisionPairs = broadPhaseCollisionPairs;
-    context.collisionPairs = collisionPairs;
+    context.narrowPhaseCollisionPairs = narrowPhaseCollisionPairs;
   }
 }

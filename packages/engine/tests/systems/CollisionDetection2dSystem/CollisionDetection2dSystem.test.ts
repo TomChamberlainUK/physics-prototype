@@ -5,7 +5,7 @@ import { Vector2d } from '#/maths';
 import { CollisionDetection2dSystem } from '#/systems';
 import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
 import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
-import type { BroadPhaseCollisionPair } from '#/types';
+import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
 describe('CollisionDetection2dSystem', () => {
   describe('constructor()', () => {
@@ -82,19 +82,19 @@ describe('CollisionDetection2dSystem', () => {
         expect(context.broadPhaseCollisionPairs).toEqual(broadPhasePairs);
       });
 
-      it('Should update context collision pairs', () => {
-        const collisionPairs = [{
+      it('Should update context narrowPhaseCollisionPairs', () => {
+        const narrowPhaseCollisionPairs: NarrowPhaseCollisionPair[] = [{
           entityA,
           entityB,
           normal: new Vector2d({ x: 0, y: 1 }),
           overlap: 1,
         }];
         const context = {
-          collisionPairs: [],
+          narrowPhaseCollisionPairs: [],
         };
-        getNarrowPhasePairsSpy.mockReturnValueOnce(collisionPairs);
+        getNarrowPhasePairsSpy.mockReturnValueOnce(narrowPhaseCollisionPairs);
         system.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual(collisionPairs);
+        expect(context.narrowPhaseCollisionPairs).toEqual(narrowPhaseCollisionPairs);
       });
     });
 
@@ -109,12 +109,12 @@ describe('CollisionDetection2dSystem', () => {
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
-      it('Should not update context collision pairs', () => {
+      it('Should not update context narrowPhaseCollisionPairs', () => {
         const context = {
-          collisionPairs: [],
+          narrowPhaseCollisionPairs: [],
         };
         system.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual([]);
+        expect(context.narrowPhaseCollisionPairs).toEqual([]);
       });
     });
   });

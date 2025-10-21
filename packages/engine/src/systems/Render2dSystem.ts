@@ -12,9 +12,6 @@ export default class Render2dSystem extends System {
   update(entities: Entity[], { alpha = 1, renderer }: Context): void {
     if (!renderer) return;
 
-    renderer.clear();
-    renderer.resetOrigin();
-
     for (const entity of entities) {
       if (!entity.hasComponents(['Transform2d', 'Geometry2d'])) {
         continue;

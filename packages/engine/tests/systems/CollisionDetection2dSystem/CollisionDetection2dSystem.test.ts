@@ -109,6 +109,14 @@ describe('CollisionDetection2dSystem', () => {
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
+      it('Should not update context broadPhaseCollisionPairs', () => {
+        const context = {
+          broadPhaseCollisionPairs: [],
+        };
+        system.update([entityA, entityB], context);
+        expect(context.broadPhaseCollisionPairs).toEqual([]);
+      });
+
       it('Should not update context narrowPhaseCollisionPairs', () => {
         const context = {
           narrowPhaseCollisionPairs: [],

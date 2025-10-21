@@ -9,6 +9,7 @@ import {
   KeyboardInput,
   Kinetic2dSystem,
   Render2dSystem,
+  RenderClear2dSystem,
 } from 'engine';
 
 describe('SandboxScene', () => {
@@ -163,6 +164,10 @@ describe('SandboxScene', () => {
     {
       name: 'kinetic2d',
       System: Kinetic2dSystem,
+    },
+    {
+      name: 'renderClear2dSystem',
+      System: RenderClear2dSystem,
     },
     {
       name: 'render2d',

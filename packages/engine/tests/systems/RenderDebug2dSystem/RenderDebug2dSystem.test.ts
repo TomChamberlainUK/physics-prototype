@@ -1,10 +1,13 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import Entity from '#/Entity';
+import { Vector2d } from '#/maths';
 import Renderer from '#/Renderer';
 import { RenderDebug2dSystem } from '#/systems';
 import * as getBroadPhaseCollisionPairsSetModule from '#/systems/RenderDebug2dSystem/logic/getBroadPhaseCollisionPairsSet';
+import * as getNarrowPhaseCollisionPairsMapModule from '#/systems/RenderDebug2dSystem/logic/getNarrowPhaseCollisionPairsMap';
 import * as renderAABBModule from '#/systems/RenderDebug2dSystem/logic/renderAABB';
-import type { BroadPhaseCollisionPair } from '#/types';
+import * as renderPotentialCollisionLineModule from '#/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine';
+import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
 describe('RenderDebug2dSystem', () => {
   let system: RenderDebug2dSystem;
@@ -33,11 +36,15 @@ describe('RenderDebug2dSystem', () => {
       let renderer: Renderer;
 
       let getBroadPhaseCollisionPairsSetSpy: MockInstance<typeof getBroadPhaseCollisionPairsSetModule.default>;
+      let getNarrowPhaseCollisionPairsMapSpy: MockInstance<typeof getNarrowPhaseCollisionPairsMapModule.default>;
       let renderAABBSpy: MockInstance<typeof renderAABBModule.default>;
+      let renderPotentialCollisionLineSpy: MockInstance<typeof renderPotentialCollisionLineModule.default>;
 
       beforeAll(() => {
         getBroadPhaseCollisionPairsSetSpy = vi.spyOn(getBroadPhaseCollisionPairsSetModule, 'default');
+        getNarrowPhaseCollisionPairsMapSpy = vi.spyOn(getNarrowPhaseCollisionPairsMapModule, 'default');
         renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
+        renderPotentialCollisionLineSpy = vi.spyOn(renderPotentialCollisionLineModule, 'default');
       });
 
       beforeEach(() => {
@@ -46,12 +53,16 @@ describe('RenderDebug2dSystem', () => {
 
       afterEach(() => {
         getBroadPhaseCollisionPairsSetSpy.mockClear();
+        getNarrowPhaseCollisionPairsMapSpy.mockClear();
         renderAABBSpy.mockClear();
+        renderPotentialCollisionLineSpy.mockClear();
       });
 
       afterAll(() => {
         getBroadPhaseCollisionPairsSetSpy.mockRestore();
+        getNarrowPhaseCollisionPairsMapSpy.mockRestore();
         renderAABBSpy.mockRestore();
+        renderPotentialCollisionLineSpy.mockRestore();
       });
 
       it('Should get a set of broad phase collision pairs from the context', () => {
@@ -60,6 +71,19 @@ describe('RenderDebug2dSystem', () => {
         ];
         system.update([], { renderer, broadPhaseCollisionPairs });
         expect(getBroadPhaseCollisionPairsSetSpy).toHaveBeenCalledWith(broadPhaseCollisionPairs);
+      });
+
+      it('Should get a map of narrow phase collision pairs from the context', () => {
+        const narrowPhaseCollisionPairs: NarrowPhaseCollisionPair[] = [
+          {
+            entityA: new Entity(),
+            entityB: new Entity(),
+            normal: new Vector2d(),
+            overlap: 0,
+          },
+        ];
+        system.update([], { renderer, narrowPhaseCollisionPairs });
+        expect(getNarrowPhaseCollisionPairsMapSpy).toHaveBeenCalledWith(narrowPhaseCollisionPairs);
       });
 
       it('Should render an AABB for each entity', () => {
@@ -75,6 +99,24 @@ describe('RenderDebug2dSystem', () => {
           expect(renderAABBSpy).toHaveBeenCalledWith(entity, {
             alpha,
             broadPhaseCollisionPairsSet,
+            renderer,
+          });
+        }
+      });
+
+      it('Should render potential collision lines for each broad phase collision pair', () => {
+        const broadPhaseCollisionPairs: BroadPhaseCollisionPair[] = [
+          [new Entity(), new Entity()],
+          [new Entity(), new Entity()],
+        ];
+        const alpha = 0.5;
+        const narrowPhaseCollisionPairsMap = new Map<string, Set<string>>();
+        getNarrowPhaseCollisionPairsMapSpy.mockReturnValue(narrowPhaseCollisionPairsMap);
+        system.update([], { alpha, renderer, broadPhaseCollisionPairs });
+        for (const [entityA, entityB] of broadPhaseCollisionPairs) {
+          expect(renderPotentialCollisionLineSpy).toHaveBeenCalledWith(entityA, entityB, {
+            alpha,
+            narrowPhaseCollisionPairsMap,
             renderer,
           });
         }

@@ -98,7 +98,7 @@ describe('renderAABB', () => {
           y: 50,
           width: collider.aabb!.max.x - collider.aabb!.min.x,
           height: collider.aabb!.max.y - collider.aabb!.min.y,
-          strokeColor: 'rgba(0, 255, 0, 0.5)',
+          strokeColor: 'rgb(0, 255, 0)',
         });
       });
 
@@ -112,7 +112,7 @@ describe('renderAABB', () => {
           renderAABB(entity, { broadPhaseCollisionPairsSet, renderer });
           expect(drawBoxSpy).toHaveBeenCalledWith(
             expect.objectContaining({
-              strokeColor: 'rgba(255, 0, 0, 0.5)',
+              strokeColor: 'rgb(255, 0, 0)',
             }),
           );
         });

@@ -30,8 +30,8 @@ export default function renderAABB(entity: Entity, {
 
   const { aabb } = collider;
   const strokeColor = broadPhaseCollisionPairsSet.has(entity.id)
-    ? 'rgba(255, 0, 0, 0.5)'
-    : 'rgba(0, 255, 0, 0.5)';
+    ? 'rgb(255, 0, 0)'
+    : 'rgb(0, 255, 0)';
 
   renderer.drawBox({
     x,

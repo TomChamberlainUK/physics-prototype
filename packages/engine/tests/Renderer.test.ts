@@ -285,6 +285,44 @@ describe('Renderer', () => {
     });
   });
 
+  describe('drawLine()', () => {
+    it('Should draw a line on the canvas', () => {
+      const start = { x: 100, y: 100 };
+      const end = { x: 200, y: 200 };
+      const lineWidth = 2;
+
+      const ctxSaveSpy = vi.spyOn(renderer.ctx, 'save');
+      const ctxBeginPathSpy = vi.spyOn(renderer.ctx, 'beginPath');
+      const ctxMoveToSpy = vi.spyOn(renderer.ctx, 'moveTo');
+      const ctxLineToSpy = vi.spyOn(renderer.ctx, 'lineTo');
+      const ctxStrokeSpy = vi.spyOn(renderer.ctx, 'stroke');
+      const ctxRestoreSpy = vi.spyOn(renderer.ctx, 'restore');
+
+      ctxRestoreSpy.mockImplementation(vi.fn);
+
+      renderer.drawLine({
+        start,
+        end,
+        strokeColor,
+        lineWidth,
+      });
+      expect(renderer.ctx.strokeStyle).toBe(strokeColor);
+      expect(renderer.ctx.lineWidth).toBe(lineWidth);
+      expect(ctxMoveToSpy).toHaveBeenCalledWith(start.x, start.y);
+      expect(ctxLineToSpy).toHaveBeenCalledWith(end.x, end.y);
+      expect(ctxStrokeSpy).toHaveBeenCalled();
+      expect(ctxRestoreSpy).toHaveBeenCalled();
+      expectCallOrder([
+        ctxSaveSpy,
+        ctxBeginPathSpy,
+        ctxMoveToSpy,
+        ctxLineToSpy,
+        ctxStrokeSpy,
+        ctxRestoreSpy,
+      ]);
+    });
+  });
+
   describe('resetOrigin()', () => {
     let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
     let mockCtxTranslate: MockInstance<typeof renderer.ctx.translate>;

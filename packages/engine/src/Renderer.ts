@@ -74,6 +74,28 @@ export default class Renderer {
     }
   }
 
+  drawLine({
+    start,
+    end,
+    strokeColor,
+    lineWidth = 1,
+  }: {
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+    strokeColor: string;
+    lineWidth?: number;
+  }) {
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.moveTo(start.x, start.y);
+    this.ctx.lineTo(end.x, end.y);
+    this.ctx.strokeStyle = strokeColor;
+    this.ctx.lineWidth = lineWidth;
+    this.ctx.stroke();
+    this.ctx.closePath();
+    this.ctx.restore();
+  }
+
   resetOrigin() {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);

@@ -5,13 +5,13 @@ import lerp from '#/utils/lerp';
 
 type Props = {
   alpha?: number;
-  narrowPhaseCollisionPairsSet: Map<string, string>;
+  narrowPhaseCollisionPairsMap: Map<string, Set<string>>;
   renderer: Renderer;
 };
 
 export default function renderPotentialCollisionLine(entityA: Entity, entityB: Entity, {
   alpha = 1,
-  narrowPhaseCollisionPairsSet,
+  narrowPhaseCollisionPairsMap,
   renderer,
 }: Props) {
   if (
@@ -31,7 +31,7 @@ export default function renderPotentialCollisionLine(entityA: Entity, entityB: E
     y: lerp(transformB.previousPosition.y, transformB.position.y, alpha),
   };
 
-  const strokeColor = narrowPhaseCollisionPairsSet.get(entityA.id) === entityB.id
+  const strokeColor = narrowPhaseCollisionPairsMap.get(entityA.id)?.has(entityB.id)
     ? `rgb(255, 0, 0)`
     : `rgb(255, 255, 0)`;
 

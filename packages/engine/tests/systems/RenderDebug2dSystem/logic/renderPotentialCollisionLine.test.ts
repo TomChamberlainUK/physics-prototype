@@ -9,7 +9,7 @@ import { Vector2d } from '#/maths';
 describe('renderPotentialCollisionLine', () => {
   let entityA: Entity;
   let entityB: Entity;
-  let narrowPhaseCollisionPairsSet: Map<string, string>;
+  let narrowPhaseCollisionPairsMap: Map<string, Set<string>>;
   let renderer: Renderer;
 
   let hasComponentASpy: MockInstance<typeof entityA.hasComponent>;
@@ -24,7 +24,7 @@ describe('renderPotentialCollisionLine', () => {
   beforeEach(() => {
     entityA = new Entity();
     entityB = new Entity();
-    narrowPhaseCollisionPairsSet = new Map<string, string>();
+    narrowPhaseCollisionPairsMap = new Map();
     hasComponentASpy = vi.spyOn(entityA, 'hasComponent');
     hasComponentBSpy = vi.spyOn(entityB, 'hasComponent');
     getComponentASpy = vi.spyOn(entityA, 'getComponent');
@@ -34,14 +34,14 @@ describe('renderPotentialCollisionLine', () => {
   it('Should check if each entity has the required components', () => {
     entityA.addComponent(new Transform2dComponent());
     entityB.addComponent(new Transform2dComponent());
-    renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsSet, renderer });
+    renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsMap, renderer });
     expect(hasComponentASpy).toHaveBeenCalledWith('Transform2d');
     expect(hasComponentBSpy).toHaveBeenCalledWith('Transform2d');
   });
 
   describe('When the entities do not have the required components', () => {
     it('Should not attempt to get the required components', () => {
-      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsSet, renderer });
+      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsMap, renderer });
       expect(getComponentASpy).not.toHaveBeenCalled();
       expect(getComponentBSpy).not.toHaveBeenCalled();
     });
@@ -77,14 +77,14 @@ describe('renderPotentialCollisionLine', () => {
     });
 
     it('Should get the required components', () => {
-      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsSet, renderer });
+      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsMap, renderer });
       expect(getComponentASpy).toHaveBeenCalledWith('Transform2d');
       expect(getComponentBSpy).toHaveBeenCalledWith('Transform2d');
     });
 
     it('Should interpolate the positions of both entities', () => {
       const alpha = 0.5;
-      renderPotentialCollisionLine(entityA, entityB, { alpha, narrowPhaseCollisionPairsSet, renderer });
+      renderPotentialCollisionLine(entityA, entityB, { alpha, narrowPhaseCollisionPairsMap, renderer });
       expect(lerpSpy).toHaveBeenCalledWith(transformA.previousPosition.x, transformA.position.x, alpha);
       expect(lerpSpy).toHaveBeenCalledWith(transformA.previousPosition.y, transformA.position.y, alpha);
       expect(lerpSpy).toHaveBeenCalledWith(transformB.previousPosition.x, transformB.position.x, alpha);
@@ -100,7 +100,7 @@ describe('renderPotentialCollisionLine', () => {
         x: 100,
         y: 100,
       });
-      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsSet, renderer });
+      renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsMap, renderer });
       expect(drawLineSpy).toHaveBeenCalledWith({
         start: transformA.position,
         end: transformB.position,
@@ -110,8 +110,8 @@ describe('renderPotentialCollisionLine', () => {
 
     describe('When entities map to each other in the narrow phase collision pairs map', () => {
       it('Should render the line in red', () => {
-        narrowPhaseCollisionPairsSet.set(entityA.id, entityB.id);
-        renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsSet, renderer });
+        narrowPhaseCollisionPairsMap.set(entityA.id, new Set([entityB.id]));
+        renderPotentialCollisionLine(entityA, entityB, { narrowPhaseCollisionPairsMap, renderer });
         expect(drawLineSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             strokeColor: 'rgb(255, 0, 0)',

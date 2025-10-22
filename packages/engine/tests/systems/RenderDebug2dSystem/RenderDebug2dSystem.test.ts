@@ -6,6 +6,7 @@ import { RenderDebug2dSystem } from '#/systems';
 import * as getBroadPhaseCollisionPairsSetModule from '#/systems/RenderDebug2dSystem/logic/getBroadPhaseCollisionPairsSet';
 import * as getNarrowPhaseCollisionPairsMapModule from '#/systems/RenderDebug2dSystem/logic/getNarrowPhaseCollisionPairsMap';
 import * as renderAABBModule from '#/systems/RenderDebug2dSystem/logic/renderAABB';
+import * as renderColliderModule from '#/systems/RenderDebug2dSystem/logic/renderCollider';
 import * as renderPotentialCollisionLineModule from '#/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine';
 import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
@@ -38,12 +39,14 @@ describe('RenderDebug2dSystem', () => {
       let getBroadPhaseCollisionPairsSetSpy: MockInstance<typeof getBroadPhaseCollisionPairsSetModule.default>;
       let getNarrowPhaseCollisionPairsMapSpy: MockInstance<typeof getNarrowPhaseCollisionPairsMapModule.default>;
       let renderAABBSpy: MockInstance<typeof renderAABBModule.default>;
+      let renderColliderSpy: MockInstance<typeof renderColliderModule.default>;
       let renderPotentialCollisionLineSpy: MockInstance<typeof renderPotentialCollisionLineModule.default>;
 
       beforeAll(() => {
         getBroadPhaseCollisionPairsSetSpy = vi.spyOn(getBroadPhaseCollisionPairsSetModule, 'default');
         getNarrowPhaseCollisionPairsMapSpy = vi.spyOn(getNarrowPhaseCollisionPairsMapModule, 'default');
         renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
+        renderColliderSpy = vi.spyOn(renderColliderModule, 'default');
         renderPotentialCollisionLineSpy = vi.spyOn(renderPotentialCollisionLineModule, 'default');
       });
 
@@ -55,6 +58,7 @@ describe('RenderDebug2dSystem', () => {
         getBroadPhaseCollisionPairsSetSpy.mockClear();
         getNarrowPhaseCollisionPairsMapSpy.mockClear();
         renderAABBSpy.mockClear();
+        renderColliderSpy.mockClear();
         renderPotentialCollisionLineSpy.mockClear();
       });
 
@@ -62,6 +66,7 @@ describe('RenderDebug2dSystem', () => {
         getBroadPhaseCollisionPairsSetSpy.mockRestore();
         getNarrowPhaseCollisionPairsMapSpy.mockRestore();
         renderAABBSpy.mockRestore();
+        renderColliderSpy.mockRestore();
         renderPotentialCollisionLineSpy.mockRestore();
       });
 
@@ -84,6 +89,21 @@ describe('RenderDebug2dSystem', () => {
         ];
         system.update([], { renderer, narrowPhaseCollisionPairs });
         expect(getNarrowPhaseCollisionPairsMapSpy).toHaveBeenCalledWith(narrowPhaseCollisionPairs);
+      });
+
+      it('Should render a collider for each entity', () => {
+        const entities = [
+          new Entity(),
+          new Entity(),
+        ];
+        const alpha = 0.5;
+        system.update(entities, { alpha, renderer, broadPhaseCollisionPairs: [] });
+        for (const entity of entities) {
+          expect(renderColliderSpy).toHaveBeenCalledWith(entity, {
+            alpha,
+            renderer,
+          });
+        }
       });
 
       it('Should render an AABB for each entity', () => {

@@ -5,6 +5,7 @@ import {
   getBroadPhaseCollisionPairsSet,
   getNarrowPhaseCollisionPairsMap,
   renderAABB,
+  renderCollider,
   renderPotentialCollisionLine,
 } from './logic';
 
@@ -23,6 +24,11 @@ export default class RenderDebug2dSystem extends System {
     const narrowPhaseCollisionPairsMap = getNarrowPhaseCollisionPairsMap(narrowPhaseCollisionPairs);
 
     for (const entity of entities) {
+      renderCollider(entity, {
+        alpha,
+        renderer,
+      });
+
       renderAABB(entity, {
         alpha,
         broadPhaseCollisionPairsSet,

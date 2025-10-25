@@ -1,5 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import Entity from '#/Entity';
+import { KeyboardInput } from '#/input';
 import { Vector2d } from '#/maths';
 import Renderer from '#/Renderer';
 import { RenderDebug2dSystem } from '#/systems';
@@ -30,6 +31,38 @@ describe('RenderDebug2dSystem', () => {
         const renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
         system.update([], {});
         expect(renderAABBSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('When the system is disabled', () => {
+      it('Should do nothing', () => {
+        const renderer = new Renderer(document.createElement('canvas'));
+        system.enabled = false;
+        const renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
+        system.update([], { renderer });
+        expect(renderAABBSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('When passed an input in the context', () => {
+      it('Should toggle the enabled state when the "p" key is pressed', () => {
+        const renderer = new Renderer(document.createElement('canvas'));
+        const input = new KeyboardInput();
+        const isPressedSpy = vi.spyOn(input, 'isPressed');
+        isPressedSpy.mockImplementation((key: string) => key === 'p');
+        system.update([], { renderer, input });
+        expect(system.enabled).toBe(false);
+      });
+
+      it('Should not toggle the enabled state when the "p" key is held down from the previous frame', () => {
+        const renderer = new Renderer(document.createElement('canvas'));
+        const input = new KeyboardInput();
+        const isPressedSpy = vi.spyOn(input, 'isPressed');
+        isPressedSpy.mockImplementation((key: string) => key === 'p');
+        system.update([], { renderer, input });
+        expect(system.enabled).toBe(false);
+        system.update([], { renderer, input });
+        expect(system.enabled).toBe(false);
       });
     });
 

@@ -11,14 +11,26 @@ import {
 
 export default class RenderDebug2dSystem extends System {
   type = 'render';
+  #wasPPressed = false;
+  enabled = true;
 
   update(entities: Entity[], {
     alpha = 1,
     broadPhaseCollisionPairs = [],
+    input,
     narrowPhaseCollisionPairs = [],
     renderer,
   }: Context) {
-    if (!renderer) return;
+    if (input) {
+      if (input.isPressed('p') && !this.#wasPPressed) {
+        this.enabled = !this.enabled;
+        this.#wasPPressed = true;
+      }
+      else if (!input.isPressed('p')) {
+        this.#wasPPressed = false;
+      }
+    }
+    if (!this.enabled || !renderer) return;
 
     const broadPhaseCollisionPairsSet = getBroadPhaseCollisionPairsSet(broadPhaseCollisionPairs);
     const narrowPhaseCollisionPairsMap = getNarrowPhaseCollisionPairsMap(narrowPhaseCollisionPairs);

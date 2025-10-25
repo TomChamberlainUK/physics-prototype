@@ -4,11 +4,12 @@ import { Vector2d } from '#/maths';
 import { InterpolationSync2dSystem } from '#/systems';
 import { describe, expect, it } from 'vitest';
 
-describe('InterpolationSync2dSystemNew', () => {
+describe('InterpolationSync2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
       const system = new InterpolationSync2dSystem();
       expect(system).toBeInstanceOf(InterpolationSync2dSystem);
+      expect(system.name).toBe('InterpolationSync2dSystem');
       expect(system.type).toBe('sync');
     });
   });

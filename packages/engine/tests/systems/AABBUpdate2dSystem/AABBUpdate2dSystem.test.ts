@@ -9,6 +9,7 @@ describe('AABBUpdate2dSystem', () => {
     it('Should instantiate', () => {
       const system = new AABBUpdate2dSystem();
       expect(system).toBeInstanceOf(AABBUpdate2dSystem);
+      expect(system.name).toBe('AABBUpdate2dSystem');
       expect(system.type).toBe('physics');
     });
   });

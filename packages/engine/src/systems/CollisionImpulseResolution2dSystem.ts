@@ -5,11 +5,14 @@ import type { Context } from '#/types';
 import System from './System';
 
 export default class CollisionImpulseResolution2dSystem extends System {
+  name = 'CollisionImpulseResolution2dSystem';
   type = 'physics';
 
-  update(_entities: Entity[], { collisionPairs }: Context) {
-    if (!collisionPairs) return;
-    const filteredCollisionPairs = collisionPairs.filter(({ entityA, entityB }) => (
+  update(_entities: Entity[], {
+    narrowPhaseCollisionPairs,
+  }: Context) {
+    if (!narrowPhaseCollisionPairs) return;
+    const filteredCollisionPairs = narrowPhaseCollisionPairs.filter(({ entityA, entityB }) => (
       entityA.hasComponents(['RigidBody2d']) && entityB.hasComponents(['RigidBody2d'])
     ));
     for (const { entityA, entityB, normal } of filteredCollisionPairs) {

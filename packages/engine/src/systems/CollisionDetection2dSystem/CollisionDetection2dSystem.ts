@@ -3,14 +3,16 @@ import type { Context } from '#/types';
 import { getBroadPhasePairs, getNarrowPhasePairs } from './logic';
 
 export default class CollisionDetection2dSystem {
+  name = 'CollisionDetection2dSystem';
   type = 'physics';
 
   update(entities: Entity[], context: Context) {
     const filteredEntities = entities.filter(entity => (
       entity.hasComponents(['Collider2d', 'Transform2d'])
     ));
-    const candidatePairs = getBroadPhasePairs(filteredEntities);
-    const collisionPairs = getNarrowPhasePairs(candidatePairs);
-    context.collisionPairs = collisionPairs;
+    const broadPhaseCollisionPairs = getBroadPhasePairs(filteredEntities);
+    const narrowPhaseCollisionPairs = getNarrowPhasePairs(broadPhaseCollisionPairs);
+    context.broadPhaseCollisionPairs = broadPhaseCollisionPairs;
+    context.narrowPhaseCollisionPairs = narrowPhaseCollisionPairs;
   }
 }

@@ -5,12 +5,14 @@ import { Vector2d } from '#/maths';
 import { CollisionDetection2dSystem } from '#/systems';
 import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
 import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
+import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
 describe('CollisionDetection2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
       const system = new CollisionDetection2dSystem();
       expect(system).toBeInstanceOf(CollisionDetection2dSystem);
+      expect(system.name).toBe('CollisionDetection2dSystem');
       expect(system.type).toBe('physics');
     });
   });
@@ -71,19 +73,29 @@ describe('CollisionDetection2dSystem', () => {
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
       });
 
-      it('Should update context collision pairs', () => {
-        const collisionPairs = [{
+      it('Should update context broadPhaseCollisionPairs', () => {
+        const broadPhasePairs: BroadPhaseCollisionPair[] = [[entityA, entityB]];
+        getBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
+        const context = {
+          broadPhaseCollisionPairs: [],
+        };
+        system.update([entityA, entityB], context);
+        expect(context.broadPhaseCollisionPairs).toEqual(broadPhasePairs);
+      });
+
+      it('Should update context narrowPhaseCollisionPairs', () => {
+        const narrowPhaseCollisionPairs: NarrowPhaseCollisionPair[] = [{
           entityA,
           entityB,
           normal: new Vector2d({ x: 0, y: 1 }),
           overlap: 1,
         }];
         const context = {
-          collisionPairs: [],
+          narrowPhaseCollisionPairs: [],
         };
-        getNarrowPhasePairsSpy.mockReturnValueOnce(collisionPairs);
+        getNarrowPhasePairsSpy.mockReturnValueOnce(narrowPhaseCollisionPairs);
         system.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual(collisionPairs);
+        expect(context.narrowPhaseCollisionPairs).toEqual(narrowPhaseCollisionPairs);
       });
     });
 
@@ -98,12 +110,20 @@ describe('CollisionDetection2dSystem', () => {
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
-      it('Should not update context collision pairs', () => {
+      it('Should not update context broadPhaseCollisionPairs', () => {
         const context = {
-          collisionPairs: [],
+          broadPhaseCollisionPairs: [],
         };
         system.update([entityA, entityB], context);
-        expect(context.collisionPairs).toEqual([]);
+        expect(context.broadPhaseCollisionPairs).toEqual([]);
+      });
+
+      it('Should not update context narrowPhaseCollisionPairs', () => {
+        const context = {
+          narrowPhaseCollisionPairs: [],
+        };
+        system.update([entityA, entityB], context);
+        expect(context.narrowPhaseCollisionPairs).toEqual([]);
       });
     });
   });

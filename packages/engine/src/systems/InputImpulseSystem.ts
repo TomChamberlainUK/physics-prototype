@@ -5,6 +5,7 @@ import type { Context } from '#/types';
 import System from './System';
 
 export default class InputImpulseSystem extends System {
+  name = 'InputImpulseSystem';
   type = 'physics';
 
   update(entities: Entity[], { input, deltaTime }: Context) {

@@ -1,6 +1,7 @@
 import SandboxScene from '#/scenes/SandboxScene';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  AABBUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -9,6 +10,8 @@ import {
   KeyboardInput,
   Kinetic2dSystem,
   Render2dSystem,
+  RenderClear2dSystem,
+  RenderDebug2dSystem,
 } from 'engine';
 
 describe('SandboxScene', () => {
@@ -117,7 +120,7 @@ describe('SandboxScene', () => {
         x,
         y,
       },
-      color: 'grey',
+      fillColor: 'grey',
       name,
     });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
@@ -132,7 +135,7 @@ describe('SandboxScene', () => {
           y: expect.any(Number),
         },
         radius: expect.any(Number),
-        color: expect.any(String),
+        fillColor: expect.any(String),
         name,
       }));
       expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
@@ -147,6 +150,10 @@ describe('SandboxScene', () => {
     {
       name: 'inputImpulse',
       System: InputImpulseSystem,
+    },
+    {
+      name: 'aabbUpdate2d',
+      System: AABBUpdate2dSystem,
     },
     {
       name: 'collisionDetection2d',
@@ -165,11 +172,24 @@ describe('SandboxScene', () => {
       System: Kinetic2dSystem,
     },
     {
+      name: 'renderClear2dSystem',
+      System: RenderClear2dSystem,
+    },
+    {
       name: 'render2d',
       System: Render2dSystem,
     },
+    {
+      name: 'renderDebug2d',
+      System: RenderDebug2dSystem,
+    },
   ])('Should add a $name system to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
+  });
+
+  it('Should disable the RenderDebug2dSystem by default', () => {
+    const renderDebug2dSystem = scene.getSystem<RenderDebug2dSystem>('RenderDebug2dSystem');
+    expect(renderDebug2dSystem.enabled).toBe(false);
   });
 
   it('Should set the input in the scene context', () => {

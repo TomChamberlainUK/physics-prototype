@@ -1,8 +1,10 @@
 import type Entity from '#/Entity';
 import System from './System';
 import type { Context, Geometry2dComponent, Transform2dComponent } from '..';
+import { lerp } from '#/utils';
 
 export default class Render2dSystem extends System {
+  name = 'Render2dSystem';
   type = 'render';
 
   constructor() {
@@ -12,9 +14,6 @@ export default class Render2dSystem extends System {
   update(entities: Entity[], { alpha = 1, renderer }: Context): void {
     if (!renderer) return;
 
-    renderer.clear();
-    renderer.resetOrigin();
-
     for (const entity of entities) {
       if (!entity.hasComponents(['Transform2d', 'Geometry2d'])) {
         continue;
@@ -23,8 +22,8 @@ export default class Render2dSystem extends System {
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
       const geometry = entity.getComponent<Geometry2dComponent>('Geometry2d');
 
-      const x = transform.previousPosition.x + (transform.position.x - transform.previousPosition.x) * alpha;
-      const y = transform.previousPosition.y + (transform.position.y - transform.previousPosition.y) * alpha;
+      const x = lerp(transform.previousPosition.x, transform.position.x, alpha);
+      const y = lerp(transform.previousPosition.y, transform.position.y, alpha);
 
       switch (geometry.shape.type) {
         case 'circle':
@@ -32,7 +31,8 @@ export default class Render2dSystem extends System {
             x,
             y,
             radius: geometry.shape.radius,
-            color: geometry.color,
+            fillColor: geometry.fillColor,
+            strokeColor: geometry.strokeColor,
           });
           break;
         case 'box':
@@ -41,7 +41,8 @@ export default class Render2dSystem extends System {
             y,
             width: geometry.shape.width,
             height: geometry.shape.height,
-            color: geometry.color,
+            fillColor: geometry.fillColor,
+            strokeColor: geometry.strokeColor,
           });
           break;
       }

@@ -5,6 +5,7 @@ import type { Context } from '#/types';
 import System from './System';
 
 export default class Kinetic2dSystem extends System {
+  name = 'Kinetic2dSystem';
   type = 'physics';
 
   update(entities: Entity[], { deltaTime }: Context) {

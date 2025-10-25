@@ -11,6 +11,7 @@ describe('InputImpulseSystem', () => {
     it('Should instantiate', () => {
       const system = new InputImpulseSystem();
       expect(system).toBeInstanceOf(InputImpulseSystem);
+      expect(system.name).toBe('InputImpulseSystem');
       expect(system.type).toBe('physics');
     });
   });

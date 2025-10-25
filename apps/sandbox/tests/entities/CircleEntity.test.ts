@@ -27,11 +27,11 @@ describe('CircleEntity', () => {
 
   it('Should have a geometry component', () => {
     const radius = 16;
-    const color = 'blue';
-    const player = new CircleEntity({ radius, color });
+    const fillColor = 'blue';
+    const player = new CircleEntity({ radius, fillColor });
     const geometry = player.getComponent<Geometry2dComponent>('Geometry2d');
     expect(geometry).toBeInstanceOf(Geometry2dComponent);
-    expect(geometry.color).toBe(color);
+    expect(geometry.fillColor).toBe(fillColor);
     expect(geometry.shape.type).toBe('circle');
     expect((geometry.shape as CircleShape).radius).toBe(radius);
   });

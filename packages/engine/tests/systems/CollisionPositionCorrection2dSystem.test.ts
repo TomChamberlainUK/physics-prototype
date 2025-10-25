@@ -9,6 +9,7 @@ describe('CollisionPositionCorrection2dSystem', () => {
     it('Should instantiate', () => {
       const system = new CollisionPositionCorrection2dSystem();
       expect(system).toBeInstanceOf(CollisionPositionCorrection2dSystem);
+      expect(system.name).toBe('CollisionPositionCorrection2dSystem');
       expect(system.type).toBe('physics');
     });
   });
@@ -45,7 +46,7 @@ describe('CollisionPositionCorrection2dSystem', () => {
       const initialDistanceVector = transformA.position.subtract(transformB.position);
       expect(initialDistanceVector.getLength()).toBeLessThan(radius * 2);
       collisionPositionCorrection2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal: initialDistanceVector.getUnit(),
@@ -69,7 +70,7 @@ describe('CollisionPositionCorrection2dSystem', () => {
       const normal = new Vector2d({ x: 1, y: 0 });
 
       collisionPositionCorrection2dSystem.update([], {
-        collisionPairs: [{
+        narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
           normal,

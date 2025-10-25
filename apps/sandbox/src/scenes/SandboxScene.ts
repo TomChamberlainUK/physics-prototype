@@ -1,4 +1,18 @@
-import { AABBUpdate2dSystem, CollisionDetection2dSystem, CollisionImpulseResolution2dSystem, CollisionPositionCorrection2dSystem, InputImpulseSystem, InterpolationSync2dSystem, KeyboardInput, Kinetic2dSystem, Render2dSystem, Scene, Vector2d } from 'engine';
+import {
+  AABBUpdate2dSystem,
+  CollisionDetection2dSystem,
+  CollisionImpulseResolution2dSystem,
+  CollisionPositionCorrection2dSystem,
+  InputImpulseSystem,
+  InterpolationSync2dSystem,
+  KeyboardInput,
+  Kinetic2dSystem,
+  Render2dSystem,
+  RenderClear2dSystem,
+  RenderDebug2dSystem,
+  Scene,
+  Vector2d,
+} from 'engine';
 import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
 
 type Props = {
@@ -53,14 +67,14 @@ export default class SandboxScene extends Scene {
         height: wallHeight,
         mass: 0,
         position: new Vector2d({ x, y }),
-        color: 'grey',
+        fillColor: 'grey',
         name,
       });
       this.addEntity(wallEntity);
     }
 
     for (let i = 0; i < 500; i++) {
-      const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const size = Math.random() * 16;
       const circleEntity = new CircleEntity({
         position: new Vector2d({
@@ -68,7 +82,7 @@ export default class SandboxScene extends Scene {
           y: (Math.random() * height) - (height / 2),
         }),
         radius: size,
-        color,
+        fillColor,
         name: `circle-${i}`,
       });
       this.addEntity(circleEntity);
@@ -81,7 +95,11 @@ export default class SandboxScene extends Scene {
     this.addSystem(new CollisionImpulseResolution2dSystem());
     this.addSystem(new CollisionPositionCorrection2dSystem());
     this.addSystem(new Kinetic2dSystem());
+    this.addSystem(new RenderClear2dSystem());
     this.addSystem(new Render2dSystem());
+    const renderDebug2dSystem = new RenderDebug2dSystem();
+    renderDebug2dSystem.enabled = false;
+    this.addSystem(renderDebug2dSystem);
 
     this.setContext({
       input,

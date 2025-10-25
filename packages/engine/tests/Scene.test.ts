@@ -52,9 +52,36 @@ describe('Scene', () => {
     });
 
     it('Should add a system to the scene', () => {
-      const system = { update: vi.fn(), type: 'physics' };
+      const system = { update: vi.fn(), type: 'physics', name: 'System' };
       scene.addSystem(system);
       expect(scene.systems).toContain(system);
+    });
+  });
+
+  describe('getSystem()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    describe('When passed the name of an added system', () => {
+      beforeEach(() => {
+        const system = { update: vi.fn(), type: 'physics', name: 'System' };
+        scene.addSystem(system);
+      });
+
+      it('Should return the system', () => {
+        const system = scene.getSystem('System');
+        expect(system).toBeDefined();
+        expect(system.name).toBe('System');
+      });
+    });
+
+    describe('When passed the name of a non-added system', () => {
+      it('Should throw an error', () => {
+        expect(
+          () => scene.getSystem('NonExistentSystem'),
+        ).toThrowError('Could not find system "NonExistentSystem" in scene');
+      });
     });
   });
 
@@ -66,9 +93,9 @@ describe('Scene', () => {
     it('Should call all sync systems with the current entities and context', () => {
       const entity = new Entity();
       const context = { input: new KeyboardInput() };
-      const system1 = { update: vi.fn(), type: 'sync' };
-      const system2 = { update: vi.fn(), type: 'sync' };
-      const system3 = { update: vi.fn(), type: 'sync' };
+      const system1 = { update: vi.fn(), type: 'sync', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'sync', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'sync', name: 'System3' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
@@ -90,9 +117,9 @@ describe('Scene', () => {
       const entity = new Entity();
       const context = { input: new KeyboardInput() };
       const deltaTime = 1 / 60;
-      const system1 = { update: vi.fn(), type: 'physics' };
-      const system2 = { update: vi.fn(), type: 'physics' };
-      const system3 = { update: vi.fn(), type: 'physics' };
+      const system1 = { update: vi.fn(), type: 'physics', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'physics', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'physics', name: 'System3' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
@@ -117,9 +144,9 @@ describe('Scene', () => {
     it('Should call all render systems with the current entities and context', () => {
       const entity = new Entity();
       const context = { input: new KeyboardInput() };
-      const system1 = { update: vi.fn(), type: 'render' };
-      const system2 = { update: vi.fn(), type: 'render' };
-      const system3 = { update: vi.fn(), type: 'render' };
+      const system1 = { update: vi.fn(), type: 'render', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'render', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'render', name: 'System3' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);

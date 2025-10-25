@@ -24,6 +24,14 @@ export default class Scene {
     this.systems.push(system);
   }
 
+  getSystem<T extends System>(name: string): T {
+    const system = this.systems.find(system => system.name === name);
+    if (!system) {
+      throw new Error(`Could not find system "${name}" in scene`);
+    }
+    return system as T;
+  }
+
   updateSync() {
     for (const system of this.systems) {
       if (system.type !== 'sync') continue;

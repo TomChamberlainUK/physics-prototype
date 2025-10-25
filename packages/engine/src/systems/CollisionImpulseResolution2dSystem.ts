@@ -5,6 +5,7 @@ import type { Context } from '#/types';
 import System from './System';
 
 export default class CollisionImpulseResolution2dSystem extends System {
+  name = 'CollisionImpulseResolution2dSystem';
   type = 'physics';
 
   update(_entities: Entity[], {

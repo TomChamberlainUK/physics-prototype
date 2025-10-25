@@ -21,6 +21,7 @@ describe('RenderDebug2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
       expect(system).toBeInstanceOf(RenderDebug2dSystem);
+      expect(system.name).toBe('RenderDebug2dSystem');
       expect(system.type).toBe('render');
     });
   });

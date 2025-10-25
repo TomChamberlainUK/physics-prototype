@@ -10,6 +10,7 @@ import {
 } from './logic';
 
 export default class RenderDebug2dSystem extends System {
+  name = 'RenderDebug2dSystem';
   type = 'render';
   #wasPPressed = false;
   enabled = true;

@@ -4,6 +4,7 @@ import System from '../System';
 import { getAABB } from './logic';
 
 export default class AABBUpdate2dSystem extends System {
+  name = 'AABBUpdate2dSystem';
   type = 'physics';
 
   update(entities: Entity[]): void {

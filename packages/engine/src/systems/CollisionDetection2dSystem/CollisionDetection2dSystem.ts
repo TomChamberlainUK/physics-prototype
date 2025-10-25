@@ -3,6 +3,7 @@ import type { Context } from '#/types';
 import { getBroadPhasePairs, getNarrowPhasePairs } from './logic';
 
 export default class CollisionDetection2dSystem {
+  name = 'CollisionDetection2dSystem';
   type = 'physics';
 
   update(entities: Entity[], context: Context) {

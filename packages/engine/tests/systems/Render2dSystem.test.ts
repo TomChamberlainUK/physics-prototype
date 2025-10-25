@@ -6,7 +6,7 @@ import Renderer from '#/Renderer';
 import Render2dSystem from '#/systems/Render2dSystem';
 import * as lerpModule from '#/utils/lerp';
 
-describe('Renderer2dSystem', () => {
+describe('Render2dSystem', () => {
   let canvas: HTMLCanvasElement;
   let renderer: Renderer;
 
@@ -22,6 +22,7 @@ describe('Renderer2dSystem', () => {
     it('Should instantiate', () => {
       const system = new Render2dSystem();
       expect(system).toBeInstanceOf(Render2dSystem);
+      expect(system.name).toBe('Render2dSystem');
       expect(system.type).toBe('render');
     });
   });

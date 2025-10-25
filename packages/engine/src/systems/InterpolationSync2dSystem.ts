@@ -4,6 +4,7 @@ import Vector2d from '#/maths/Vector2d';
 import System from './System';
 
 export default class InterpolationSync2dSystem extends System {
+  name = 'InterpolationSync2dSystem';
   type = 'sync';
 
   update(entities: Entity[]) {

@@ -9,6 +9,7 @@ describe('Kinetic2dSystem', () => {
     it('Should instantiate', () => {
       const system = new Kinetic2dSystem();
       expect(system).toBeInstanceOf(Kinetic2dSystem);
+      expect(system.name).toBe('Kinetic2dSystem');
       expect(system.type).toBe('physics');
     });
   });

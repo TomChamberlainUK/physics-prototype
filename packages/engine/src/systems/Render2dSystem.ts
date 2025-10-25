@@ -4,6 +4,7 @@ import type { Context, Geometry2dComponent, Transform2dComponent } from '..';
 import { lerp } from '#/utils';
 
 export default class Render2dSystem extends System {
+  name = 'Render2dSystem';
   type = 'render';
 
   constructor() {

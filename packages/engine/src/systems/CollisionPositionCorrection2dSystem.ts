@@ -4,6 +4,7 @@ import type { Context } from '#/types';
 import System from './System';
 
 export default class CollisionPositionCorrection2dSystem extends System {
+  name = 'CollisionPositionCorrection2dSystem';
   type = 'physics';
 
   update(_entities: Entity[], {

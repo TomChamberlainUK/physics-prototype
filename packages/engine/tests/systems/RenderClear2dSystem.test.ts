@@ -19,6 +19,7 @@ describe('RenderClear2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
       expect(system).toBeInstanceOf(RenderClear2dSystem);
+      expect(system.name).toBe('RenderClear2dSystem');
       expect(system.type).toBe('render');
     });
   });

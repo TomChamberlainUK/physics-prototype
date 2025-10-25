@@ -9,6 +9,7 @@ describe('CollisionImpulseResolution2dSystem', () => {
     it('Should instantiate', () => {
       const system = new CollisionImpulseResolution2dSystem();
       expect(system).toBeInstanceOf(CollisionImpulseResolution2dSystem);
+      expect(system.name).toBe('CollisionImpulseResolution2dSystem');
       expect(system.type).toBe('physics');
     });
   });

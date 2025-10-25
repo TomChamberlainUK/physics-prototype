@@ -11,6 +11,7 @@ import {
   Kinetic2dSystem,
   Render2dSystem,
   RenderClear2dSystem,
+  RenderDebug2dSystem,
 } from 'engine';
 
 describe('SandboxScene', () => {
@@ -178,8 +179,18 @@ describe('SandboxScene', () => {
       name: 'render2d',
       System: Render2dSystem,
     },
+    {
+      name: 'renderDebug2d',
+      System: RenderDebug2dSystem,
+    },
   ])('Should add a $name system to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
+  });
+
+  it('Should disable the RenderDebug2dSystem by default', () => {
+    const renderDebug2dSystem = scene['systems']
+      .find(system => system instanceof RenderDebug2dSystem) as RenderDebug2dSystem;
+    expect(renderDebug2dSystem.enabled).toBe(false);
   });
 
   it('Should set the input in the scene context', () => {

@@ -188,8 +188,7 @@ describe('SandboxScene', () => {
   });
 
   it('Should disable the RenderDebug2dSystem by default', () => {
-    const renderDebug2dSystem = scene['systems']
-      .find(system => system instanceof RenderDebug2dSystem) as RenderDebug2dSystem;
+    const renderDebug2dSystem = scene.getSystem<RenderDebug2dSystem>('RenderDebug2dSystem');
     expect(renderDebug2dSystem.enabled).toBe(false);
   });
 

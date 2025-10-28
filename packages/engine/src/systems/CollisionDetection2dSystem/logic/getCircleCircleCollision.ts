@@ -2,6 +2,12 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 
+/**
+ * Determines the collision information between two circle-shaped colliders.
+ * @param entityA - The first entity with a circle collider.
+ * @param entityB - The second entity with a circle collider.
+ * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
+ */
 export default function getCircleCircleCollision(entityA: Entity, entityB: Entity) {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');

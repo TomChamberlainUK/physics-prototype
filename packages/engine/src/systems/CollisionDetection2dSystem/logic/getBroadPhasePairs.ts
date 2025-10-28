@@ -2,6 +2,11 @@ import type { Collider2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import getAABBOverlap from './getAABBOverlap';
 
+/**
+ * Identifies potential collision pairs among the given entities using broad-phase collision detection.
+ * @param entities - The entities to check for potential collisions.
+ * @returns An array of entity pairs that are potential collision candidates.
+ */
 export default function getBroadPhasePairs(entities: Entity[]) {
   const candidatePairs: [Entity, Entity][] = [];
   for (let i = 0; i < entities.length; i++) {

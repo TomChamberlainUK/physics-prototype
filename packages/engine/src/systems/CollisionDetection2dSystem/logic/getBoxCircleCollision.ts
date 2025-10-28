@@ -3,6 +3,12 @@ import type Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import type { BoxShape, CircleShape } from '#/types';
 
+/**
+ * Determines the collision information between a box-shaped collider and a circle-shaped collider.
+ * @param entityA - The first entity with either a box or circle collider.
+ * @param entityB - The second entity with either a box or circle collider.
+ * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
+ */
 export default function getBoxCircleCollision(entityA: Entity, entityB: Entity) {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');

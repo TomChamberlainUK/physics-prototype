@@ -1,6 +1,11 @@
 import type Entity from '#/Entity';
 import type { Collider2dComponent, Transform2dComponent } from '#/index';
 
+/**
+ * Calculates and returns the axis-aligned bounding box (AABB) for the given entity.
+ * @param entity - The entity for which to calculate the AABB.
+ * @returns The calculated AABB or null if the entity lacks required components.
+ */
 export default function getAABB(entity: Entity) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
     return null;

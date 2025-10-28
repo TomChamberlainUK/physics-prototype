@@ -3,17 +3,28 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Renderer from '#/Renderer';
 import lerp from '#/utils/lerp';
 
-type Props = {
+/**
+ * Parameters for rendering the AABB.
+ */
+type Params = {
+  /** The interpolation alpha value for rendering. */
   alpha?: number;
+  /** The set of entity IDs involved in broad-phase collisions. */
   broadPhaseCollisionPairsSet: Set<string>;
+  /** The renderer used to draw the AABB. */
   renderer: Renderer;
 };
 
+/**
+ * Renders the axis-aligned bounding box (AABB) of the given entity for debugging purposes.
+ * @param entity - The entity whose AABB to render.
+ * @param params - The parameters for rendering, including alpha, collision pairs set, and renderer.
+ */
 export default function renderAABB(entity: Entity, {
   alpha = 1,
   broadPhaseCollisionPairsSet,
   renderer,
-}: Props) {
+}: Params) {
   if (!entity.hasComponents(['Transform2d', 'Collider2d'])) {
     return;
   }

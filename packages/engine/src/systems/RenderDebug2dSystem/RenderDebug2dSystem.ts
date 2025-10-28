@@ -9,12 +9,22 @@ import {
   renderPotentialCollisionLine,
 } from './logic';
 
+/**
+ * A system that renders debug information for 2D entities, including colliders and collision pairs.
+ */
 export default class RenderDebug2dSystem extends System {
   name = 'RenderDebug2dSystem';
   type = 'render';
+  /** Tracks the previous state of the 'p' key to toggle debug rendering. */
   #wasPPressed = false;
+  /** Indicates whether debug rendering is currently enabled. */
   enabled = true;
 
+  /**
+   * Renders debug information for entities, including colliders and collision pairs.
+   * @param entities - The entities to render debug information for.
+   * @param context - The context containing rendering and input information.
+   */
   update(entities: Entity[], {
     alpha = 1,
     broadPhaseCollisionPairs = [],

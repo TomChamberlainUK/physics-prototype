@@ -3,17 +3,29 @@ import type { Transform2dComponent } from '#/components';
 import type Renderer from '#/Renderer';
 import lerp from '#/utils/lerp';
 
-type Props = {
+/**
+ * Parameters for rendering the potential collision line.
+ */
+type Params = {
+  /** The interpolation alpha value for rendering. */
   alpha?: number;
+  /** The map of narrow-phase collision pairs. */
   narrowPhaseCollisionPairsMap: Map<string, Set<string>>;
+  /** The renderer used to draw the potential collision line. */
   renderer: Renderer;
 };
 
+/**
+ * Renders a line between two entities to indicate potential collisions for debugging purposes.
+ * @param entityA - The first entity.
+ * @param entityB - The second entity.
+ * @param params - The parameters for rendering, including alpha, collision pairs map, and renderer.
+ */
 export default function renderPotentialCollisionLine(entityA: Entity, entityB: Entity, {
   alpha = 1,
   narrowPhaseCollisionPairsMap,
   renderer,
-}: Props) {
+}: Params) {
   if (
     !entityA.hasComponent('Transform2d')
     || !entityB.hasComponent('Transform2d')

@@ -3,10 +3,18 @@ import type Entity from '#/Entity';
 import type { Context } from '#/types';
 import System from './System';
 
+/**
+ * A system that corrects positions of 2D entities to resolve collisions.
+ */
 export default class CollisionPositionCorrection2dSystem extends System {
   name = 'CollisionPositionCorrection2dSystem';
   type = 'physics';
 
+  /**
+   * Corrects positions of 2D entities based on narrow phase collision pairs.
+   * @param _entities - The entities in the system (not used).
+   * @param context - The context containing narrow phase collision pairs.
+   */
   update(_entities: Entity[], {
     narrowPhaseCollisionPairs,
   }: Context) {

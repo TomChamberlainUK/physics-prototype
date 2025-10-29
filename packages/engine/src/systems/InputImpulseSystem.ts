@@ -4,10 +4,18 @@ import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
 import System from './System';
 
+/**
+ * A system that applies input-based impulses to 2D rigid bodies.
+ */
 export default class InputImpulseSystem extends System {
   name = 'InputImpulseSystem';
   type = 'physics';
 
+  /**
+   * Applies impulses to 2D rigid bodies based on user input.
+   * @param entities - The entities in the system.
+   * @param context - The context containing input and deltaTime information.
+   */
   update(entities: Entity[], { input, deltaTime }: Context) {
     if (!input || !deltaTime) return;
     for (const entity of entities) {

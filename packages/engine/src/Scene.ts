@@ -3,27 +3,54 @@ import type Renderer from './Renderer';
 import type System from './systems/System';
 import type { Context } from './types';
 
+/**
+ * The Scene class manages entities and systems within the game.
+ */
 export default class Scene {
+  /** The list of entities in the scene. */
   entities: Entity[];
+  /** The list of systems in the scene. */
   systems: System[] = [];
+  /** The context shared across systems. */
   context: Context = {};
 
+  /**
+   * Creates an instance of the Scene class.
+   */
   constructor() {
     this.entities = [];
   }
 
+  /**
+   * Sets the context for the scene.
+   * @param context - The context to set.
+   */
   setContext(context: Context) {
     this.context = context;
   }
 
+  /**
+   * Adds an entity to the scene.
+   * @param entity - The entity to add.
+   */
   addEntity(entity: Entity) {
     this.entities.push(entity);
   }
 
+  /**
+   * Adds a system to the scene.
+   * @param system - The system to add.
+   */
   addSystem(system: System) {
     this.systems.push(system);
   }
 
+  /**
+   * Gets a system by name.
+   * @param name - The name of the system to get.
+   * @returns The system with the specified name.
+   * @throws Error if the system does not exist.
+   */
   getSystem<T extends System>(name: string): T {
     const system = this.systems.find(system => system.name === name);
     if (!system) {
@@ -32,6 +59,9 @@ export default class Scene {
     return system as T;
   }
 
+  /**
+   * Updates all sync systems in the scene.
+   */
   updateSync() {
     for (const system of this.systems) {
       if (system.type !== 'sync') continue;
@@ -39,6 +69,10 @@ export default class Scene {
     }
   }
 
+  /**
+   * Updates all physics systems in the scene.
+   * @param deltaTime - The time elapsed since the last update.
+   */
   updatePhysics(deltaTime: number) {
     this.context.deltaTime = deltaTime;
     for (const system of this.systems) {
@@ -47,7 +81,20 @@ export default class Scene {
     }
   }
 
-  updateRender({ alpha, renderer }: { alpha: number; renderer: Renderer }) {
+  /**
+   * Updates all render systems in the scene.
+   * @param alpha - The interpolation factor for rendering.
+   * @param renderer - The renderer used for rendering.
+   */
+  updateRender({
+    alpha,
+    renderer,
+  }: {
+    /** The interpolation factor for rendering. */
+    alpha: number;
+    /** The renderer used for rendering. */
+    renderer: Renderer;
+  }) {
     this.context.alpha = alpha;
     this.context.renderer = renderer;
     for (const system of this.systems) {

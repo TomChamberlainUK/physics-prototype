@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import { defineConfig } from 'eslint/config';
+import tsdoceslint from 'eslint-plugin-tsdoc';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
@@ -12,4 +13,12 @@ export default defineConfig([
     jsx: false,
   }),
   tseslint.configs.recommended,
+  {
+    plugins: {
+      tsdoc: tsdoceslint,
+    },
+    rules: {
+      'tsdoc/syntax': 'warn',
+    },
+  },
 ]);

@@ -4,10 +4,18 @@ import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
 import System from './System';
 
+/**
+ * A system that updates the positions of 2D entities based on their rigid body physics.
+ */
 export default class Kinetic2dSystem extends System {
   name = 'Kinetic2dSystem';
   type = 'physics';
 
+  /**
+   * Updates positions of 2D entities based on their rigid body components.
+   * @param entities - The entities in the system.
+   * @param context - The context containing deltaTime information.
+   */
   update(entities: Entity[], { deltaTime }: Context) {
     if (!deltaTime) return;
     for (const entity of entities) {

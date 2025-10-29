@@ -3,14 +3,18 @@ import System from './System';
 import type { Context, Geometry2dComponent, Transform2dComponent } from '..';
 import { lerp } from '#/utils';
 
+/**
+ * A system that renders 2D entities based on their transform and geometry components.
+ */
 export default class Render2dSystem extends System {
   name = 'Render2dSystem';
   type = 'render';
 
-  constructor() {
-    super();
-  }
-
+  /**
+   * Renders 2D entities based on their transform and geometry components.
+   * @param entities - The entities to render.
+   * @param context - The context containing rendering information.
+   */
   update(entities: Entity[], { alpha = 1, renderer }: Context): void {
     if (!renderer) return;
 

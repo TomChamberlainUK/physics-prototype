@@ -4,10 +4,18 @@ import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
 import System from './System';
 
+/**
+ * A system that resolves collision impulses between 2D rigid bodies.
+ */
 export default class CollisionImpulseResolution2dSystem extends System {
   name = 'CollisionImpulseResolution2dSystem';
   type = 'physics';
 
+  /**
+   * Resolves collision impulses for 2D rigid bodies based on narrow phase collision pairs.
+   * @param _entities - The entities in the system (not used).
+   * @param context - The context containing narrow phase collision pairs.
+   */
   update(_entities: Entity[], {
     narrowPhaseCollisionPairs,
   }: Context) {

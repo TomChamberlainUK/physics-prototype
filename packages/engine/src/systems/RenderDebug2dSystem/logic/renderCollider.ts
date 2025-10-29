@@ -3,15 +3,25 @@ import type Entity from '#/Entity';
 import type Renderer from '#/Renderer';
 import { lerp } from '#/utils';
 
-type Props = {
+/**
+ * Parameters for rendering the collider.
+ */
+type Params = {
+  /** The interpolation alpha value for rendering. */
   alpha?: number;
+  /** The renderer used to draw the collider. */
   renderer: Renderer;
 };
 
+/**
+ * Renders the collider of the given entity for debugging purposes.
+ * @param entity - The entity whose collider to render.
+ * @param params - The parameters for rendering, including alpha and renderer.
+ */
 export default function renderCollider(entity: Entity, {
   alpha = 1,
   renderer,
-}: Props) {
+}: Params) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
     return;
   }

@@ -1,7 +1,21 @@
+import type { EventEmitter } from '#/core';
+import type { ControlScheme } from '#/types';
+
+type ConstructorParams = {
+  /** The control scheme for mapping keys to events. */
+  controlScheme?: ControlScheme;
+  /** The event emitter for emitting input events. */
+  eventEmitter?: EventEmitter | null;
+};
+
 /**
  * Keyboard input handler.
  */
 export default class KeyboardInput {
+  /** The control scheme for the keyboard input. */
+  #controlScheme: ControlScheme;
+  /** The event emitter for emitting input events. */
+  #eventEmitter: EventEmitter | null;
   /** The set of currently pressed keys. */
   #keys: Set<string>;
   /** The keydown event handler. */
@@ -12,7 +26,12 @@ export default class KeyboardInput {
   /**
    * Creates an instance of the KeyboardInput class.
    */
-  constructor() {
+  constructor({
+    controlScheme = [],
+    eventEmitter = null,
+  }: ConstructorParams = {}) {
+    this.#controlScheme = controlScheme;
+    this.#eventEmitter = eventEmitter;
     this.#keys = new Set<string>();
     this.#keydownHandler = (event) => {
       const key = event.key.toLowerCase();
@@ -55,6 +74,13 @@ export default class KeyboardInput {
    */
   pressKey(key: string) {
     this.#keys.add(key);
+    if (this.#eventEmitter) {
+      for (const { key: controlKey, action } of this.#controlScheme) {
+        if (key === controlKey) {
+          this.#eventEmitter.emit(action);
+        }
+      }
+    }
   }
 
   /**

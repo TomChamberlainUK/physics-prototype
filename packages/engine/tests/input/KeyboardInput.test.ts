@@ -1,8 +1,12 @@
-import { KeyboardInput } from '#/input';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { EventEmitter } from '#/core';
+import { KeyboardInput } from '#/input';
+import type { ControlScheme } from '#/types/ControlScheme';
 
 describe('KeyboardInput', () => {
   let keyboardInput: KeyboardInput;
+  let controlScheme: ControlScheme;
+  let eventEmitter: EventEmitter;
   let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
   let removeEventListenerSpy: ReturnType<typeof vi.spyOn>;
 
@@ -12,7 +16,12 @@ describe('KeyboardInput', () => {
   });
 
   beforeEach(() => {
-    keyboardInput = new KeyboardInput();
+    controlScheme = [];
+    eventEmitter = new EventEmitter();
+    keyboardInput = new KeyboardInput({
+      controlScheme,
+      eventEmitter,
+    });
   });
 
   afterEach(() => {
@@ -108,6 +117,15 @@ describe('KeyboardInput', () => {
       keyboardInput.pressKey(key);
       const isPressed = keyboardInput.isPressed(key);
       expect(isPressed).toBe(true);
+    });
+
+    it('Should emit the corresponding action for the pressed key', () => {
+      const key = 'x';
+      const action = 'testAction';
+      controlScheme.push({ key, action });
+      const emitSpy = vi.spyOn(eventEmitter, 'emit');
+      keyboardInput.pressKey(key);
+      expect(emitSpy).toHaveBeenCalledWith(action);
     });
   });
 

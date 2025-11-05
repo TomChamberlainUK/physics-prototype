@@ -34,6 +34,7 @@ export default class KeyboardInput {
     this.#eventEmitter = eventEmitter;
     this.#keys = new Set<string>();
     this.#keydownHandler = (event) => {
+      if (event.repeat) return;
       const key = event.key.toLowerCase();
       this.pressKey(key);
     };

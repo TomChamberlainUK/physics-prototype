@@ -75,9 +75,17 @@ export default class KeyboardInput {
   pressKey(key: string) {
     this.#keys.add(key);
     if (this.#eventEmitter) {
-      for (const { key: controlKey, action } of this.#controlScheme) {
+      for (const { key: controlKey, action, actionType } of this.#controlScheme) {
         if (key === controlKey) {
-          this.#eventEmitter.emit(action);
+          switch (actionType) {
+            case 'trigger':
+              this.#eventEmitter.emit(action);
+              break;
+            case 'state': {
+              this.#eventEmitter.emit(`${action}:start`);
+              break;
+            }
+          }
         }
       }
     }
@@ -89,5 +97,16 @@ export default class KeyboardInput {
    */
   releaseKey(key: string) {
     this.#keys.delete(key);
+    if (this.#eventEmitter) {
+      for (const { key: controlKey, action, actionType } of this.#controlScheme) {
+        if (key === controlKey) {
+          switch (actionType) {
+            case 'state':
+              this.#eventEmitter.emit(`${action}:stop`);
+              break;
+          }
+        }
+      }
+    }
   }
 }

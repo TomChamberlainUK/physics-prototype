@@ -119,13 +119,28 @@ describe('KeyboardInput', () => {
       expect(isPressed).toBe(true);
     });
 
-    it('Should emit the corresponding action for the pressed key', () => {
-      const key = 'x';
-      const action = 'testAction';
-      controlScheme.push({ key, action });
-      const emitSpy = vi.spyOn(eventEmitter, 'emit');
-      keyboardInput.pressKey(key);
-      expect(emitSpy).toHaveBeenCalledWith(action);
+    describe('When an event emitter is provided', () => {
+      describe('When the key pressed corresponds to a control scheme action with a type of "state"', () => {
+        it('Should emit the corresponding start action for the pressed key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'state' });
+          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          keyboardInput.pressKey(key);
+          expect(emitSpy).toHaveBeenCalledWith(`${action}:start`);
+        });
+      });
+
+      describe('When the key pressed corresponds to a control scheme action with a type of "trigger"', () => {
+        it('Should emit the corresponding action for the pressed key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'trigger' });
+          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          keyboardInput.pressKey(key);
+          expect(emitSpy).toHaveBeenCalledWith(action);
+        });
+      });
     });
   });
 
@@ -133,11 +148,22 @@ describe('KeyboardInput', () => {
     it('Should remove a key from the pressed state', () => {
       const key = 'a';
       keyboardInput.pressKey(key);
-      let isPressed = keyboardInput.isPressed(key);
-      expect(isPressed).toBe(true);
       keyboardInput.releaseKey(key);
-      isPressed = keyboardInput.isPressed(key);
+      const isPressed = keyboardInput.isPressed(key);
       expect(isPressed).toBe(false);
+    });
+
+    describe('When an event emitter is provided', () => {
+      describe('When the key released corresponds to a control scheme action with a type of "state"', () => {
+        it('Should emit the corresponding stop action for the released key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'state' });
+          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          keyboardInput.releaseKey(key);
+          expect(emitSpy).toHaveBeenCalledWith(`${action}:stop`);
+        });
+      });
     });
   });
 });

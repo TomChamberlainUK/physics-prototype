@@ -1,5 +1,6 @@
 import {
   AABBUpdate2dSystem,
+  ActionManager,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -13,6 +14,7 @@ import {
   RenderDebug2dSystem,
   Scene,
   Vector2d,
+  type ControlScheme,
 } from 'engine';
 import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
 
@@ -28,14 +30,20 @@ export default class SandboxScene extends Scene {
   }: Props) {
     super();
     const eventEmitter = new EventEmitter();
+    const controlScheme: ControlScheme = [
+      { key: 'w', action: 'moveUp', actionType: 'state' },
+      { key: 'a', action: 'moveLeft', actionType: 'state' },
+      { key: 's', action: 'moveDown', actionType: 'state' },
+      { key: 'd', action: 'moveRight', actionType: 'state' },
+      { key: 'shift', action: 'boost', actionType: 'state' },
+      { key: 'p', action: 'toggleDebug', actionType: 'trigger' },
+    ];
+
+    const actionManager = new ActionManager({ controlScheme, eventEmitter });
+
     const input = new KeyboardInput({
       eventEmitter,
-      controlScheme: [
-        {
-          key: 'p',
-          action: 'toggleDebug',
-        },
-      ],
+      controlScheme,
     });
     input.enable();
 
@@ -124,6 +132,7 @@ export default class SandboxScene extends Scene {
     this.addSystem(renderDebug2dSystem);
 
     this.setContext({
+      actions: actionManager.actions,
       input,
     });
   }

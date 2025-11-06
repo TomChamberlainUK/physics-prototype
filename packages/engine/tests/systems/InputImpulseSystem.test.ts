@@ -34,60 +34,60 @@ describe('InputImpulseSystem', () => {
 
     it.each([
       {
-        name: 'no keys',
-        keys: [],
+        name: 'no actions',
+        actions: [],
         direction: { x: 0, y: 0 },
       },
       {
-        name: 'w',
-        keys: ['w'],
+        name: 'moveUp',
+        actions: ['moveUp'],
         direction: { x: 0, y: -1 },
       },
       {
-        name: 's',
-        keys: ['s'],
+        name: 'moveDown',
+        actions: ['moveDown'],
         direction: { x: 0, y: 1 },
       },
       {
-        name: 'a',
-        keys: ['a'],
+        name: 'moveLeft',
+        actions: ['moveLeft'],
         direction: { x: -1, y: 0 },
       },
       {
-        name: 'd',
-        keys: ['d'],
+        name: 'moveRight',
+        actions: ['moveRight'],
         direction: { x: 1, y: 0 },
       },
       {
-        name: 'w + d',
-        keys: ['w', 'd'],
+        name: 'moveUp + moveRight',
+        actions: ['moveUp', 'moveRight'],
         direction: { x: 1, y: -1 },
       },
       {
-        name: 'w + a',
-        keys: ['w', 'a'],
+        name: 'moveUp + moveLeft',
+        actions: ['moveUp', 'moveLeft'],
         direction: { x: -1, y: -1 },
       },
       {
-        name: 's + d',
-        keys: ['s', 'd'],
+        name: 'moveDown + moveRight',
+        actions: ['moveDown', 'moveRight'],
         direction: { x: 1, y: 1 },
       },
       {
-        name: 's + a',
-        keys: ['s', 'a'],
+        name: 'moveDown + moveLeft',
+        actions: ['moveDown', 'moveLeft'],
         direction: { x: -1, y: 1 },
       },
-    ])('Should apply correct impulse for $name', ({ keys, direction }) => {
+    ])('Should apply correct impulse for $name', ({ actions, direction }) => {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent();
       const inputImpulseComponent = new InputImpulseComponent();
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-      const input = {
-        isPressed: (key: string) => keys.includes(key),
-      } as unknown as KeyboardInput;
 
-      inputImpulseSystem.update([entity], { input, deltaTime });
+      inputImpulseSystem.update([entity], {
+        actions: new Set(actions),
+        deltaTime,
+      });
 
       const expectedImpulse = getExpectedImpulse(
         new Vector2d(direction),
@@ -103,11 +103,9 @@ describe('InputImpulseSystem', () => {
       const rigidBody2dComponent = new RigidBody2dComponent();
       const inputImpulseComponent = new InputImpulseComponent();
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-      const input = {
-        isPressed: (key: string) => ['w', 'shift'].includes(key),
-      } as unknown as KeyboardInput;
+      const actions = new Set(['moveUp', 'boost']);
 
-      inputImpulseSystem.update([entity], { input, deltaTime });
+      inputImpulseSystem.update([entity], { actions, deltaTime });
 
       const expectedImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
@@ -123,11 +121,9 @@ describe('InputImpulseSystem', () => {
       const rigidBody2dComponent = new RigidBody2dComponent();
       const inputImpulseComponent = new InputImpulseComponent();
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-      const input = {
-        isPressed: (key: string) => ['w', 'd'].includes(key),
-      } as unknown as KeyboardInput;
+      const actions = new Set(['moveUp', 'moveRight']);
 
-      inputImpulseSystem.update([entity], { input, deltaTime });
+      inputImpulseSystem.update([entity], { actions, deltaTime });
 
       const singleDirectionImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
@@ -159,11 +155,9 @@ describe('InputImpulseSystem', () => {
         });
         const inputImpulseComponent = new InputImpulseComponent();
         entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-        const input = {
-          isPressed: (key: string) => key === 'w',
-        } as unknown as KeyboardInput;
+        const actions = new Set(['moveUp']);
 
-        inputImpulseSystem.update([entity], { input, deltaTime });
+        inputImpulseSystem.update([entity], { actions, deltaTime });
 
         const expectedImpulse = getExpectedImpulse(direction, mass);
 
@@ -176,12 +170,9 @@ describe('InputImpulseSystem', () => {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent();
       entity.addComponent(rigidBody2dComponent);
-      const input = {
-        isPressed: (key: string) => key === 'w',
-      } as unknown as KeyboardInput;
-      const deltaTime = 1 / 60;
+      const actions = new Set(['moveUp']);
 
-      inputImpulseSystem.update([entity], { input, deltaTime });
+      inputImpulseSystem.update([entity], { actions, deltaTime });
 
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(0);
     });

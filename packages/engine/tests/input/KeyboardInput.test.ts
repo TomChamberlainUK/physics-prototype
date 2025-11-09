@@ -8,8 +8,8 @@ describe('KeyboardInput', () => {
   let controlScheme: ControlScheme;
   let events: Events;
 
-  let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
-  let removeEventListenerSpy: ReturnType<typeof vi.spyOn>;
+  let addEventListenerSpy: MockInstance<typeof window.addEventListener>;
+  let removeEventListenerSpy: MockInstance<typeof window.removeEventListener>;
   let eventsEmitSpy: MockInstance<typeof events.emit>;
 
   beforeAll(() => {

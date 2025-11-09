@@ -16,8 +16,8 @@ export default class InputImpulseSystem extends System {
    * @param entities - The entities in the system.
    * @param context - The context containing input and deltaTime information.
    */
-  update(entities: Entity[], { input, deltaTime }: Context) {
-    if (!input || !deltaTime) return;
+  update(entities: Entity[], { actions, deltaTime }: Context) {
+    if (!actions || !deltaTime) return;
     for (const entity of entities) {
       if (!entity.hasComponents(['RigidBody2d', 'InputImpulse'])) {
         continue;
@@ -25,19 +25,19 @@ export default class InputImpulseSystem extends System {
       const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
       let force = 3600; // Assuming 60Hz physics update rate
       const direction = new Vector2d({ x: 0, y: 0 });
-      if (input.isPressed('shift')) {
+      if (actions.has('boost')) {
         force *= 2;
       }
-      if (input.isPressed('w')) {
+      if (actions.has('moveUp')) {
         direction.y -= 1;
       }
-      if (input.isPressed('a')) {
+      if (actions.has('moveLeft')) {
         direction.x -= 1;
       }
-      if (input.isPressed('s')) {
+      if (actions.has('moveDown')) {
         direction.y += 1;
       }
-      if (input.isPressed('d')) {
+      if (actions.has('moveRight')) {
         direction.x += 1;
       }
       const normalizedDirection = direction.getUnit();

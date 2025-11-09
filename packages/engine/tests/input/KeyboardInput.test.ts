@@ -1,10 +1,16 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { Events } from '#/core';
 import { KeyboardInput } from '#/input';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ControlScheme } from '#/types/ControlScheme';
 
 describe('KeyboardInput', () => {
   let keyboardInput: KeyboardInput;
-  let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
-  let removeEventListenerSpy: ReturnType<typeof vi.spyOn>;
+  let controlScheme: ControlScheme;
+  let events: Events;
+
+  let addEventListenerSpy: MockInstance<typeof window.addEventListener>;
+  let removeEventListenerSpy: MockInstance<typeof window.removeEventListener>;
+  let eventsEmitSpy: MockInstance<typeof events.emit>;
 
   beforeAll(() => {
     addEventListenerSpy = vi.spyOn(window, 'addEventListener');
@@ -12,7 +18,13 @@ describe('KeyboardInput', () => {
   });
 
   beforeEach(() => {
-    keyboardInput = new KeyboardInput();
+    controlScheme = [];
+    events = new Events();
+    keyboardInput = new KeyboardInput({
+      controlScheme,
+      events,
+    });
+    eventsEmitSpy = vi.spyOn(events, 'emit');
   });
 
   afterEach(() => {
@@ -109,17 +121,49 @@ describe('KeyboardInput', () => {
       const isPressed = keyboardInput.isPressed(key);
       expect(isPressed).toBe(true);
     });
+
+    describe('When an event emitter is provided', () => {
+      describe('When the key pressed corresponds to a control scheme action with a type of "state"', () => {
+        it('Should emit the corresponding start action for the pressed key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'state' });
+          keyboardInput.pressKey(key);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(`${action}:start`);
+        });
+      });
+
+      describe('When the key pressed corresponds to a control scheme action with a type of "trigger"', () => {
+        it('Should emit the corresponding action for the pressed key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'trigger' });
+          keyboardInput.pressKey(key);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(action);
+        });
+      });
+    });
   });
 
   describe('releaseKey()', () => {
     it('Should remove a key from the pressed state', () => {
       const key = 'a';
       keyboardInput.pressKey(key);
-      let isPressed = keyboardInput.isPressed(key);
-      expect(isPressed).toBe(true);
       keyboardInput.releaseKey(key);
-      isPressed = keyboardInput.isPressed(key);
+      const isPressed = keyboardInput.isPressed(key);
       expect(isPressed).toBe(false);
+    });
+
+    describe('When an event emitter is provided', () => {
+      describe('When the key released corresponds to a control scheme action with a type of "state"', () => {
+        it('Should emit the corresponding stop action for the released key', () => {
+          const key = 'x';
+          const action = 'testAction';
+          controlScheme.push({ key, action, actionType: 'state' });
+          keyboardInput.releaseKey(key);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(`${action}:stop`);
+        });
+      });
     });
   });
 });

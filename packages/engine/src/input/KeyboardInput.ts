@@ -1,7 +1,24 @@
+import type { Events } from '#/core';
+import type { ControlScheme } from '#/types';
+
+/**
+ * Constructor parameters for KeyboardInput.
+ */
+type ConstructorParams = {
+  /** The control scheme for mapping keys to events. */
+  controlScheme?: ControlScheme;
+  /** The event emitter for emitting input events. */
+  events?: Events | null;
+};
+
 /**
  * Keyboard input handler.
  */
 export default class KeyboardInput {
+  /** The control scheme for the keyboard input. */
+  #controlScheme: ControlScheme;
+  /** The event emitter for emitting input events. */
+  #events: Events | null;
   /** The set of currently pressed keys. */
   #keys: Set<string>;
   /** The keydown event handler. */
@@ -12,9 +29,15 @@ export default class KeyboardInput {
   /**
    * Creates an instance of the KeyboardInput class.
    */
-  constructor() {
+  constructor({
+    controlScheme = [],
+    events = null,
+  }: ConstructorParams = {}) {
+    this.#controlScheme = controlScheme;
+    this.#events = events;
     this.#keys = new Set<string>();
     this.#keydownHandler = (event) => {
+      if (event.repeat) return;
       const key = event.key.toLowerCase();
       this.pressKey(key);
     };
@@ -55,6 +78,21 @@ export default class KeyboardInput {
    */
   pressKey(key: string) {
     this.#keys.add(key);
+    if (this.#events) {
+      for (const { key: controlKey, action, actionType } of this.#controlScheme) {
+        if (key === controlKey) {
+          switch (actionType) {
+            case 'trigger':
+              this.#events.emit(action);
+              break;
+            case 'state': {
+              this.#events.emit(`${action}:start`);
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -63,5 +101,16 @@ export default class KeyboardInput {
    */
   releaseKey(key: string) {
     this.#keys.delete(key);
+    if (this.#events) {
+      for (const { key: controlKey, action, actionType } of this.#controlScheme) {
+        if (key === controlKey) {
+          switch (actionType) {
+            case 'state':
+              this.#events.emit(`${action}:stop`);
+              break;
+          }
+        }
+      }
+    }
   }
 }

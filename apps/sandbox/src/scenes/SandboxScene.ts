@@ -1,8 +1,10 @@
 import {
   AABBUpdate2dSystem,
+  Actions,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
+  Events,
   InputImpulseSystem,
   InterpolationSync2dSystem,
   KeyboardInput,
@@ -12,22 +14,39 @@ import {
   RenderDebug2dSystem,
   Scene,
   Vector2d,
+  type ControlScheme,
 } from 'engine';
 import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
 
 type Props = {
-  input: KeyboardInput;
   height: number;
   width: number;
 };
 
 export default class SandboxScene extends Scene {
   constructor({
-    input,
     height,
     width,
   }: Props) {
     super();
+    const events = new Events();
+    const controlScheme: ControlScheme = [
+      { key: 'w', action: 'moveUp', actionType: 'state' },
+      { key: 'a', action: 'moveLeft', actionType: 'state' },
+      { key: 's', action: 'moveDown', actionType: 'state' },
+      { key: 'd', action: 'moveRight', actionType: 'state' },
+      { key: 'shift', action: 'boost', actionType: 'state' },
+      { key: 'p', action: 'toggleDebug', actionType: 'trigger' },
+    ];
+
+    const actions = new Actions({ controlScheme, events });
+
+    const input = new KeyboardInput({
+      events,
+      controlScheme,
+    });
+    input.enable();
+
     const playerEntity = new PlayerEntity();
     this.addEntity(playerEntity);
 
@@ -88,20 +107,32 @@ export default class SandboxScene extends Scene {
       this.addEntity(circleEntity);
     }
 
-    this.addSystem(new InterpolationSync2dSystem());
-    this.addSystem(new InputImpulseSystem());
-    this.addSystem(new AABBUpdate2dSystem());
-    this.addSystem(new CollisionDetection2dSystem());
-    this.addSystem(new CollisionImpulseResolution2dSystem());
-    this.addSystem(new CollisionPositionCorrection2dSystem());
-    this.addSystem(new Kinetic2dSystem());
-    this.addSystem(new RenderClear2dSystem());
-    this.addSystem(new Render2dSystem());
-    const renderDebug2dSystem = new RenderDebug2dSystem();
+    const interpolationSync2dSystem = new InterpolationSync2dSystem();
+    const inputImpulseSystem = new InputImpulseSystem();
+    const aabbUpdate2dSystem = new AABBUpdate2dSystem();
+    const collisionDetection2dSystem = new CollisionDetection2dSystem();
+    const collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
+    const collisionPositionCorrection2dSystem = new CollisionPositionCorrection2dSystem();
+    const kinetic2dSystem = new Kinetic2dSystem();
+    const renderClear2dSystem = new RenderClear2dSystem();
+    const render2dSystem = new Render2dSystem();
+    const renderDebug2dSystem = new RenderDebug2dSystem({ events });
+
     renderDebug2dSystem.enabled = false;
+
+    this.addSystem(interpolationSync2dSystem);
+    this.addSystem(inputImpulseSystem);
+    this.addSystem(aabbUpdate2dSystem);
+    this.addSystem(collisionDetection2dSystem);
+    this.addSystem(collisionImpulseResolution2dSystem);
+    this.addSystem(collisionPositionCorrection2dSystem);
+    this.addSystem(kinetic2dSystem);
+    this.addSystem(renderClear2dSystem);
+    this.addSystem(render2dSystem);
     this.addSystem(renderDebug2dSystem);
 
     this.setContext({
+      actions,
       input,
     });
   }

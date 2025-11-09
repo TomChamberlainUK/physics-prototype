@@ -1,7 +1,7 @@
-import SandboxScene from '#/scenes/SandboxScene';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AABBUpdate2dSystem,
+  Actions,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -13,13 +13,13 @@ import {
   RenderClear2dSystem,
   RenderDebug2dSystem,
 } from 'engine';
+import SandboxScene from '#/scenes/SandboxScene';
 
 describe('SandboxScene', () => {
   const height = 600;
   const width = 800;
 
   let scene: SandboxScene;
-  let input: KeyboardInput;
 
   const sceneAddEntitySpy = vi.spyOn(SandboxScene.prototype, 'addEntity');
   const sceneAddSystemSpy = vi.spyOn(SandboxScene.prototype, 'addSystem');
@@ -51,9 +51,7 @@ describe('SandboxScene', () => {
   });
 
   beforeEach(() => {
-    input = new KeyboardInput();
     scene = new SandboxScene({
-      input,
       width,
       height,
     });
@@ -193,6 +191,14 @@ describe('SandboxScene', () => {
   });
 
   it('Should set the input in the scene context', () => {
-    expect(sceneSetContextSpy).toHaveBeenCalledWith({ input });
+    expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
+      input: expect.any(KeyboardInput),
+    }));
+  });
+
+  it('Should set the actions in the scene context', () => {
+    expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
+      actions: expect.any(Actions),
+    }));
   });
 });

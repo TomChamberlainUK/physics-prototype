@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { Events } from '#/core';
 import Entity from '#/Entity';
-import { KeyboardInput } from '#/input';
 import { Vector2d } from '#/maths';
 import Renderer from '#/Renderer';
 import { RenderDebug2dSystem } from '#/systems';
@@ -13,9 +13,13 @@ import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types'
 
 describe('RenderDebug2dSystem', () => {
   let system: RenderDebug2dSystem;
+  let events: Events;
+  let eventsOnSpy: MockInstance<typeof events.on>;
 
   beforeEach(() => {
-    system = new RenderDebug2dSystem();
+    events = new Events();
+    eventsOnSpy = vi.spyOn(events, 'on');
+    system = new RenderDebug2dSystem({ events });
   });
 
   describe('constructor()', () => {
@@ -23,6 +27,11 @@ describe('RenderDebug2dSystem', () => {
       expect(system).toBeInstanceOf(RenderDebug2dSystem);
       expect(system.name).toBe('RenderDebug2dSystem');
       expect(system.type).toBe('render');
+      expect(system.enabled).toBe(true);
+    });
+
+    it('Should subscribe to the toggleDebug event', () => {
+      expect(eventsOnSpy).toHaveBeenCalledWith('toggleDebug', expect.any(Function));
     });
   });
 
@@ -42,28 +51,6 @@ describe('RenderDebug2dSystem', () => {
         const renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
         system.update([], { renderer });
         expect(renderAABBSpy).not.toHaveBeenCalled();
-      });
-    });
-
-    describe('When passed an input in the context', () => {
-      it('Should toggle the enabled state when the "p" key is pressed', () => {
-        const renderer = new Renderer(document.createElement('canvas'));
-        const input = new KeyboardInput();
-        const isPressedSpy = vi.spyOn(input, 'isPressed');
-        isPressedSpy.mockImplementation((key: string) => key === 'p');
-        system.update([], { renderer, input });
-        expect(system.enabled).toBe(false);
-      });
-
-      it('Should not toggle the enabled state when the "p" key is held down from the previous frame', () => {
-        const renderer = new Renderer(document.createElement('canvas'));
-        const input = new KeyboardInput();
-        const isPressedSpy = vi.spyOn(input, 'isPressed');
-        isPressedSpy.mockImplementation((key: string) => key === 'p');
-        system.update([], { renderer, input });
-        expect(system.enabled).toBe(false);
-        system.update([], { renderer, input });
-        expect(system.enabled).toBe(false);
       });
     });
 
@@ -175,6 +162,15 @@ describe('RenderDebug2dSystem', () => {
           });
         }
       });
+    });
+  });
+
+  describe('When the toggleDebug event is emitted', () => {
+    it('Should toggle the enabled state', () => {
+      events.emit('toggleDebug');
+      expect(system.enabled).toBe(false);
+      events.emit('toggleDebug');
+      expect(system.enabled).toBe(true);
     });
   });
 });

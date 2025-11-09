@@ -361,4 +361,12 @@ describe('Renderer', () => {
       );
     });
   });
+
+  describe('save()', () => {
+    it('Should save the current canvas state', () => {
+      const mockCtxSave = vi.spyOn(renderer.ctx, 'save');
+      renderer.save();
+      expect(mockCtxSave).toHaveBeenCalled();
+    });
+  });
 });

@@ -157,4 +157,11 @@ export default class Renderer {
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
   }
+
+  /**
+   * Saves the current state of the canvas context.
+   */
+  save() {
+    this.ctx.save();
+  }
 }

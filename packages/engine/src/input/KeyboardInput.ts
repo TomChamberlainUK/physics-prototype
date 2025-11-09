@@ -1,6 +1,9 @@
 import type { Events } from '#/core';
 import type { ControlScheme } from '#/types';
 
+/**
+ * Constructor parameters for KeyboardInput.
+ */
 type ConstructorParams = {
   /** The control scheme for mapping keys to events. */
   controlScheme?: ControlScheme;

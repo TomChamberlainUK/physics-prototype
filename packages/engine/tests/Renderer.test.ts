@@ -369,4 +369,12 @@ describe('Renderer', () => {
       expect(mockCtxSave).toHaveBeenCalled();
     });
   });
+
+  describe('restore()', () => {
+    it('Should restore the previous canvas state', () => {
+      const mockCtxRestore = vi.spyOn(renderer.ctx, 'restore');
+      renderer.restore();
+      expect(mockCtxRestore).toHaveBeenCalled();
+    });
+  });
 });

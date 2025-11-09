@@ -164,4 +164,11 @@ export default class Renderer {
   save() {
     this.ctx.save();
   }
+
+  /**
+   * Restores the last saved state of the canvas context.
+   */
+  restore() {
+    this.ctx.restore();
+  }
 }

@@ -85,9 +85,9 @@ export default class Renderer {
    * @param strokeColor - The stroke color of the rectangle (optional).
    */
   drawBox({
-    /** The x-coordinate of the rectangle's top-left corner. */
+    /** The x-coordinate of the rectangle's center. */
     x = 0,
-    /** The y-coordinate of the rectangle's top-left corner. */
+    /** The y-coordinate of the rectangle's center. */
     y = 0,
     /** The width of the rectangle. */
     width,

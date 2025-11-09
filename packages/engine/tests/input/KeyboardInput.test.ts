@@ -1,4 +1,4 @@
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { Events } from '#/core';
 import { KeyboardInput } from '#/input';
 import type { ControlScheme } from '#/types/ControlScheme';
@@ -7,8 +7,10 @@ describe('KeyboardInput', () => {
   let keyboardInput: KeyboardInput;
   let controlScheme: ControlScheme;
   let events: Events;
+
   let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
   let removeEventListenerSpy: ReturnType<typeof vi.spyOn>;
+  let eventsEmitSpy: MockInstance<typeof events.emit>;
 
   beforeAll(() => {
     addEventListenerSpy = vi.spyOn(window, 'addEventListener');
@@ -22,6 +24,7 @@ describe('KeyboardInput', () => {
       controlScheme,
       events,
     });
+    eventsEmitSpy = vi.spyOn(events, 'emit');
   });
 
   afterEach(() => {
@@ -125,9 +128,8 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'state' });
-          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.pressKey(key);
-          expect(emitSpy).toHaveBeenCalledWith(`${action}:start`);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(`${action}:start`);
         });
       });
 
@@ -136,9 +138,8 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'trigger' });
-          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.pressKey(key);
-          expect(emitSpy).toHaveBeenCalledWith(action);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(action);
         });
       });
     });
@@ -159,9 +160,8 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'state' });
-          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.releaseKey(key);
-          expect(emitSpy).toHaveBeenCalledWith(`${action}:stop`);
+          expect(eventsEmitSpy).toHaveBeenCalledWith(`${action}:stop`);
         });
       });
     });

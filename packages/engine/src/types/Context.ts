@@ -1,3 +1,4 @@
+import type { Actions } from '#/core';
 import type { KeyboardInput } from '#/input';
 import type Renderer from '#/Renderer';
 import type { BroadPhaseCollisionPair } from './BroadPhaseCollisionPair';
@@ -8,7 +9,7 @@ import type { NarrowPhaseCollisionPair } from './NarrowPhaseCollisionPair';
  */
 export type Context = {
   /** The set of current actions being performed. */
-  actions?: Set<string>;
+  actions?: Actions;
   /** The interpolation factor for rendering. */
   alpha?: number;
   /** Pairs of entities that are potentially colliding. */

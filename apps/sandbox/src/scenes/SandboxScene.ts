@@ -1,6 +1,6 @@
 import {
   AABBUpdate2dSystem,
-  ActionManager,
+  Actions,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -39,7 +39,7 @@ export default class SandboxScene extends Scene {
       { key: 'p', action: 'toggleDebug', actionType: 'trigger' },
     ];
 
-    const actionManager = new ActionManager({ controlScheme, eventEmitter });
+    const actions = new Actions({ controlScheme, eventEmitter });
 
     const input = new KeyboardInput({
       eventEmitter,
@@ -132,7 +132,7 @@ export default class SandboxScene extends Scene {
     this.addSystem(renderDebug2dSystem);
 
     this.setContext({
-      actions: actionManager.actions,
+      actions,
       input,
     });
   }

@@ -2,7 +2,7 @@ import type { ControlScheme } from '#/types';
 import type EventEmitter from './EventEmitter';
 
 /**
- * Parameters for constructing an ActionManager.
+ * Parameters for constructing an Actions.
  */
 type ConstructorParams = {
   controlScheme: ControlScheme;
@@ -12,12 +12,12 @@ type ConstructorParams = {
 /**
  * Manages actions based on a control scheme and events emitted by an event emitter.
  */
-export default class ActionManager {
+export default class Actions {
   /** Set of active actions */
-  actions: Set<string> = new Set();
+  #actions: Set<string> = new Set();
 
   /**
-   * Creates an instance of ActionManager.
+   * Creates an instance of Actions.
    * @param controlScheme - The control scheme defining actions and their types.
    * @param eventEmitter - The event emitter to listen for action events.
    */
@@ -26,8 +26,17 @@ export default class ActionManager {
       if (actionType !== 'state') {
         continue;
       }
-      eventEmitter.on(`${action}:start`, () => this.actions.add(action));
-      eventEmitter.on(`${action}:stop`, () => this.actions.delete(action));
+      eventEmitter.on(`${action}:start`, () => this.#actions.add(action));
+      eventEmitter.on(`${action}:stop`, () => this.#actions.delete(action));
     }
+  }
+
+  /**
+   * Checks if the specified action is currently active.
+   * @param action - The action to check.
+   * @returns True if the action is active, false otherwise.
+   */
+  has(action: string) {
+    return this.#actions.has(action);
   }
 }

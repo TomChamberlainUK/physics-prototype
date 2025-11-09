@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   AABBUpdate2dSystem,
+  Actions,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -197,7 +198,7 @@ describe('SandboxScene', () => {
 
   it('Should set the actions in the scene context', () => {
     expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
-      actions: expect.any(Set),
+      actions: expect.any(Actions),
     }));
   });
 });

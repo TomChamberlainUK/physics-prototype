@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { ActionManager, EventEmitter } from '#/core';
+import { Actions, EventEmitter } from '#/core';
 import type { ControlScheme } from '#/types';
 
-describe('ActionManager', () => {
-  let actionManager: ActionManager;
+describe('Actions', () => {
+  let actionManager: Actions;
   let controlScheme: ControlScheme;
   let eventEmitter: EventEmitter;
 
@@ -16,7 +16,7 @@ describe('ActionManager', () => {
     ];
     eventEmitter = new EventEmitter();
     eventEmitterOnSpy = vi.spyOn(eventEmitter, 'on');
-    actionManager = new ActionManager({
+    actionManager = new Actions({
       controlScheme,
       eventEmitter,
     });
@@ -24,7 +24,7 @@ describe('ActionManager', () => {
 
   describe('constructor()', () => {
     it('Should instantiate', () => {
-      expect(actionManager).toBeInstanceOf(ActionManager);
+      expect(actionManager).toBeInstanceOf(Actions);
     });
 
     it('Should register actions on state events', () => {
@@ -55,6 +55,17 @@ describe('ActionManager', () => {
           );
         }
       }
+    });
+  });
+
+  describe('has()', () => {
+    it('Should return true for active actions', () => {
+      eventEmitter.emit('testStateAction:start');
+      expect(actionManager.has('testStateAction')).toBe(true);
+    });
+
+    it('Should return false for inactive actions', () => {
+      expect(actionManager.has('testStateAction')).toBe(false);
     });
   });
 });

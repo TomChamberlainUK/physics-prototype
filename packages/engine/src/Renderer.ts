@@ -24,6 +24,8 @@ export default class Renderer {
 
     this.canvas = canvas;
     this.ctx = ctx;
+
+    this.resetOrigin();
   }
 
   /**

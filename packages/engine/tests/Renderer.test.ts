@@ -15,9 +15,11 @@ describe('Renderer', () => {
 
   describe('constructor()', () => {
     let canvasGetContextSpy: MockInstance<typeof HTMLCanvasElement.prototype.getContext>;
+    let resetOriginSpy: MockInstance<typeof Renderer.prototype.resetOrigin>;
 
     beforeAll(() => {
       canvasGetContextSpy = vi.spyOn(canvas, 'getContext');
+      resetOriginSpy = vi.spyOn(Renderer.prototype, 'resetOrigin');
     });
 
     beforeEach(() => {
@@ -51,6 +53,10 @@ describe('Renderer', () => {
 
     it('Should expose the rendering context', () => {
       expect(renderer.ctx).toBeInstanceOf(CanvasRenderingContext2D);
+    });
+
+    it('Should reset the origin', () => {
+      expect(resetOriginSpy).toHaveBeenCalled();
     });
   });
 

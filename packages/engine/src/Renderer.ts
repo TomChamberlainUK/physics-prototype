@@ -180,4 +180,12 @@ export default class Renderer {
   translate({ x, y }: { x: number; y: number }) {
     this.ctx.translate(x, y);
   }
+
+  /**
+   * Rotates the canvas context by the given angle.
+   * @param angle - The angle in radians to rotate the context.
+   */
+  rotate(angle: number) {
+    this.ctx.rotate(angle);
+  }
 }

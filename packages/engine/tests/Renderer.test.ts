@@ -387,4 +387,13 @@ describe('Renderer', () => {
       expect(mockCtxTranslate).toHaveBeenCalledWith(x, y);
     });
   });
+
+  describe('rotate()', () => {
+    it('Should rotate the canvas context', () => {
+      const mockCtxRotate = vi.spyOn(renderer.ctx, 'rotate');
+      const angle = Math.PI / 4;
+      renderer.rotate(angle);
+      expect(mockCtxRotate).toHaveBeenCalledWith(angle);
+    });
+  });
 });

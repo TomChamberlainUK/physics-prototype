@@ -1,21 +1,21 @@
 import { describe, expect, it, vi } from 'vitest';
-import { EventEmitter } from '#/core';
+import { Events } from '#/core';
 
-describe('EventEmitter', () => {
+describe('Events', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
-      const eventEmitter = new EventEmitter();
-      expect(eventEmitter).toBeInstanceOf(EventEmitter);
+      const events = new Events();
+      expect(events).toBeInstanceOf(Events);
     });
   });
 
   describe('on()', () => {
     it('Should register an event listener', () => {
-      const eventEmitter = new EventEmitter();
+      const events = new Events();
       const event = 'testEvent';
       const handler = vi.fn();
-      eventEmitter.on(event, handler);
-      const listeners = eventEmitter.listeners.get(event);
+      events.on(event, handler);
+      const listeners = events.listeners.get(event);
       expect(listeners).toBeDefined();
       expect(listeners).toContain(handler);
     });
@@ -23,12 +23,12 @@ describe('EventEmitter', () => {
 
   describe('off()', () => {
     it('Should remove a registered event listener', () => {
-      const eventEmitter = new EventEmitter();
+      const events = new Events();
       const event = 'testEvent';
       const handler = vi.fn();
-      eventEmitter.on(event, handler);
-      eventEmitter.off(event, handler);
-      const listeners = eventEmitter.listeners.get(event);
+      events.on(event, handler);
+      events.off(event, handler);
+      const listeners = events.listeners.get(event);
       expect(listeners).toBeDefined();
       expect(listeners).not.toContain(handler);
     });
@@ -36,12 +36,12 @@ describe('EventEmitter', () => {
 
   describe('emit()', () => {
     it('Should invoke registered event listeners with provided arguments', () => {
-      const eventEmitter = new EventEmitter();
+      const events = new Events();
       const event = 'testEvent';
       const handler = vi.fn();
       const args = ['hello', 'world'];
-      eventEmitter.on(event, handler);
-      eventEmitter.emit(event, ...args);
+      events.on(event, handler);
+      events.emit(event, ...args);
       expect(handler).toHaveBeenCalledWith(...args);
     });
   });

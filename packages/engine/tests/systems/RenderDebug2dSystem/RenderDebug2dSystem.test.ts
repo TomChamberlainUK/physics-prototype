@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { EventEmitter } from '#/core';
+import { Events } from '#/core';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import Renderer from '#/Renderer';
@@ -13,13 +13,13 @@ import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types'
 
 describe('RenderDebug2dSystem', () => {
   let system: RenderDebug2dSystem;
-  let eventEmitter: EventEmitter;
-  let eventEmitterOnSpy: MockInstance<typeof eventEmitter.on>;
+  let events: Events;
+  let eventsOnSpy: MockInstance<typeof events.on>;
 
   beforeEach(() => {
-    eventEmitter = new EventEmitter();
-    eventEmitterOnSpy = vi.spyOn(eventEmitter, 'on');
-    system = new RenderDebug2dSystem({ eventEmitter });
+    events = new Events();
+    eventsOnSpy = vi.spyOn(events, 'on');
+    system = new RenderDebug2dSystem({ events });
   });
 
   describe('constructor()', () => {
@@ -31,7 +31,7 @@ describe('RenderDebug2dSystem', () => {
     });
 
     it('Should subscribe to the toggleDebug event', () => {
-      expect(eventEmitterOnSpy).toHaveBeenCalledWith('toggleDebug', expect.any(Function));
+      expect(eventsOnSpy).toHaveBeenCalledWith('toggleDebug', expect.any(Function));
     });
   });
 
@@ -167,9 +167,9 @@ describe('RenderDebug2dSystem', () => {
 
   describe('When the toggleDebug event is emitted', () => {
     it('Should toggle the enabled state', () => {
-      eventEmitter.emit('toggleDebug');
+      events.emit('toggleDebug');
       expect(system.enabled).toBe(false);
-      eventEmitter.emit('toggleDebug');
+      events.emit('toggleDebug');
       expect(system.enabled).toBe(true);
     });
   });

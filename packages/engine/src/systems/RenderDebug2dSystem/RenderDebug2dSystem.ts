@@ -1,4 +1,4 @@
-import type { EventEmitter } from '#/core';
+import type { Events } from '#/core';
 import type Entity from '#/Entity';
 import type { Context } from '#/types';
 import System from '../System';
@@ -15,7 +15,7 @@ import {
  */
 type ConstructorParams = {
   /** Event emitter to listen for toggleDebug events. */
-  eventEmitter: EventEmitter;
+  events: Events;
 };
 
 /**
@@ -27,9 +27,9 @@ export default class RenderDebug2dSystem extends System {
   /** Indicates whether debug rendering is currently enabled. */
   enabled = true;
 
-  constructor({ eventEmitter }: ConstructorParams) {
+  constructor({ events }: ConstructorParams) {
     super();
-    eventEmitter.on('toggleDebug', () => {
+    events.on('toggleDebug', () => {
       this.enabled = !this.enabled;
     });
   }

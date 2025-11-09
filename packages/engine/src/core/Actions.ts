@@ -1,12 +1,12 @@
 import type { ControlScheme } from '#/types';
-import type EventEmitter from './EventEmitter';
+import type Events from './Events';
 
 /**
  * Parameters for constructing an Actions.
  */
 type ConstructorParams = {
   controlScheme: ControlScheme;
-  eventEmitter: EventEmitter;
+  events: Events;
 };
 
 /**
@@ -19,15 +19,15 @@ export default class Actions {
   /**
    * Creates an instance of Actions.
    * @param controlScheme - The control scheme defining actions and their types.
-   * @param eventEmitter - The event emitter to listen for action events.
+   * @param events - The events emitter to listen for action events.
    */
-  constructor({ controlScheme, eventEmitter }: ConstructorParams) {
+  constructor({ controlScheme, events }: ConstructorParams) {
     for (const { action, actionType } of controlScheme) {
       if (actionType !== 'state') {
         continue;
       }
-      eventEmitter.on(`${action}:start`, () => this.#actions.add(action));
-      eventEmitter.on(`${action}:stop`, () => this.#actions.delete(action));
+      events.on(`${action}:start`, () => this.#actions.add(action));
+      events.on(`${action}:stop`, () => this.#actions.delete(action));
     }
   }
 

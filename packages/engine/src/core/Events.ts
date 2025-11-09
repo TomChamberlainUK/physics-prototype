@@ -1,7 +1,7 @@
 /**
  * A simple event emitter class that allows registering event listeners.
  */
-export default class EventEmitter {
+export default class Events {
   #listeners: Map<string, Array<(...args: unknown[]) => void>> = new Map();
 
   /**

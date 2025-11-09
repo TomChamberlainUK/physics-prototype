@@ -1,12 +1,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { EventEmitter } from '#/core';
+import { Events } from '#/core';
 import { KeyboardInput } from '#/input';
 import type { ControlScheme } from '#/types/ControlScheme';
 
 describe('KeyboardInput', () => {
   let keyboardInput: KeyboardInput;
   let controlScheme: ControlScheme;
-  let eventEmitter: EventEmitter;
+  let events: Events;
   let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
   let removeEventListenerSpy: ReturnType<typeof vi.spyOn>;
 
@@ -17,10 +17,10 @@ describe('KeyboardInput', () => {
 
   beforeEach(() => {
     controlScheme = [];
-    eventEmitter = new EventEmitter();
+    events = new Events();
     keyboardInput = new KeyboardInput({
       controlScheme,
-      eventEmitter,
+      events,
     });
   });
 
@@ -125,7 +125,7 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'state' });
-          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.pressKey(key);
           expect(emitSpy).toHaveBeenCalledWith(`${action}:start`);
         });
@@ -136,7 +136,7 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'trigger' });
-          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.pressKey(key);
           expect(emitSpy).toHaveBeenCalledWith(action);
         });
@@ -159,7 +159,7 @@ describe('KeyboardInput', () => {
           const key = 'x';
           const action = 'testAction';
           controlScheme.push({ key, action, actionType: 'state' });
-          const emitSpy = vi.spyOn(eventEmitter, 'emit');
+          const emitSpy = vi.spyOn(events, 'emit');
           keyboardInput.releaseKey(key);
           expect(emitSpy).toHaveBeenCalledWith(`${action}:stop`);
         });

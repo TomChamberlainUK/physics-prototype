@@ -4,7 +4,7 @@ import {
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
-  EventEmitter,
+  Events,
   InputImpulseSystem,
   InterpolationSync2dSystem,
   KeyboardInput,
@@ -29,7 +29,7 @@ export default class SandboxScene extends Scene {
     width,
   }: Props) {
     super();
-    const eventEmitter = new EventEmitter();
+    const events = new Events();
     const controlScheme: ControlScheme = [
       { key: 'w', action: 'moveUp', actionType: 'state' },
       { key: 'a', action: 'moveLeft', actionType: 'state' },
@@ -39,10 +39,10 @@ export default class SandboxScene extends Scene {
       { key: 'p', action: 'toggleDebug', actionType: 'trigger' },
     ];
 
-    const actions = new Actions({ controlScheme, eventEmitter });
+    const actions = new Actions({ controlScheme, events });
 
     const input = new KeyboardInput({
-      eventEmitter,
+      events,
       controlScheme,
     });
     input.enable();
@@ -116,7 +116,7 @@ export default class SandboxScene extends Scene {
     const kinetic2dSystem = new Kinetic2dSystem();
     const renderClear2dSystem = new RenderClear2dSystem();
     const render2dSystem = new Render2dSystem();
-    const renderDebug2dSystem = new RenderDebug2dSystem({ eventEmitter });
+    const renderDebug2dSystem = new RenderDebug2dSystem({ events });
 
     renderDebug2dSystem.enabled = false;
 

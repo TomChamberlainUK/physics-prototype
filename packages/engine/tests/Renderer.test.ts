@@ -377,4 +377,14 @@ describe('Renderer', () => {
       expect(mockCtxRestore).toHaveBeenCalled();
     });
   });
+
+  describe('translate()', () => {
+    it('Should translate the canvas origin', () => {
+      const mockCtxTranslate = vi.spyOn(renderer.ctx, 'translate');
+      const x = 50;
+      const y = 100;
+      renderer.translate({ x, y });
+      expect(mockCtxTranslate).toHaveBeenCalledWith(x, y);
+    });
+  });
 });

@@ -171,4 +171,13 @@ export default class Renderer {
   restore() {
     this.ctx.restore();
   }
+
+  /**
+   * Translates the canvas context by the given vector.
+   * @param x - The x-component of the translation vector.
+   * @param y - The y-component of the translation vector.
+   */
+  translate({ x, y }: { x: number; y: number }) {
+    this.ctx.translate(x, y);
+  }
 }

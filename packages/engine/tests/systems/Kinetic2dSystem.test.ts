@@ -24,7 +24,7 @@ describe('Kinetic2dSystem', () => {
       kinetic2dSystem = new Kinetic2dSystem();
     });
 
-    it('Should increase an entity\'s velocity by its impulse and then reduce its impulse to zero', () => {
+    it('Should increase an entity\'s velocity by its impulse', () => {
       const entity = new Entity();
       const transformComponent = new Transform2dComponent();
       const rigidBody2dComponent = new RigidBody2dComponent({
@@ -38,6 +38,21 @@ describe('Kinetic2dSystem', () => {
       expect(rigidBody2dComponent.velocity).toBeInstanceOf(Vector2d);
       expect(rigidBody2dComponent.velocity.x).toBe(1);
       expect(rigidBody2dComponent.velocity.y).toBe(2);
+    });
+
+    it('Should reduce an entity\'s impulse to zero after applying it to velocity', () => {
+      const entity = new Entity();
+      const transformComponent = new Transform2dComponent();
+      const rigidBody2dComponent = new RigidBody2dComponent({
+        impulse: new Vector2d({ x: 1, y: 2 }),
+      });
+      entity.addComponents([
+        transformComponent,
+        rigidBody2dComponent,
+      ]);
+
+      kinetic2dSystem.update([entity], { deltaTime });
+
       expect(rigidBody2dComponent.impulse).toBeInstanceOf(Vector2d);
       expect(rigidBody2dComponent.impulse.x).toBe(0);
       expect(rigidBody2dComponent.impulse.y).toBe(0);
@@ -88,6 +103,88 @@ describe('Kinetic2dSystem', () => {
       expect(transformComponent.position).toBeInstanceOf(Vector2d);
       expect(transformComponent.position.x).toBe(expectedPosition.x);
       expect(transformComponent.position.y).toBe(expectedPosition.y);
+    });
+
+    it('Should increase an entity\'s angular velocity by its angular impulse', () => {
+      const initialAngularVelocity = 0;
+      const angularImpulse = Math.PI; // Radians per second
+      const expectedAngularVelocity = initialAngularVelocity + angularImpulse;
+
+      const entity = new Entity();
+      const transformComponent = new Transform2dComponent();
+      const rigidBody2dComponent = new RigidBody2dComponent({
+        angularVelocity: initialAngularVelocity,
+        angularImpulse,
+      });
+      entity.addComponents([
+        transformComponent,
+        rigidBody2dComponent,
+      ]);
+
+      kinetic2dSystem.update([entity], { deltaTime });
+
+      expect(rigidBody2dComponent.angularVelocity).toBeCloseTo(expectedAngularVelocity);
+    });
+
+    it('Should reduce angular impulse to zero after applying it to angular velocity', () => {
+      const angularImpulse = Math.PI; // Radians per second
+
+      const entity = new Entity();
+      const transformComponent = new Transform2dComponent();
+      const rigidBody2dComponent = new RigidBody2dComponent({
+        angularImpulse,
+      });
+      entity.addComponents([
+        transformComponent,
+        rigidBody2dComponent,
+      ]);
+
+      kinetic2dSystem.update([entity], { deltaTime });
+
+      expect(rigidBody2dComponent.angularImpulse).toBe(0);
+    });
+
+    it('Should increase an entity\'s angular velocity by its angular acceleration multiplied by deltaTime', () => {
+      const initialAngularVelocity = 0;
+      const angularAcceleration = Math.PI; // Radians per second squared
+      const expectedAngularVelocity = initialAngularVelocity + angularAcceleration * deltaTime;
+
+      const entity = new Entity();
+      const transformComponent = new Transform2dComponent();
+      const rigidBody2dComponent = new RigidBody2dComponent({
+        angularVelocity: initialAngularVelocity,
+        angularAcceleration,
+      });
+      entity.addComponents([
+        transformComponent,
+        rigidBody2dComponent,
+      ]);
+
+      kinetic2dSystem.update([entity], { deltaTime });
+
+      expect(rigidBody2dComponent.angularVelocity).toBeCloseTo(expectedAngularVelocity);
+    });
+
+    it('Should increase an entity\'s rotation by its angular velocity multiplied by deltaTime', () => {
+      const initialRotation = 0;
+      const angularVelocity = Math.PI; // Radians per second
+      const expectedRotation = initialRotation + angularVelocity * deltaTime;
+
+      const entity = new Entity();
+      const transformComponent = new Transform2dComponent({
+        rotation: initialRotation,
+      });
+      const rigidBody2dComponent = new RigidBody2dComponent({
+        angularVelocity,
+      });
+      entity.addComponents([
+        transformComponent,
+        rigidBody2dComponent,
+      ]);
+
+      kinetic2dSystem.update([entity], { deltaTime });
+
+      expect(transformComponent.rotation).toBeCloseTo(expectedRotation);
     });
   });
 });

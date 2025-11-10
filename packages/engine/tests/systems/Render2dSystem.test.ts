@@ -39,6 +39,7 @@ describe('Render2dSystem', () => {
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
     let saveSpy: MockInstance<typeof renderer.save>;
     let translateSpy: MockInstance<typeof renderer.translate>;
+    let rotateSpy: MockInstance<typeof renderer.rotate>;
     let restoreSpy: MockInstance<typeof renderer.restore>;
     let lerpSpy: MockInstance<typeof lerpModule.default>;
 
@@ -53,6 +54,7 @@ describe('Render2dSystem', () => {
       drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
       saveSpy = vi.spyOn(renderer, 'save');
       translateSpy = vi.spyOn(renderer, 'translate');
+      rotateSpy = vi.spyOn(renderer, 'rotate');
       restoreSpy = vi.spyOn(renderer, 'restore');
     });
 
@@ -62,6 +64,7 @@ describe('Render2dSystem', () => {
       lerpSpy.mockClear();
       saveSpy.mockClear();
       translateSpy.mockClear();
+      rotateSpy.mockClear();
       restoreSpy.mockClear();
     });
 
@@ -71,6 +74,7 @@ describe('Render2dSystem', () => {
       lerpSpy.mockRestore();
       saveSpy.mockRestore();
       translateSpy.mockRestore();
+      rotateSpy.mockRestore();
       restoreSpy.mockRestore();
     });
 
@@ -101,6 +105,22 @@ describe('Render2dSystem', () => {
       }));
       system.update([entity], { alpha: 1, renderer });
       expect(translateSpy).toHaveBeenCalledWith({ x: position.x, y: position.y });
+    });
+
+    it('Should rotate the renderer to the entity rotation', () => {
+      const radius = 50;
+      const rotation = 45;
+      entity.addComponent(new Transform2dComponent({ position, rotation }));
+      entity.addComponent(new Geometry2dComponent({
+        fillColor,
+        strokeColor,
+        shape: {
+          type: 'circle',
+          radius,
+        },
+      }));
+      system.update([entity], { alpha: 1, renderer });
+      expect(rotateSpy).toHaveBeenCalledWith((rotation * Math.PI) / 180);
     });
 
     it('Should draw a circle for any entity with circular geometry', () => {

@@ -37,6 +37,9 @@ describe('Render2dSystem', () => {
 
     let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
     let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
+    let saveSpy: MockInstance<typeof renderer.save>;
+    let translateSpy: MockInstance<typeof renderer.translate>;
+    let restoreSpy: MockInstance<typeof renderer.restore>;
     let lerpSpy: MockInstance<typeof lerpModule.default>;
 
     beforeAll(() => {
@@ -48,18 +51,56 @@ describe('Render2dSystem', () => {
       system = new Render2dSystem();
       drawBoxSpy = vi.spyOn(renderer, 'drawBox');
       drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
+      saveSpy = vi.spyOn(renderer, 'save');
+      translateSpy = vi.spyOn(renderer, 'translate');
+      restoreSpy = vi.spyOn(renderer, 'restore');
     });
 
     afterEach(() => {
       drawBoxSpy.mockClear();
       drawCircleSpy.mockClear();
       lerpSpy.mockClear();
+      saveSpy.mockClear();
+      translateSpy.mockClear();
+      restoreSpy.mockClear();
     });
 
     afterAll(() => {
       drawBoxSpy.mockRestore();
       drawCircleSpy.mockRestore();
       lerpSpy.mockRestore();
+      saveSpy.mockRestore();
+      translateSpy.mockRestore();
+      restoreSpy.mockRestore();
+    });
+
+    it('Should save the renderer state', () => {
+      entity.addComponent(new Transform2dComponent({ position }));
+      entity.addComponent(new Geometry2dComponent({
+        fillColor,
+        strokeColor,
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      }));
+      system.update([entity], { alpha: 1, renderer });
+      expect(saveSpy).toHaveBeenCalled();
+    });
+
+    it('Should translate the renderer to the entity position', () => {
+      const radius = 50;
+      entity.addComponent(new Transform2dComponent({ position }));
+      entity.addComponent(new Geometry2dComponent({
+        fillColor,
+        strokeColor,
+        shape: {
+          type: 'circle',
+          radius,
+        },
+      }));
+      system.update([entity], { alpha: 1, renderer });
+      expect(translateSpy).toHaveBeenCalledWith({ x: position.x, y: position.y });
     });
 
     it('Should draw a circle for any entity with circular geometry', () => {
@@ -75,8 +116,6 @@ describe('Render2dSystem', () => {
       }));
       system.update([entity], { alpha: 1, renderer });
       expect(drawCircleSpy).toHaveBeenCalledWith({
-        x: position.x,
-        y: position.y,
         radius,
         fillColor,
         strokeColor,
@@ -98,13 +137,25 @@ describe('Render2dSystem', () => {
       }));
       system.update([entity], { alpha: 1, renderer });
       expect(drawBoxSpy).toHaveBeenCalledWith({
-        x: position.x,
-        y: position.y,
         width,
         height,
         fillColor,
         strokeColor,
       });
+    });
+
+    it('Should restore the renderer state', () => {
+      entity.addComponent(new Transform2dComponent({ position }));
+      entity.addComponent(new Geometry2dComponent({
+        fillColor,
+        strokeColor,
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      }));
+      system.update([entity], { alpha: 1, renderer });
+      expect(restoreSpy).toHaveBeenCalled();
     });
 
     it('Should interpolate the entity position based on the alpha value', () => {
@@ -132,10 +183,9 @@ describe('Render2dSystem', () => {
       system.update([entity], { alpha, renderer });
       expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
       expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
-      expect(drawCircleSpy).toHaveBeenCalledWith({
+      expect(translateSpy).toHaveBeenCalledWith({
         x: expectedX,
         y: expectedY,
-        radius,
       });
     });
 

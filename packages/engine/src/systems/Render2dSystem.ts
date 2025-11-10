@@ -29,11 +29,12 @@ export default class Render2dSystem extends System {
       const x = lerp(transform.previousPosition.x, transform.position.x, alpha);
       const y = lerp(transform.previousPosition.y, transform.position.y, alpha);
 
+      renderer.save();
+      renderer.translate({ x, y });
+
       switch (geometry.shape.type) {
         case 'circle':
           renderer.drawCircle({
-            x,
-            y,
             radius: geometry.shape.radius,
             fillColor: geometry.fillColor,
             strokeColor: geometry.strokeColor,
@@ -41,8 +42,6 @@ export default class Render2dSystem extends System {
           break;
         case 'box':
           renderer.drawBox({
-            x,
-            y,
             width: geometry.shape.width,
             height: geometry.shape.height,
             fillColor: geometry.fillColor,
@@ -50,6 +49,8 @@ export default class Render2dSystem extends System {
           });
           break;
       }
+
+      renderer.restore();
     }
   }
 }

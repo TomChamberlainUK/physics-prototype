@@ -19,6 +19,12 @@ type ConstructorParams = {
   restitution?: number;
   /** The friction coefficient of the rigid body. */
   friction?: number;
+  /** The angular velocity of the rigid body. */
+  angularVelocity?: number;
+  /** The angular acceleration of the rigid body. */
+  angularAcceleration?: number;
+  /** The angular impulse applied to the rigid body. */
+  angularImpulse?: number;
 };
 
 /**
@@ -41,6 +47,12 @@ export default class RigidBody2dComponent extends Component {
   restitution: number;
   /** The friction coefficient of the rigid body. */
   friction: number;
+  /** The angular velocity of the rigid body. */
+  angularVelocity: number;
+  /** The angular acceleration of the rigid body. */
+  angularAcceleration: number;
+  /** The angular impulse applied to the rigid body. */
+  angularImpulse: number;
 
   /**
    * Creates an instance of the RigidBody2dComponent.
@@ -51,6 +63,9 @@ export default class RigidBody2dComponent extends Component {
    * @param mass - The mass of the rigid body.
    * @param restitution - The restitution coefficient of the rigid body.
    * @param friction - The friction coefficient of the rigid body.
+   * @param angularVelocity - The angular velocity of the rigid body.
+   * @param angularAcceleration - The angular acceleration of the rigid body.
+   * @param angularImpulse - The angular impulse applied to the rigid body.
    */
   constructor({
     velocity = new Vector2d(),
@@ -60,6 +75,9 @@ export default class RigidBody2dComponent extends Component {
     mass = 1,
     restitution = 0.8,
     friction = 0.3,
+    angularVelocity = 0,
+    angularAcceleration = 0,
+    angularImpulse = 0,
   }: ConstructorParams = {}) {
     super('RigidBody2d');
     this.velocity = velocity;
@@ -72,5 +90,8 @@ export default class RigidBody2dComponent extends Component {
       : 0;
     this.restitution = restitution;
     this.friction = friction;
+    this.angularVelocity = angularVelocity;
+    this.angularAcceleration = angularAcceleration;
+    this.angularImpulse = angularImpulse;
   }
 }

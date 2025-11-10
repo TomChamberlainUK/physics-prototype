@@ -30,7 +30,6 @@ describe('getNarrowPhaseCollisionPairsMap', () => {
       },
     ];
     const result = getNarrowPhaseCollisionPairsMap(narrowPhaseCollisionPairs);
-    console.log(result);
     expect(result).toBeInstanceOf(Map);
     expect(result.size).toBe(2);
     expect(result.get(entityA.id)?.has(entityB.id)).toBe(true);

@@ -28,10 +28,6 @@ describe('Render2dSystem', () => {
   });
 
   describe('update()', () => {
-    const fillColor = 'black';
-    const strokeColor = 'white';
-    const position = new Vector2d({ x: 100, y: 150 });
-
     let entity: Entity;
     let system: Render2dSystem;
 
@@ -78,154 +74,143 @@ describe('Render2dSystem', () => {
       restoreSpy.mockRestore();
     });
 
-    it('Should save the renderer state', () => {
-      entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'circle',
-          radius: 16,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(saveSpy).toHaveBeenCalled();
-    });
+    describe('When passed a renderer and entities with the required components', () => {
+      const fillColor = 'black';
+      const strokeColor = 'white';
 
-    it('Should translate the renderer to the entity position', () => {
-      const radius = 50;
-      entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'circle',
-          radius,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(translateSpy).toHaveBeenCalledWith({ x: position.x, y: position.y });
-    });
+      let transform2dComponent: Transform2dComponent;
+      let geometry2dComponent: Geometry2dComponent;
 
-    it('Should rotate the renderer to the entity rotation', () => {
-      const radius = 50;
-      const rotation = 45;
-      entity.addComponent(new Transform2dComponent({ position, rotation }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'circle',
-          radius,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(rotateSpy).toHaveBeenCalledWith((rotation * Math.PI) / 180);
-    });
+      beforeEach(() => {
+        transform2dComponent = new Transform2dComponent();
+        geometry2dComponent = new Geometry2dComponent({
+          fillColor,
+          strokeColor,
+          shape: {
+            type: 'circle',
+            radius: 16,
+          },
+        });
+        entity.addComponent(transform2dComponent);
+        entity.addComponent(geometry2dComponent);
+      });
 
-    it('Should draw a circle for any entity with circular geometry', () => {
-      const radius = 50;
-      entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'circle',
-          radius,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(drawCircleSpy).toHaveBeenCalledWith({
-        radius,
-        fillColor,
-        strokeColor,
+      it('Should save the renderer state', () => {
+        system.update([entity], { alpha: 1, renderer });
+        expect(saveSpy).toHaveBeenCalled();
+      });
+
+      it('Should translate the renderer to the entity position', () => {
+        const position = new Vector2d({ x: 100, y: 150 });
+        transform2dComponent.position = position;
+        system.update([entity], { alpha: 1, renderer });
+        expect(translateSpy).toHaveBeenCalledWith({ x: position.x, y: position.y });
+      });
+
+      it('Should rotate the renderer to the entity rotation', () => {
+        const rotation = 45;
+        transform2dComponent.rotation = rotation;
+        system.update([entity], { alpha: 1, renderer });
+        expect(rotateSpy).toHaveBeenCalledWith((rotation * Math.PI) / 180);
+      });
+
+      describe('When passed an entity with circular geometry', () => {
+        const radius = 32;
+
+        beforeEach(() => {
+          geometry2dComponent.shape = {
+            type: 'circle',
+            radius,
+          };
+        });
+
+        it('Should draw a circle for any entity with circular geometry', () => {
+          system.update([entity], { alpha: 1, renderer });
+          expect(drawCircleSpy).toHaveBeenCalledWith({
+            radius,
+            fillColor,
+            strokeColor,
+          });
+        });
+      });
+
+      describe('When passed an entity with box geometry', () => {
+        const width = 64;
+        const height = 48;
+
+        beforeEach(() => {
+          geometry2dComponent.shape = {
+            type: 'box',
+            width,
+            height,
+          };
+        });
+
+        it('Should draw a box for any entity with box geometry', () => {
+          system.update([entity], { alpha: 1, renderer });
+          expect(drawBoxSpy).toHaveBeenCalledWith({
+            width,
+            height,
+            fillColor,
+            strokeColor,
+          });
+        });
+      });
+
+      it('Should restore the renderer state', () => {
+        system.update([entity], { alpha: 1, renderer });
+        expect(restoreSpy).toHaveBeenCalled();
+      });
+
+      it('Should interpolate the entity position based on the alpha value', () => {
+        const alpha = 0.5;
+        const previousPosition = new Vector2d({ x: 0, y: 0 });
+        const currentPosition = new Vector2d({ x: 100, y: 100 });
+        const expectedX = 50;
+        const expectedY = 50;
+        lerpSpy.mockImplementationOnce(() => expectedX);
+        lerpSpy.mockImplementationOnce(() => expectedY);
+        transform2dComponent.previousPosition = previousPosition;
+        transform2dComponent.position = currentPosition;
+        system.update([entity], { alpha, renderer });
+        expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
+        expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
+        expect(translateSpy).toHaveBeenCalledWith({
+          x: expectedX,
+          y: expectedY,
+        });
       });
     });
 
-    it('Should draw a box for any entity with box geometry', () => {
-      const width = 120;
-      const height = 80;
-      entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'box',
-          width,
-          height,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(drawBoxSpy).toHaveBeenCalledWith({
-        width,
-        height,
-        fillColor,
-        strokeColor,
+    describe('When passed entities without the required components', () => {
+      it('Should not render anything', () => {
+        system.update([entity], { alpha: 1, renderer });
+        expect(saveSpy).not.toHaveBeenCalled();
+        expect(translateSpy).not.toHaveBeenCalled();
+        expect(rotateSpy).not.toHaveBeenCalled();
+        expect(drawBoxSpy).not.toHaveBeenCalled();
+        expect(drawCircleSpy).not.toHaveBeenCalled();
+        expect(restoreSpy).not.toHaveBeenCalled();
       });
     });
 
-    it('Should restore the renderer state', () => {
-      entity.addComponent(new Transform2dComponent({ position }));
-      entity.addComponent(new Geometry2dComponent({
-        fillColor,
-        strokeColor,
-        shape: {
-          type: 'circle',
-          radius: 16,
-        },
-      }));
-      system.update([entity], { alpha: 1, renderer });
-      expect(restoreSpy).toHaveBeenCalled();
-    });
-
-    it('Should interpolate the entity position based on the alpha value', () => {
-      const radius = 50;
-      const alpha = 0.5;
-      const previousPosition = new Vector2d({ x: 0, y: 0 });
-      const currentPosition = new Vector2d({ x: 100, y: 100 });
-      const expectedX = 50;
-      const expectedY = 50;
-      lerpSpy.mockImplementationOnce(() => expectedX);
-      lerpSpy.mockImplementationOnce(() => expectedY);
-      const transform2dComponent = new Transform2dComponent();
-      const geometry2dComponent = new Geometry2dComponent({
-        shape: {
-          type: 'circle',
-          radius,
-        },
+    describe('When no renderer is provided', () => {
+      it('Should not render anything', () => {
+        entity.addComponent(new Transform2dComponent());
+        entity.addComponent(new Geometry2dComponent({
+          shape: {
+            type: 'circle',
+            radius: 16,
+          },
+        }));
+        system.update([entity], { alpha: 1 });
+        expect(saveSpy).not.toHaveBeenCalled();
+        expect(translateSpy).not.toHaveBeenCalled();
+        expect(rotateSpy).not.toHaveBeenCalled();
+        expect(drawBoxSpy).not.toHaveBeenCalled();
+        expect(drawCircleSpy).not.toHaveBeenCalled();
+        expect(restoreSpy).not.toHaveBeenCalled();
       });
-      entity.addComponents([
-        transform2dComponent,
-        geometry2dComponent,
-      ]);
-      transform2dComponent.previousPosition = previousPosition;
-      transform2dComponent.position = currentPosition;
-      system.update([entity], { alpha, renderer });
-      expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
-      expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
-      expect(translateSpy).toHaveBeenCalledWith({
-        x: expectedX,
-        y: expectedY,
-      });
-    });
-
-    it('Should skip entities without Transform2d or Geometry2d components', () => {
-      system.update([entity], { alpha: 1, renderer });
-      expect(drawBoxSpy).not.toHaveBeenCalled();
-      expect(drawCircleSpy).not.toHaveBeenCalled();
-    });
-
-    it('Should do nothing if no renderer is provided', () => {
-      entity.addComponent(new Transform2dComponent());
-      entity.addComponent(new Geometry2dComponent({
-        shape: {
-          type: 'circle',
-          radius: 16,
-        },
-      }));
-      system.update([entity], { alpha: 1 });
-      expect(drawCircleSpy).not.toHaveBeenCalled();
-      expect(drawBoxSpy).not.toHaveBeenCalled();
     });
   });
 });

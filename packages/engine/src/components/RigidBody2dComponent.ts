@@ -5,25 +5,25 @@ import Component from './Component';
  * Parameters for constructing a RigidBody2dComponent.
  */
 type ConstructorParams = {
-  /** The velocity of the rigid body. */
+  /** The current linear velocity of the body. Unit: meters per second (m/s). */
   velocity?: Vector2d;
-  /** The acceleration of the rigid body. */
+  /** The current linear acceleration of the body. Unit: meters per second squared (m/s²). */
   acceleration?: Vector2d;
-  /** The force applied to the rigid body. */
+  /** The total force to be applied this frame. Unit: newtons (N). */
   force?: Vector2d;
-  /** The impulse applied to the rigid body. */
+  /** Instantaneous change in linear momentum, applied this frame. Unit: newton-seconds (N·s). */
   impulse?: Vector2d;
-  /** The mass of the rigid body. */
+  /** The mass of the body, affecting resistance to force. Unit: kilograms (kg). */
   mass?: number;
-  /** The restitution coefficient of the rigid body. */
+  /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
   restitution?: number;
-  /** The friction coefficient of the rigid body. */
+  /** The resistance to sliding motion. Range: 0–1. */
   friction?: number;
-  /** The angular velocity of the rigid body. */
+  /** The current angular velocity (rate of rotation). Unit: radians per second (rad/s). */
   angularVelocity?: number;
-  /** The angular acceleration of the rigid body. */
+  /** The current angular acceleration (rate of change of angular velocity). Unit: radians per second squared (rad/s²). */
   angularAcceleration?: number;
-  /** The angular impulse applied to the rigid body. */
+  /** Instantaneous change in angular momentum, applied this frame. Unit: newton-meter-seconds (N·m·s). */
   angularImpulse?: number;
 };
 
@@ -31,41 +31,41 @@ type ConstructorParams = {
  * A component that defines a 2D rigid body for an entity.
  */
 export default class RigidBody2dComponent extends Component {
-  /** The velocity of the rigid body. */
+  /** The current linear velocity of the body. Unit: meters per second (m/s). */
   velocity: Vector2d;
-  /** The acceleration of the rigid body. */
+  /** The current linear acceleration of the body. Unit: meters per second squared (m/s²). */
   acceleration: Vector2d;
-  /** The force applied to the rigid body. */
+  /** The total force to be applied this frame. Unit: newtons (N). */
   force: Vector2d;
-  /** The impulse applied to the rigid body. */
+  /** Instantaneous change in linear momentum, applied this frame. Unit: newton-seconds (N·s). */
   impulse: Vector2d;
-  /** The mass of the rigid body. */
+  /** The mass of the body, affecting resistance to force. Unit: kilograms (kg). */
   mass: number;
-  /** The inverse mass of the rigid body. */
+  /** The inverse of mass, used for efficient calculations. Unit: 1/kg. */
   inverseMass: number;
-  /** The restitution coefficient of the rigid body. */
+  /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
   restitution: number;
-  /** The friction coefficient of the rigid body. */
+  /** The resistance to sliding motion. Range: 0–1. */
   friction: number;
-  /** The angular velocity of the rigid body. */
+  /** The current angular velocity (rate of rotation). Unit: radians per second (rad/s). */
   angularVelocity: number;
-  /** The angular acceleration of the rigid body. */
+  /** The current angular acceleration (rate of change of angular velocity). Unit: radians per second squared (rad/s²). */
   angularAcceleration: number;
-  /** The angular impulse applied to the rigid body. */
+  /** Instantaneous change in angular momentum, applied this frame. Unit: newton-meter-seconds (N·m·s). */
   angularImpulse: number;
 
   /**
    * Creates an instance of the RigidBody2dComponent.
-   * @param velocity - The velocity of the rigid body.
-   * @param acceleration - The acceleration of the rigid body.
-   * @param force - The force applied to the rigid body.
-   * @param impulse - The impulse applied to the rigid body.
-   * @param mass - The mass of the rigid body.
-   * @param restitution - The restitution coefficient of the rigid body.
-   * @param friction - The friction coefficient of the rigid body.
-   * @param angularVelocity - The angular velocity of the rigid body.
-   * @param angularAcceleration - The angular acceleration of the rigid body.
-   * @param angularImpulse - The angular impulse applied to the rigid body.
+   * @param velocity - The current linear velocity of the body. Unit: meters per second (m/s).
+   * @param acceleration - The current linear acceleration of the body. Unit: meters per second squared (m/s²).
+   * @param force - The total force to be applied this frame. Unit: newtons (N).
+   * @param impulse - Instantaneous change in linear momentum, applied this frame. Unit: newton-seconds (N·s).
+   * @param mass - The mass of the body, affecting resistance to force. Unit: kilograms (kg).
+   * @param restitution - The restitution coefficient (bounciness) of the body in collisions. Range: 0–1.
+   * @param friction - The resistance to sliding motion. Range: 0–1.
+   * @param angularVelocity - The current angular velocity (rate of rotation). Unit: radians per second (rad/s).
+   * @param angularAcceleration - The current angular acceleration (rate of change of angular velocity). Unit: radians per second squared (rad/s²).
+   * @param angularImpulse - Instantaneous change in angular momentum, applied this frame. Unit: newton-meter-seconds (N·m·s).
    */
   constructor({
     velocity = new Vector2d(),

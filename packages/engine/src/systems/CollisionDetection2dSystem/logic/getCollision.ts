@@ -1,5 +1,6 @@
 import type { Collider2dComponent } from '#/components';
 import type Entity from '#/Entity';
+import type { Collision } from '#/types';
 import getBoxBoxCollision from './getBoxBoxCollision';
 import getBoxCircleCollision from './getBoxCircleCollision';
 import getCircleCircleCollision from './getCircleCircleCollision';
@@ -10,7 +11,7 @@ import getCircleCircleCollision from './getCircleCircleCollision';
  * @param entityB - The second entity with a collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
  */
-export default function getCollision(entityA: Entity, entityB: Entity) {
+export default function getCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
 

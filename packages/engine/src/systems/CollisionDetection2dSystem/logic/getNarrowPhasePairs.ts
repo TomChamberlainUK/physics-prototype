@@ -10,15 +10,15 @@ import getCollision from './getCollision';
 export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]) {
   const collisionPairs: NarrowPhaseCollisionPair[] = [];
   for (const [entityA, entityB] of candidatePairs) {
-    const { isColliding, normal, overlap } = getCollision(entityA, entityB);
-    if (!isColliding) {
+    const collision = getCollision(entityA, entityB);
+    if (!collision.isColliding) {
       continue;
     }
     collisionPairs.push({
       entityA,
       entityB,
-      normal: normal!,
-      overlap: overlap!,
+      normal: collision.normal,
+      overlap: collision.overlap,
     });
   }
   return collisionPairs;

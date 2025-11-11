@@ -1,6 +1,7 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
+import type { Collision } from '#/types';
 
 /**
  * Determines the collision information between two box-shaped colliders.
@@ -8,7 +9,7 @@ import Vector2d from '#/maths/Vector2d';
  * @param entityB - The second entity with a box collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
  */
-export default function getBoxBoxCollision(entityA: Entity, entityB: Entity) {
+export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');

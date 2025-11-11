@@ -23,6 +23,8 @@ export default class Transform2dComponent extends Component {
   previousPosition: Vector2d;
   /** The rotation of the transform, measured in radians. */
   rotation: number;
+  /** The previous rotation of the transform, measured in radians. */
+  previousRotation: number;
   /** The scale of the transform. */
   scale: Vector2d;
 
@@ -41,6 +43,7 @@ export default class Transform2dComponent extends Component {
     this.position = position;
     this.previousPosition = new Vector2d(position);
     this.rotation = rotation;
+    this.previousRotation = rotation;
     this.scale = scale;
   }
 }

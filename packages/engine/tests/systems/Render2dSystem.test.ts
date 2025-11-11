@@ -107,11 +107,43 @@ describe('Render2dSystem', () => {
         expect(translateSpy).toHaveBeenCalledWith({ x: position.x, y: position.y });
       });
 
+      it('Should interpolate the entity position based on the alpha value', () => {
+        const alpha = 0.5;
+        const previousPosition = new Vector2d({ x: 0, y: 0 });
+        const currentPosition = new Vector2d({ x: 100, y: 100 });
+        const expectedX = 50;
+        const expectedY = 50;
+        lerpSpy.mockImplementationOnce(() => expectedX);
+        lerpSpy.mockImplementationOnce(() => expectedY);
+        transform2dComponent.previousPosition = previousPosition;
+        transform2dComponent.position = currentPosition;
+        system.update([entity], { alpha, renderer });
+        expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
+        expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
+        expect(translateSpy).toHaveBeenCalledWith({
+          x: expectedX,
+          y: expectedY,
+        });
+      });
+
       it('Should rotate the renderer to the entity rotation', () => {
         const rotation = 45;
         transform2dComponent.rotation = rotation;
         system.update([entity], { alpha: 1, renderer });
         expect(rotateSpy).toHaveBeenCalledWith(rotation);
+      });
+
+      it('Should interpolate the entity rotation based on the alpha value', () => {
+        const alpha = 0.5;
+        const previousRotation = 0;
+        const currentRotation = 90;
+        const expectedRotation = 45;
+        lerpSpy.mockImplementation(() => expectedRotation);
+        transform2dComponent.previousRotation = previousRotation;
+        transform2dComponent.rotation = currentRotation;
+        system.update([entity], { alpha, renderer });
+        expect(lerpSpy).toHaveBeenCalledWith(previousRotation, currentRotation, alpha);
+        expect(rotateSpy).toHaveBeenCalledWith(expectedRotation);
       });
 
       describe('When passed an entity with circular geometry', () => {
@@ -160,25 +192,6 @@ describe('Render2dSystem', () => {
       it('Should restore the renderer state', () => {
         system.update([entity], { alpha: 1, renderer });
         expect(restoreSpy).toHaveBeenCalled();
-      });
-
-      it('Should interpolate the entity position based on the alpha value', () => {
-        const alpha = 0.5;
-        const previousPosition = new Vector2d({ x: 0, y: 0 });
-        const currentPosition = new Vector2d({ x: 100, y: 100 });
-        const expectedX = 50;
-        const expectedY = 50;
-        lerpSpy.mockImplementationOnce(() => expectedX);
-        lerpSpy.mockImplementationOnce(() => expectedY);
-        transform2dComponent.previousPosition = previousPosition;
-        transform2dComponent.position = currentPosition;
-        system.update([entity], { alpha, renderer });
-        expect(lerpSpy).toHaveBeenNthCalledWith(1, previousPosition.x, currentPosition.x, alpha);
-        expect(lerpSpy).toHaveBeenNthCalledWith(2, previousPosition.y, currentPosition.y, alpha);
-        expect(translateSpy).toHaveBeenCalledWith({
-          x: expectedX,
-          y: expectedY,
-        });
       });
     });
 

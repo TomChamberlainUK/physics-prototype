@@ -111,7 +111,7 @@ describe('Render2dSystem', () => {
         const rotation = 45;
         transform2dComponent.rotation = rotation;
         system.update([entity], { alpha: 1, renderer });
-        expect(rotateSpy).toHaveBeenCalledWith((rotation * Math.PI) / 180);
+        expect(rotateSpy).toHaveBeenCalledWith(rotation);
       });
 
       describe('When passed an entity with circular geometry', () => {

@@ -31,7 +31,7 @@ export default class Render2dSystem extends System {
 
       renderer.save();
       renderer.translate({ x, y });
-      renderer.rotate((transform.rotation * Math.PI) / 180);
+      renderer.rotate(transform.rotation);
 
       switch (geometry.shape.type) {
         case 'circle':

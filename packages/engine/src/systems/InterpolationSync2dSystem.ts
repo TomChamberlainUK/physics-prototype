@@ -21,6 +21,7 @@ export default class InterpolationSync2dSystem extends System {
       }
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
       transform.previousPosition = new Vector2d(transform.position);
+      transform.previousRotation = transform.rotation;
     }
   }
 }

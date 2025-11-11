@@ -28,11 +28,13 @@ export default function getCircleCircleCollision(entityA: Entity, entityB: Entit
       const normal = distance === 0
         ? new Vector2d({ x: 1, y: 0 })
         : delta.getUnit();
+      const contactPoint = transformA.position.subtract(normal.multiply(colliderA.shape.radius));
 
       return {
         isColliding: true,
         normal,
         overlap,
+        contactPoint,
       };
     }
   }

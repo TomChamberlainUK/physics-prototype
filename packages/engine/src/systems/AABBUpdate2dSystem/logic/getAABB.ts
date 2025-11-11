@@ -1,5 +1,7 @@
 import type Entity from '#/Entity';
 import type { Collider2dComponent, Transform2dComponent } from '#/index';
+import getBoxAABB from './getBoxAABB';
+import getCircleAABB from './getCircleAABB';
 
 /**
  * Calculates and returns the axis-aligned bounding box (AABB) for the given entity.
@@ -14,34 +16,19 @@ export default function getAABB(entity: Entity) {
   const collider = entity.getComponent<Collider2dComponent>('Collider2d');
   const transform = entity.getComponent<Transform2dComponent>('Transform2d');
 
-  const { x, y } = transform.position;
-
   switch (collider.shape.type) {
     case 'box': {
-      const { width, height } = collider.shape;
-      return {
-        min: {
-          x: x - width / 2,
-          y: y - height / 2,
-        },
-        max: {
-          x: x + width / 2,
-          y: y + height / 2,
-        },
-      };
+      return getBoxAABB({
+        width: collider.shape.width,
+        height: collider.shape.height,
+        position: transform.position,
+      });
     }
     case 'circle': {
-      const { radius } = collider.shape;
-      return {
-        min: {
-          x: x - radius,
-          y: y - radius,
-        },
-        max: {
-          x: x + radius,
-          y: y + radius,
-        },
-      };
+      return getCircleAABB({
+        radius: collider.shape.radius,
+        position: transform.position,
+      });
     }
   }
 }

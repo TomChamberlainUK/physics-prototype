@@ -1,40 +1,74 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { getAABB } from '#/systems/AABBUpdate2dSystem/logic';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as getBoxAABBModule from '#/systems/AABBUpdate2dSystem/logic/getBoxAABB';
+import * as getCircleAABBModule from '#/systems/AABBUpdate2dSystem/logic/getCircleAABB';
 
 describe('getAABB', () => {
-  it.each([
-    {
-      shape: {
-        type: 'box',
-        width: 1,
-        height: 1,
-      },
-      expected: {
-        min: { x: -0.5, y: -0.5 },
-        max: { x: 0.5, y: 0.5 },
-      },
-    },
-    {
-      shape: {
-        type: 'circle',
-        radius: 1,
-      },
-      expected: {
-        min: { x: -1, y: -1 },
-        max: { x: 1, y: 1 },
-      },
-    },
-  ] as const)('Should return the min and max points of the AABB for a $shape.type', ({ shape, expected }) => {
-    const entity = new Entity();
-    entity.addComponents([
-      new Transform2dComponent(),
-      new Collider2dComponent({
-        shape,
-      }),
-    ]);
-    const aabb = getAABB(entity);
-    expect(aabb).toEqual(expected);
+  let entity: Entity;
+  let transform: Transform2dComponent;
+  let collider: Collider2dComponent;
+
+  beforeEach(() => {
+    entity = new Entity();
+    transform = new Transform2dComponent();
+    entity.addComponent(transform);
+  });
+
+  describe('When the entity has a box collider', () => {
+    beforeEach(() => {
+      collider = new Collider2dComponent({
+        shape: {
+          type: 'box',
+          width: 32,
+          height: 16,
+        },
+      });
+      entity.addComponent(collider);
+    });
+
+    it('Should return the result of getBoxAABB', () => {
+      const getBoxAABBSpy = vi.spyOn(getBoxAABBModule, 'default');
+      const expectedAABB = {
+        min: { x: -16, y: -8 },
+        max: { x: 16, y: 8 },
+      };
+      getBoxAABBSpy.mockReturnValue(expectedAABB);
+      const aabb = getAABB(entity);
+      expect(getBoxAABBSpy).toHaveBeenCalledWith({
+        width: 32,
+        height: 16,
+        position: transform.position,
+      });
+      expect(aabb).toBe(expectedAABB);
+    });
+  });
+
+  describe('When the entity has a circle collider', () => {
+    beforeEach(() => {
+      collider = new Collider2dComponent({
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      });
+      entity.addComponent(collider);
+    });
+
+    it('Should return the result of getCircleAABB', () => {
+      const getCircleAABBSpy = vi.spyOn(getCircleAABBModule, 'default');
+      const expectedAABB = {
+        min: { x: -16, y: -16 },
+        max: { x: 16, y: 16 },
+      };
+      getCircleAABBSpy.mockReturnValue(expectedAABB);
+      const aabb = getAABB(entity);
+      expect(getCircleAABBSpy).toHaveBeenCalledWith({
+        radius: 16,
+        position: transform.position,
+      });
+      expect(aabb).toBe(expectedAABB);
+    });
   });
 });

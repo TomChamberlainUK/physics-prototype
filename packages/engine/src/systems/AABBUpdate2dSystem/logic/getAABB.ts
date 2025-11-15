@@ -22,6 +22,7 @@ export default function getAABB(entity: Entity) {
         width: collider.shape.width,
         height: collider.shape.height,
         position: transform.position,
+        rotation: transform.rotation,
       });
     }
     case 'circle': {

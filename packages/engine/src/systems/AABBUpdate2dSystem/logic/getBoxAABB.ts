@@ -1,3 +1,5 @@
+import { Matrix2d } from '#/maths';
+
 /**
  * Parameters required to calculate the AABB for a box.
  */
@@ -26,8 +28,10 @@ type Parameters = {
 export default function getBoxAABB({ width, height, position, rotation }: Parameters) {
   const halfWidth = width / 2;
   const halfHeight = height / 2;
-  const cos = Math.cos(rotation);
-  const sin = Math.sin(rotation);
+
+  const translationMatrix = Matrix2d.translation(position);
+  const rotationMatrix = Matrix2d.rotation(rotation);
+  const transformMatrix = Matrix2d.multiply(translationMatrix, rotationMatrix);
 
   // Corners of the box in local space
   const localCorners = [
@@ -38,12 +42,7 @@ export default function getBoxAABB({ width, height, position, rotation }: Parame
   ];
 
   // Corners of the box in world space after rotation and translation
-  const worldCorners = localCorners.map((corner) => {
-    return {
-      x: position.x + corner.x * cos - corner.y * sin,
-      y: position.y + corner.x * sin + corner.y * cos,
-    };
-  });
+  const worldCorners = localCorners.map(corner => transformMatrix.transformPoint(corner));
 
   const xs = worldCorners.map(corner => corner.x);
   const ys = worldCorners.map(corner => corner.y);

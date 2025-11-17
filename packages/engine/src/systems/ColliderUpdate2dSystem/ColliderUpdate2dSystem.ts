@@ -4,14 +4,14 @@ import System from '../System';
 import { getAABB } from './logic';
 
 /**
- * A system that updates the axis-aligned bounding boxes (AABBs) of 2D colliders.
+ * A system that updates colliders based on their transforms.
  */
-export default class AABBUpdate2dSystem extends System {
-  name = 'AABBUpdate2dSystem';
+export default class ColliderUpdate2dSystem extends System {
+  name = 'ColliderUpdate2dSystem';
   type = 'physics';
 
   /**
-   * Updates entities' AABBs based on their colliders and transforms.
+   * Updates entities' colliders based on their transforms.
    * @param entities - The entities to update.
    */
   update(entities: Entity[]): void {

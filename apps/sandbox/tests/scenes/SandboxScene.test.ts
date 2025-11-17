@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  AABBUpdate2dSystem,
   Actions,
+  ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -150,8 +150,8 @@ describe('SandboxScene', () => {
       System: InputImpulseSystem,
     },
     {
-      name: 'aabbUpdate2d',
-      System: AABBUpdate2dSystem,
+      name: 'colliderUpdate2d',
+      System: ColliderUpdate2dSystem,
     },
     {
       name: 'collisionDetection2d',

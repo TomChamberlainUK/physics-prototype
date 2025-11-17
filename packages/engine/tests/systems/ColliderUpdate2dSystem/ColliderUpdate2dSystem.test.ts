@@ -1,22 +1,22 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
-import AABBUpdate2dSystem from '#/systems/AABBUpdate2dSystem/AABBUpdate2dSystem';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import * as getAABBModule from '#/systems/AABBUpdate2dSystem/logic/getAABB';
+import { ColliderUpdate2dSystem } from '#/systems';
+import * as getAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getAABB';
 
-describe('AABBUpdate2dSystem', () => {
+describe('ColliderUpdate2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
-      const system = new AABBUpdate2dSystem();
-      expect(system).toBeInstanceOf(AABBUpdate2dSystem);
-      expect(system.name).toBe('AABBUpdate2dSystem');
+      const system = new ColliderUpdate2dSystem();
+      expect(system).toBeInstanceOf(ColliderUpdate2dSystem);
+      expect(system.name).toBe('ColliderUpdate2dSystem');
       expect(system.type).toBe('physics');
     });
   });
 
   describe('update()', () => {
     let entity: Entity;
-    let aabbUpdate2dSystem: AABBUpdate2dSystem;
+    let system: ColliderUpdate2dSystem;
 
     let getAABBSpy: MockInstance<typeof getAABBModule.default>;
 
@@ -25,7 +25,7 @@ describe('AABBUpdate2dSystem', () => {
     });
 
     beforeEach(() => {
-      aabbUpdate2dSystem = new AABBUpdate2dSystem();
+      system = new ColliderUpdate2dSystem();
       entity = new Entity();
     });
 
@@ -68,14 +68,14 @@ describe('AABBUpdate2dSystem', () => {
           },
         };
         getAABBSpy.mockReturnValueOnce(expectedAABB);
-        aabbUpdate2dSystem.update([entity]);
+        system.update([entity]);
         expect(collider2dComponent.aabb).toEqual(expectedAABB);
       });
     });
 
     describe('When passed entities without required components', () => {
       it('Should not update the AABB of entities', () => {
-        aabbUpdate2dSystem.update([entity]);
+        system.update([entity]);
         expect(getAABBSpy).not.toHaveBeenCalled();
       });
     });

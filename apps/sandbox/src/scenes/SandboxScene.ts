@@ -1,6 +1,6 @@
 import {
-  AABBUpdate2dSystem,
   Actions,
+  ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -109,7 +109,7 @@ export default class SandboxScene extends Scene {
 
     const interpolationSync2dSystem = new InterpolationSync2dSystem();
     const inputImpulseSystem = new InputImpulseSystem();
-    const aabbUpdate2dSystem = new AABBUpdate2dSystem();
+    const colliderUpdate2dSystem = new ColliderUpdate2dSystem();
     const collisionDetection2dSystem = new CollisionDetection2dSystem();
     const collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
     const collisionPositionCorrection2dSystem = new CollisionPositionCorrection2dSystem();
@@ -122,7 +122,7 @@ export default class SandboxScene extends Scene {
 
     this.addSystem(interpolationSync2dSystem);
     this.addSystem(inputImpulseSystem);
-    this.addSystem(aabbUpdate2dSystem);
+    this.addSystem(colliderUpdate2dSystem);
     this.addSystem(collisionDetection2dSystem);
     this.addSystem(collisionImpulseResolution2dSystem);
     this.addSystem(collisionPositionCorrection2dSystem);

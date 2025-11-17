@@ -1,9 +1,9 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { getAABB } from '#/systems/AABBUpdate2dSystem/logic';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as getBoxAABBModule from '#/systems/AABBUpdate2dSystem/logic/getBoxAABB';
-import * as getCircleAABBModule from '#/systems/AABBUpdate2dSystem/logic/getCircleAABB';
+import { getAABB } from '#/systems/ColliderUpdate2dSystem/logic';
+import * as getBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getBoxAABB';
+import * as getCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getCircleAABB';
 
 describe('getAABB', () => {
   let entity: Entity;

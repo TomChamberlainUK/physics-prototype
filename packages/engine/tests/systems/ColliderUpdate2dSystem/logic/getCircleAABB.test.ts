@@ -1,4 +1,4 @@
-import { getCircleAABB } from '#/systems/AABBUpdate2dSystem/logic';
+import { getCircleAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import { describe, expect, it } from 'vitest';
 
 describe('getCircleAABB', () => {

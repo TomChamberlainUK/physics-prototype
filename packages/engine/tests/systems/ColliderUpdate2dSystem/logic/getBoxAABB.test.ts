@@ -1,4 +1,4 @@
-import { getBoxAABB } from '#/systems/AABBUpdate2dSystem/logic';
+import { getBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('getBoxAABB', () => {

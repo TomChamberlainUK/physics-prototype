@@ -40,6 +40,7 @@ describe('getAABB', () => {
         width: 32,
         height: 16,
         position: transform.position,
+        rotation: transform.rotation,
       });
       expect(aabb).toBe(expectedAABB);
     });

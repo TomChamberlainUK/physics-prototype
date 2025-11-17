@@ -1,7 +1,7 @@
 import type { Collider2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import System from '../System';
-import { getAABB } from './logic';
+import { getAABB, getVertices } from './logic';
 
 /**
  * A system that updates colliders based on their transforms.
@@ -20,6 +20,7 @@ export default class ColliderUpdate2dSystem extends System {
         continue;
       }
       const collider = entity.getComponent<Collider2dComponent>('Collider2d');
+      collider.vertices = getVertices(entity);
       collider.aabb = getAABB(entity);
     }
   }

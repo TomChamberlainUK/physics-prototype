@@ -3,6 +3,7 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { ColliderUpdate2dSystem } from '#/systems';
 import * as getAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getAABB';
+import * as getVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getVertices';
 
 describe('ColliderUpdate2dSystem', () => {
   describe('constructor()', () => {
@@ -19,9 +20,11 @@ describe('ColliderUpdate2dSystem', () => {
     let system: ColliderUpdate2dSystem;
 
     let getAABBSpy: MockInstance<typeof getAABBModule.default>;
+    let getVerticesSpy: MockInstance<typeof getVerticesModule.default>;
 
     beforeAll(() => {
       getAABBSpy = vi.spyOn(getAABBModule, 'default');
+      getVerticesSpy = vi.spyOn(getVerticesModule, 'default');
     });
 
     beforeEach(() => {
@@ -31,10 +34,12 @@ describe('ColliderUpdate2dSystem', () => {
 
     afterEach(() => {
       getAABBSpy.mockClear();
+      getVerticesSpy.mockClear();
     });
 
     afterAll(() => {
       getAABBSpy.mockRestore();
+      getVerticesSpy.mockRestore();
     });
 
     describe('When passed entities with required components', () => {
@@ -70,6 +75,18 @@ describe('ColliderUpdate2dSystem', () => {
         getAABBSpy.mockReturnValueOnce(expectedAABB);
         system.update([entity]);
         expect(collider2dComponent.aabb).toEqual(expectedAABB);
+      });
+
+      it('Should update the vertices of entities', () => {
+        const expectedVertices = [
+          { x: -0.5, y: -0.5 },
+          { x: 0.5, y: -0.5 },
+          { x: 0.5, y: 0.5 },
+          { x: -0.5, y: 0.5 },
+        ];
+        getVerticesSpy.mockReturnValueOnce(expectedVertices);
+        system.update([entity]);
+        expect(collider2dComponent.vertices).toEqual(expectedVertices);
       });
     });
 

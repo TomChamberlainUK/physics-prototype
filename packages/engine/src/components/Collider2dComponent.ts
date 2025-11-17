@@ -17,6 +17,8 @@ export default class Collider2dComponent extends Component {
   aabb: AABB | null;
   /** The shape of the collider. */
   shape: Shape;
+  /** The vertices of the collider, if applicable. */
+  vertices: { x: number; y: number }[] | null;
 
   /**
    * Creates an instance of the Collider2dComponent.
@@ -26,5 +28,6 @@ export default class Collider2dComponent extends Component {
     super('Collider2d');
     this.aabb = null;
     this.shape = shape;
+    this.vertices = null;
   }
 }

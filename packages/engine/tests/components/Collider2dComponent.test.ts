@@ -17,6 +17,7 @@ describe('Collider2dComponent', () => {
       radius,
     });
     expect(component.aabb).toBeNull();
+    expect(component.vertices).toBeNull();
   });
 
   it('Should instantiate with a box shape', () => {
@@ -37,5 +38,6 @@ describe('Collider2dComponent', () => {
       height,
     });
     expect(component.aabb).toBeNull();
+    expect(component.vertices).toBeNull();
   });
 });

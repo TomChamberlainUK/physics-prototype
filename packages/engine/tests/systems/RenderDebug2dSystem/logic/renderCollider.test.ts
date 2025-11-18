@@ -5,7 +5,7 @@ import Vector2d from '#/maths/Vector2d';
 import Renderer from '#/Renderer';
 import renderCollider from '#/systems/RenderDebug2dSystem/logic/renderCollider';
 import * as lerpModule from '#/utils/lerp';
-import type { BoxShape, CircleShape } from '#/types';
+import type { CircleShape } from '#/types';
 
 describe('renderCollider', () => {
   let entity: Entity;
@@ -14,14 +14,14 @@ describe('renderCollider', () => {
   let hasComponentsSpy: MockInstance<typeof entity.hasComponents>;
   let getComponentSpy: MockInstance<typeof entity.getComponent>;
   let lerpSpy: MockInstance<typeof lerpModule.default>;
-  let drawBoxSpy: MockInstance<typeof renderer.drawBox>;
   let drawCircleSpy: MockInstance<typeof renderer.drawCircle>;
+  let drawShapeSpy: MockInstance<typeof renderer.drawShape>;
 
   beforeAll(() => {
     renderer = new Renderer(document.createElement('canvas'));
     lerpSpy = vi.spyOn(lerpModule, 'default');
-    drawBoxSpy = vi.spyOn(renderer, 'drawBox');
     drawCircleSpy = vi.spyOn(renderer, 'drawCircle');
+    drawShapeSpy = vi.spyOn(renderer, 'drawShape');
   });
 
   beforeEach(() => {
@@ -32,14 +32,14 @@ describe('renderCollider', () => {
 
   afterEach(() => {
     lerpSpy.mockClear();
-    drawBoxSpy.mockClear();
     drawCircleSpy.mockClear();
+    drawShapeSpy.mockClear();
   });
 
   afterAll(() => {
     lerpSpy.mockRestore();
-    drawBoxSpy.mockRestore();
     drawCircleSpy.mockRestore();
+    drawShapeSpy.mockRestore();
   });
 
   it('Should check that the entity has the required components', () => {
@@ -60,13 +60,13 @@ describe('renderCollider', () => {
 
     it('Should not attempt to render anything', () => {
       renderCollider(entity, { renderer });
-      expect(drawBoxSpy).not.toHaveBeenCalled();
       expect(drawCircleSpy).not.toHaveBeenCalled();
+      expect(drawShapeSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('When the entity has the required components', () => {
-    const strokeColor = 'rgb(255, 255, 0)';
+    const color = 'rgb(0, 255, 0)';
 
     let transform: Transform2dComponent;
     let collider: Collider2dComponent;
@@ -109,18 +109,32 @@ describe('renderCollider', () => {
           width: 32,
           height: 32,
         };
+        collider.worldVertices = [
+          { x: 0, y: 0 },
+          { x: 32, y: 0 },
+          { x: 32, y: 32 },
+          { x: 0, y: 32 },
+        ];
       });
 
-      it('Should render a box', () => {
-        const shape = collider.shape as BoxShape;
+      it('Should render the box\'s collider', () => {
         renderCollider(entity, { renderer });
-        expect(drawBoxSpy).toHaveBeenCalledWith({
-          x: transform.position.x,
-          y: transform.position.y,
-          width: shape.width,
-          height: shape.height,
-          strokeColor,
+        expect(drawShapeSpy).toHaveBeenCalledWith({
+          vertices: collider.worldVertices,
+          strokeColor: color,
         });
+      });
+
+      it('Should render a circle at each vertex of the box', () => {
+        renderCollider(entity, { renderer });
+        for (const vertex of collider.worldVertices!) {
+          expect(drawCircleSpy).toHaveBeenCalledWith({
+            x: vertex.x,
+            y: vertex.y,
+            radius: 2,
+            fillColor: color,
+          });
+        }
       });
     });
 
@@ -139,7 +153,7 @@ describe('renderCollider', () => {
           x: transform.position.x,
           y: transform.position.y,
           radius: shape.radius,
-          strokeColor,
+          strokeColor: color,
         });
       });
     });

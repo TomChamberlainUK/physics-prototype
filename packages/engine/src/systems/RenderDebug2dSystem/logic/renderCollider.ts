@@ -40,18 +40,25 @@ export default function renderCollider(entity: Entity, {
     alpha,
   );
 
-  const strokeColor = 'rgb(255, 255, 0)';
+  const color = 'rgb(0, 255, 0)';
 
   switch (collider.shape.type) {
     case 'box': {
-      const { width, height } = collider.shape;
-      renderer.drawBox({
-        x,
-        y,
-        width,
-        height,
-        strokeColor,
+      if (!collider.worldVertices) {
+        return;
+      }
+      renderer.drawShape({
+        vertices: collider.worldVertices,
+        strokeColor: color,
       });
+      for (const vertex of collider.worldVertices) {
+        renderer.drawCircle({
+          x: vertex.x,
+          y: vertex.y,
+          radius: 2,
+          fillColor: color,
+        });
+      }
       break;
     }
     case 'circle': {
@@ -60,7 +67,7 @@ export default function renderCollider(entity: Entity, {
         x,
         y,
         radius,
-        strokeColor,
+        strokeColor: color,
       });
       break;
     }

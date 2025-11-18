@@ -3,7 +3,7 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { ColliderUpdate2dSystem } from '#/systems';
 import * as getAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getAABB';
-import * as getVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getVertices';
+import * as getWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
 
 describe('ColliderUpdate2dSystem', () => {
   describe('constructor()', () => {
@@ -20,11 +20,11 @@ describe('ColliderUpdate2dSystem', () => {
     let system: ColliderUpdate2dSystem;
 
     let getAABBSpy: MockInstance<typeof getAABBModule.default>;
-    let getVerticesSpy: MockInstance<typeof getVerticesModule.default>;
+    let getWorldVerticesSpy: MockInstance<typeof getWorldVerticesModule.default>;
 
     beforeAll(() => {
       getAABBSpy = vi.spyOn(getAABBModule, 'default');
-      getVerticesSpy = vi.spyOn(getVerticesModule, 'default');
+      getWorldVerticesSpy = vi.spyOn(getWorldVerticesModule, 'default');
     });
 
     beforeEach(() => {
@@ -34,12 +34,12 @@ describe('ColliderUpdate2dSystem', () => {
 
     afterEach(() => {
       getAABBSpy.mockClear();
-      getVerticesSpy.mockClear();
+      getWorldVerticesSpy.mockClear();
     });
 
     afterAll(() => {
       getAABBSpy.mockRestore();
-      getVerticesSpy.mockRestore();
+      getWorldVerticesSpy.mockRestore();
     });
 
     describe('When passed entities with required components', () => {
@@ -77,16 +77,16 @@ describe('ColliderUpdate2dSystem', () => {
         expect(collider2dComponent.aabb).toEqual(expectedAABB);
       });
 
-      it('Should update the vertices of entities', () => {
-        const expectedVertices = [
+      it('Should update the worldVertices of entities', () => {
+        const expectedWorldVertices = [
           { x: -0.5, y: -0.5 },
           { x: 0.5, y: -0.5 },
           { x: 0.5, y: 0.5 },
           { x: -0.5, y: 0.5 },
         ];
-        getVerticesSpy.mockReturnValueOnce(expectedVertices);
+        getWorldVerticesSpy.mockReturnValueOnce(expectedWorldVertices);
         system.update([entity]);
-        expect(collider2dComponent.vertices).toEqual(expectedVertices);
+        expect(collider2dComponent.worldVertices).toEqual(expectedWorldVertices);
       });
     });
 
@@ -94,6 +94,11 @@ describe('ColliderUpdate2dSystem', () => {
       it('Should not update the AABB of entities', () => {
         system.update([entity]);
         expect(getAABBSpy).not.toHaveBeenCalled();
+      });
+
+      it('Should not update the worldVertices of entities', () => {
+        system.update([entity]);
+        expect(getWorldVerticesSpy).not.toHaveBeenCalled();
       });
     });
   });

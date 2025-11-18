@@ -329,6 +329,148 @@ describe('Renderer', () => {
     });
   });
 
+  describe('drawShape()', () => {
+    let ctxBeginPathSpy: MockInstance<typeof renderer.ctx.beginPath>;
+    let ctxMoveToSpy: MockInstance<typeof renderer.ctx.moveTo>;
+    let ctxLineToSpy: MockInstance<typeof renderer.ctx.lineTo>;
+    let ctxClosePathSpy: MockInstance<typeof renderer.ctx.closePath>;
+    let ctxFillSpy: MockInstance<typeof renderer.ctx.fill>;
+    let ctxStrokeSpy: MockInstance<typeof renderer.ctx.stroke>;
+
+    beforeAll(() => {
+      ctxBeginPathSpy = vi.spyOn(renderer.ctx, 'beginPath');
+      ctxMoveToSpy = vi.spyOn(renderer.ctx, 'moveTo');
+      ctxLineToSpy = vi.spyOn(renderer.ctx, 'lineTo');
+      ctxClosePathSpy = vi.spyOn(renderer.ctx, 'closePath');
+      ctxFillSpy = vi.spyOn(renderer.ctx, 'fill');
+      ctxStrokeSpy = vi.spyOn(renderer.ctx, 'stroke');
+    });
+
+    beforeEach(() => {
+      renderer = new Renderer(canvas);
+    });
+
+    afterEach(() => {
+      ctxBeginPathSpy.mockClear();
+      ctxMoveToSpy.mockClear();
+      ctxLineToSpy.mockClear();
+      ctxClosePathSpy.mockClear();
+      ctxFillSpy.mockClear();
+      ctxStrokeSpy.mockClear();
+    });
+
+    afterAll(() => {
+      ctxBeginPathSpy.mockRestore();
+      ctxMoveToSpy.mockRestore();
+      ctxLineToSpy.mockRestore();
+      ctxClosePathSpy.mockRestore();
+      ctxFillSpy.mockRestore();
+      ctxStrokeSpy.mockRestore();
+    });
+
+    describe('When provided valid vertices', () => {
+      const vertices = [
+        { x: 100, y: 100 },
+        { x: 200, y: 100 },
+        { x: 200, y: 200 },
+        { x: 100, y: 200 },
+      ];
+
+      it('Should draw a shape on the canvas', () => {
+        renderer.drawShape({ vertices });
+
+        expect(ctxBeginPathSpy).toHaveBeenCalled();
+        expect(ctxMoveToSpy).toHaveBeenCalledWith(vertices[0]!.x, vertices[0]!.y);
+
+        for (const vertex of vertices.slice(1)) {
+          expect(ctxLineToSpy).toHaveBeenCalledWith(vertex.x, vertex.y);
+        }
+        expect(ctxClosePathSpy).toHaveBeenCalled();
+        expectCallOrder([
+          ctxBeginPathSpy,
+          ctxLineToSpy,
+          ctxClosePathSpy,
+        ]);
+      });
+
+      describe('When fillColor is provided', () => {
+        it('Should draw a shape on the canvas with a fill', () => {
+          renderer.drawShape({
+            vertices,
+            fillColor,
+          });
+
+          expect(ctxFillSpy).toHaveBeenCalled();
+          expect(renderer.ctx.fillStyle).toBe(fillColor);
+          expectCallOrder([
+            ctxBeginPathSpy,
+            ctxLineToSpy,
+            ctxClosePathSpy,
+            ctxFillSpy,
+          ]);
+        });
+      });
+
+      describe('When strokeColor is provided', () => {
+        it('Should draw a shape on the canvas with a stroke', () => {
+          renderer.drawShape({
+            vertices,
+            strokeColor,
+          });
+
+          expect(ctxStrokeSpy).toHaveBeenCalled();
+          expect(renderer.ctx.strokeStyle).toBe(strokeColor);
+          expectCallOrder([
+            ctxBeginPathSpy,
+            ctxLineToSpy,
+            ctxClosePathSpy,
+            ctxStrokeSpy,
+          ]);
+        });
+      });
+    });
+
+    describe('When the first vertex is undefined', () => {
+      it('Should throw an error', () => {
+        const vertices = [
+          undefined,
+          { x: 200, y: 100 },
+          { x: 200, y: 200 },
+          { x: 100, y: 200 },
+        ];
+        expect(() => {
+          renderer.drawShape({ vertices: vertices as { x: number; y: number }[] });
+        }).toThrowError('Vertex 0 is undefined');
+      });
+    });
+
+    describe('When a vertex other than the first is undefined', () => {
+      it('Should throw an error', () => {
+        const vertices = [
+          { x: 100, y: 100 },
+          undefined,
+          { x: 200, y: 200 },
+          { x: 100, y: 200 },
+        ];
+        expect(() => {
+          renderer.drawShape({ vertices: vertices as { x: number; y: number }[] });
+        }).toThrowError('Vertex 1 is undefined');
+      });
+    });
+
+    describe('When not provided vertices', () => {
+      it('Should not attempt to draw anything', () => {
+        renderer.drawShape({ vertices: [] });
+        expect(ctxBeginPathSpy).not.toHaveBeenCalled();
+        expect(ctxMoveToSpy).not.toHaveBeenCalled();
+        expect(ctxLineToSpy).not.toHaveBeenCalled();
+        expect(ctxClosePathSpy).not.toHaveBeenCalled();
+        expect(ctxFillSpy).not.toHaveBeenCalled();
+        expect(ctxStrokeSpy).not.toHaveBeenCalled();
+      });
+    });
+  });
+
   describe('resetOrigin()', () => {
     let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
     let mockCtxTranslate: MockInstance<typeof renderer.ctx.translate>;

@@ -151,6 +151,52 @@ export default class Renderer {
   }
 
   /**
+   * Draws a shape defined by a list of vertices on the canvas.
+   * @param vertices - The vertices of the shape to draw.
+   * @param fillColor - The fill color of the shape (optional).
+   * @param strokeColor - The stroke color of the shape (optional).
+   */
+  drawShape({
+    vertices,
+    fillColor,
+    strokeColor,
+  }: {
+    /** The vertices of the shape to draw. */
+    vertices: { x: number; y: number }[];
+    /** The fill color of the shape (optional). */
+    fillColor?: string;
+    /** The stroke color of the shape (optional). */
+    strokeColor?: string;
+  }) {
+    if (vertices.length === 0) {
+      return;
+    }
+
+    if (!vertices[0]) {
+      throw new Error('Vertex 0 is undefined');
+    }
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(vertices[0].x, vertices[0].y);
+    for (let i = 1; i < vertices.length; i++) {
+      const vertex = vertices[i];
+      if (!vertex) {
+        throw new Error(`Vertex ${i} is undefined`);
+      }
+      this.ctx.lineTo(vertex.x, vertex.y);
+    }
+    this.ctx.closePath();
+    if (fillColor) {
+      this.ctx.fillStyle = fillColor;
+      this.ctx.fill();
+    }
+    if (strokeColor) {
+      this.ctx.strokeStyle = strokeColor;
+      this.ctx.stroke();
+    }
+  }
+
+  /**
    * Resets the origin of the canvas to the center.
    */
   resetOrigin() {

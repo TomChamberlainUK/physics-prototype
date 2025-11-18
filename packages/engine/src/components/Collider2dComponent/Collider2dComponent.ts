@@ -1,5 +1,6 @@
 import type { AABB, Shape } from '#/types';
 import Component from '../Component';
+import { getVertices } from './logic';
 
 /**
  * Parameters for constructing a Collider2dComponent.
@@ -17,8 +18,10 @@ export default class Collider2dComponent extends Component {
   aabb: AABB | null;
   /** The shape of the collider. */
   shape: Shape;
-  /** The vertices of the collider, if applicable. */
-  vertices: { x: number; y: number }[] | null;
+  /** The local-space vertices of the collider (relative to the collider's origin). */
+  localVertices: { x: number; y: number }[] | null;
+  /** The world-space vertices of the collider (transformed by the entity's transform). */
+  worldVertices: { x: number; y: number }[] | null;
 
   /**
    * Creates an instance of the Collider2dComponent.
@@ -28,6 +31,7 @@ export default class Collider2dComponent extends Component {
     super('Collider2d');
     this.aabb = null;
     this.shape = shape;
-    this.vertices = null;
+    this.localVertices = getVertices(shape);
+    this.worldVertices = null;
   }
 }

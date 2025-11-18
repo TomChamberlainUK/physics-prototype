@@ -1,3 +1,4 @@
+import type { Vector2d } from '#/maths';
 import type { AABB, Shape } from '#/types';
 import Component from '../Component';
 import { getVertices } from './logic';
@@ -19,9 +20,9 @@ export default class Collider2dComponent extends Component {
   /** The shape of the collider. */
   shape: Shape;
   /** The local-space vertices of the collider (relative to the collider's origin). */
-  localVertices: { x: number; y: number }[] | null;
+  localVertices: Vector2d[] | null;
   /** The world-space vertices of the collider (transformed by the entity's transform). */
-  worldVertices: { x: number; y: number }[] | null;
+  worldVertices: Vector2d[] | null;
 
   /**
    * Creates an instance of the Collider2dComponent.

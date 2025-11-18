@@ -1,3 +1,5 @@
+import { Vector2d } from '#/maths';
+
 /**
  * Parameters for calculating box vertices.
  */
@@ -19,9 +21,9 @@ export default function getBoxVertices({ width, height }: Parameters) {
   const halfHeight = height / 2;
 
   return [
-    { x: -halfWidth, y: -halfHeight },
-    { x: halfWidth, y: -halfHeight },
-    { x: halfWidth, y: halfHeight },
-    { x: -halfWidth, y: halfHeight },
+    new Vector2d({ x: -halfWidth, y: -halfHeight }),
+    new Vector2d({ x: halfWidth, y: -halfHeight }),
+    new Vector2d({ x: halfWidth, y: halfHeight }),
+    new Vector2d({ x: -halfWidth, y: halfHeight }),
   ];
 }

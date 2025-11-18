@@ -1,5 +1,5 @@
 import type Entity from '#/Entity';
-import { Matrix2d, type Collider2dComponent, type Transform2dComponent } from '#/index';
+import { Matrix2d, Vector2d, type Collider2dComponent, type Transform2dComponent } from '#/index';
 
 export default function getWorldVertices(entity: Entity) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
@@ -17,7 +17,9 @@ export default function getWorldVertices(entity: Entity) {
   const rotationMatrix = Matrix2d.rotation(transform.rotation);
   const transformMatrix = Matrix2d.multiply(translationMatrix, rotationMatrix);
 
-  const vertices = collider.localVertices.map(vertex => transformMatrix.transformPoint(vertex));
+  const vertices = collider.localVertices.map(vertex => (
+    new Vector2d(transformMatrix.transformPoint(vertex))
+  ));
 
   return vertices;
 }

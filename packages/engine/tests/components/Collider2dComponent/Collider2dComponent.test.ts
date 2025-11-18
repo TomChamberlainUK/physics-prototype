@@ -1,4 +1,4 @@
-import Collider2dComponent from '#/components/Collider2dComponent';
+import { Collider2dComponent } from '#/components';
 import { describe, expect, it } from 'vitest';
 
 describe('Collider2dComponent', () => {

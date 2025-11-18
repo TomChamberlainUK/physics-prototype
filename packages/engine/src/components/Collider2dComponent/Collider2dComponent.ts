@@ -1,5 +1,5 @@
 import type { AABB, Shape } from '#/types';
-import Component from './Component';
+import Component from '../Component';
 
 /**
  * Parameters for constructing a Collider2dComponent.

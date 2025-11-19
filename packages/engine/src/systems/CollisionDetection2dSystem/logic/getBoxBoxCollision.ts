@@ -6,7 +6,7 @@ import getBoxAxes from './getBoxAxes';
 import projectVertices from './projectVertices';
 
 /**
- * Determines the collision information between two box-shaped colliders.
+ * Determines the collision information between two box-shaped colliders using Separating Axis Theorem (SAT).
  * @param entityA - The first entity with a box collider.
  * @param entityB - The second entity with a box collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
@@ -27,8 +27,6 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
   if (!verticesA || !verticesB) {
     return { isColliding: false };
   }
-
-  // SAT (Separating Axis Theorem) implementation
 
   // Get the axes to test (normals of all edges)
   const axes = [

@@ -1,58 +1,133 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { getBoxBoxCollision } from '#/systems/CollisionDetection2dSystem/logic';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { getWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
 
 describe('getBoxBoxCollision', () => {
+  const width = 50;
+  const height = 50;
+
   let entityA: Entity;
   let entityB: Entity;
   let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
+  let colliderA: Collider2dComponent;
+  let colliderB: Collider2dComponent;
 
   beforeEach(() => {
     entityA = new Entity();
     entityB = new Entity();
-    [entityA, entityB].forEach((entity) => {
-      entity.addComponents([
-        new Collider2dComponent({
-          shape: {
-            type: 'box',
-            width: 32,
-            height: 32,
-          },
+    transformA = new Transform2dComponent();
+    transformB = new Transform2dComponent();
+    colliderA = new Collider2dComponent({
+      shape: {
+        type: 'box',
+        width,
+        height,
+      },
+    });
+    colliderB = new Collider2dComponent({
+      shape: {
+        type: 'box',
+        width,
+        height,
+      },
+    });
+    entityA.addComponents([
+      transformA,
+      colliderA,
+    ]);
+    entityB.addComponents([
+      transformB,
+      colliderB,
+    ]);
+  });
+
+  describe('When passed axis-aligned entities with colliding world vertices', () => {
+    const overlap = 16;
+
+    beforeEach(() => {
+      transformB.position.x = width - overlap;
+      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderB.worldVertices = getWorldVertices(entityB);
+    });
+
+    it('Should return collision data', () => {
+      const result = getBoxBoxCollision(entityA, entityB);
+
+      expect(result).toEqual({
+        isColliding: true,
+        normal: { x: -1, y: 0 },
+        overlap: overlap,
+      });
+    });
+  });
+
+  describe('When passed axis-aligned entities with non-colliding world vertices', () => {
+    const gap = 16;
+
+    beforeEach(() => {
+      transformB.position.x = width + gap;
+      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderB.worldVertices = getWorldVertices(entityB);
+    });
+
+    it('Should return no collision data when passed two non-colliding boxes', () => {
+      const result = getBoxBoxCollision(entityA, entityB);
+
+      expect(result).toEqual({
+        isColliding: false,
+      });
+    });
+  });
+
+  describe('When passed rotated entities with colliding world vertices', () => {
+    const overlap = 16;
+
+    beforeEach(() => {
+      transformA.rotation = Math.PI / 4; // 45 degrees
+      transformB.position.x = width - overlap;
+      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderB.worldVertices = getWorldVertices(entityB);
+    });
+
+    it('Should return collision data', () => {
+      const result = getBoxBoxCollision(entityA, entityB);
+
+      expect(result).toEqual({
+        isColliding: true,
+        normal: expect.objectContaining({
+          x: expect.any(Number),
+          y: expect.any(Number),
         }),
-        new Transform2dComponent(),
-      ]);
-    });
-    transformA = entityA.getComponent('Transform2d');
-    transformB = entityB.getComponent('Transform2d');
-  });
+        overlap: expect.any(Number),
+      });
 
-  it('Should return correct collision data when passed two colliding boxes', () => {
-    transformA.position.x = 0;
-    transformA.position.y = 0;
-    transformB.position.x = 16;
-    transformB.position.y = 0;
+      if (!result.isColliding || !result.normal || !result.overlap) {
+        throw new Error('Expected collision data to be defined');
+      }
 
-    const result = getBoxBoxCollision(entityA, entityB);
-
-    expect(result).toEqual({
-      isColliding: true,
-      normal: { x: -1, y: 0 },
-      overlap: 16,
+      expect(result.overlap).toBeGreaterThan(overlap);
     });
   });
 
-  it('Should return no collision data when passed two non-colliding boxes', () => {
-    transformA.position.x = 0;
-    transformA.position.y = 0;
-    transformB.position.x = 100;
-    transformB.position.y = 0;
+  describe('When passed rotated entities with non-colliding world vertices', () => {
+    const gap = 16;
 
-    const result = getBoxBoxCollision(entityA, entityB);
+    beforeEach(() => {
+      transformA.rotation = Math.PI / 4; // 45 degrees
+      transformB.position.x = width + gap;
+      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderB.worldVertices = getWorldVertices(entityB);
+    });
 
-    expect(result).toEqual({
-      isColliding: false,
+    it('Should return no collision data when passed two non-colliding boxes', () => {
+      const result = getBoxBoxCollision(entityA, entityB);
+
+      expect(result).toEqual({
+        isColliding: false,
+      });
     });
   });
 });

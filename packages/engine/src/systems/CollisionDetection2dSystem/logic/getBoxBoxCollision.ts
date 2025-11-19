@@ -2,6 +2,8 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
+import getBoxAxes from './getBoxAxes';
+import projectVertices from './projectVertices';
 
 /**
  * Determines the collision information between two box-shaped colliders.
@@ -11,56 +13,65 @@ import type { Collision } from '#/types';
  */
 export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
-  const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
+  const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
   const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
 
-  if (colliderA.shape.type === 'box' && colliderB.shape.type === 'box') {
-    const halfWidthA = colliderA.shape.width / 2;
-    const halfHeightA = colliderA.shape.height / 2;
-    const halfWidthB = colliderB.shape.width / 2;
-    const halfHeightB = colliderB.shape.height / 2;
+  if (colliderA.shape.type !== 'box' || colliderB.shape.type !== 'box') {
+    return { isColliding: false };
+  }
 
-    const delta = transformA.position.subtract(transformB.position);
+  const verticesA = colliderA.worldVertices;
+  const verticesB = colliderB.worldVertices;
 
-    const overlapX = halfWidthA + halfWidthB - Math.abs(delta.x);
-    const overlapY = halfHeightA + halfHeightB - Math.abs(delta.y);
+  if (!verticesA || !verticesB) {
+    return { isColliding: false };
+  }
 
-    if (overlapX > 0 && overlapY > 0) {
-      if (overlapX < overlapY) {
-        const overlap = overlapX;
-        const normal = new Vector2d({
-          x: delta.x < 0
-            ? -1
-            : 1,
-          y: 0,
-        });
+  // SAT (Separating Axis Theorem) implementation
 
-        return {
-          isColliding: true,
-          normal,
-          overlap,
-        };
-      }
-      else {
-        const overlap = overlapY;
-        const normal = new Vector2d({
-          x: 0,
-          y: delta.y < 0
-            ? -1
-            : 1,
-        });
+  // Get the axes to test (normals of all edges)
+  const axes = [
+    ...getBoxAxes(verticesA),
+    ...getBoxAxes(verticesB),
+  ];
 
-        return {
-          isColliding: true,
-          normal,
-          overlap,
-        };
-      }
+  let minOverlap = Infinity;
+  let smallestAxis: Vector2d | null = null; // Minimum Translation Vector (MTV) axis
+
+  // Check for separation on each axis
+  for (const axis of axes) {
+    const projectionA = projectVertices({ vertices: verticesA, axis });
+    const projectionB = projectVertices({ vertices: verticesB, axis });
+
+    // If there's a gap, there's no collision
+    if (projectionA.max < projectionB.min || projectionB.max < projectionA.min) {
+      return { isColliding: false };
+    }
+
+    // Calculate overlap on this axis
+    const overlap = Math.min(projectionA.max, projectionB.max) - Math.max(projectionA.min, projectionB.min);
+
+    // Update minimum overlap and corresponding axis
+    if (overlap < minOverlap) {
+      minOverlap = overlap;
+      smallestAxis = axis;
     }
   }
 
+  if (smallestAxis === null) {
+    throw new Error('Collision detected but no separating axis found');
+  }
+
+  // Ensure the MTV (normal) always points from B to A
+  const centerDelta = transformA.position.subtract(transformB.position);
+  if (Vector2d.dotProduct(centerDelta, smallestAxis) < 0) {
+    smallestAxis = smallestAxis.multiply(-1);
+  }
+
   return {
-    isColliding: false,
+    isColliding: true,
+    normal: smallestAxis,
+    overlap: minOverlap,
   };
 }

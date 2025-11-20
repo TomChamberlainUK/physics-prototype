@@ -49,6 +49,10 @@ export default class RigidBody2dComponent extends Component {
   mass: number;
   /** The inverse of mass, used for efficient calculations. Unit: 1/kg. */
   inverseMass: number;
+  /** The moment of inertia, affecting resistance to angular acceleration. Unit: kilogram meter squared (kg·m²). */
+  momentOfInertia: number | null;
+  /** The inverse of moment of inertia, used for efficient calculations. Unit: 1/(kg·m²). */
+  inverseMomentOfInertia: number | null;
   /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
   restitution: number;
   /** The resistance to sliding motion. Range: 0–1. */
@@ -91,6 +95,8 @@ export default class RigidBody2dComponent extends Component {
     this.inverseMass = mass !== 0
       ? 1 / mass
       : 0;
+    this.momentOfInertia = null;
+    this.inverseMomentOfInertia = null;
     this.restitution = restitution;
     this.friction = friction;
   }

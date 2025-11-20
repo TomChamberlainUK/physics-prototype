@@ -1,12 +1,16 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import type { BoxShape, CircleShape, Collision } from '#/types';
+import Vector2d from '#/maths/Vector2d';
+import type { Collision } from '#/types';
+import getBoxAxes from './getBoxAxes';
+import getClosestBoxVertex from './getClosestBoxVertex';
+import projectCircle from './projectCircle';
+import projectVertices from './projectVertices';
 
 /**
- * Determines the collision information between a box-shaped collider and a circle-shaped collider.
- * @param entityA - The first entity with either a box or circle collider.
- * @param entityB - The second entity with either a box or circle collider.
+ * Determines the collision information between a box-shaped collider and a circle-shaped collider using Separating Axis Theorem (SAT).
+ * @param entityA - The first entity with a box or circle collider.
+ * @param entityB - The second entity with a box or circle collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
  */
 export default function getBoxCircleCollision(entityA: Entity, entityB: Entity): Collision {
@@ -15,89 +19,68 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity):
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
   const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
 
-  let boxCollider: Collider2dComponent;
-  let boxTransform: Transform2dComponent;
-  let circleCollider: Collider2dComponent;
-  let circleTransform: Transform2dComponent;
-  let delta: Vector2d;
+  // Identify which is box and which is circle
+  let boxVertices: Vector2d[] | null;
+  let circlePosition: Vector2d;
+  let circleRadius: number;
 
   if (colliderA.shape.type === 'box' && colliderB.shape.type === 'circle') {
-    boxCollider = colliderA;
-    boxTransform = transformA;
-    circleCollider = colliderB;
-    circleTransform = transformB;
-    delta = boxTransform.position.subtract(circleTransform.position);
+    boxVertices = colliderA.worldVertices;
+    circlePosition = transformB.position;
+    circleRadius = colliderB.shape.radius;
   }
   else if (colliderA.shape.type === 'circle' && colliderB.shape.type === 'box') {
-    boxCollider = colliderB;
-    boxTransform = transformB;
-    circleCollider = colliderA;
-    circleTransform = transformA;
-    delta = circleTransform.position.subtract(boxTransform.position);
+    boxVertices = colliderB.worldVertices;
+    circlePosition = transformA.position;
+    circleRadius = colliderA.shape.radius;
   }
   else {
     return { isColliding: false };
   }
 
-  const boxShape = boxCollider.shape as BoxShape;
-  const circleShape = circleCollider.shape as CircleShape;
+  if (!boxVertices) {
+    return { isColliding: false };
+  }
 
-  const halfWidth = boxShape.width / 2;
-  const halfHeight = boxShape.height / 2;
+  // Get the axes to test (normals of box edges and circle-to-box axis)
+  const closestBoxVertex = getClosestBoxVertex({ vertices: boxVertices, point: circlePosition });
+  const circleToBoxAxis = circlePosition.subtract(closestBoxVertex).getUnit();
+  const axes = [
+    ...getBoxAxes(boxVertices),
+    circleToBoxAxis,
+  ];
 
-  const closestPointOnBox = new Vector2d({
-    x: Math.max(-halfWidth, Math.min(delta.x, halfWidth)),
-    y: Math.max(-halfHeight, Math.min(delta.y, halfHeight)),
-  });
+  let minOverlap = Infinity;
+  let smallestAxis: Vector2d | null = null; // Minimum Translation Vector (MTV) axis
 
-  const deltaToClosestPointOnBox = delta.subtract(closestPointOnBox);
+  // Check for separation on each axis
+  for (const axis of axes) {
+    const projectionBox = projectVertices({ vertices: boxVertices, axis });
+    const projectionCircle = projectCircle({ position: circlePosition, radius: circleRadius, axis });
 
-  const distanceSquared = deltaToClosestPointOnBox.getLengthSquared();
-  const radiusSquared = circleShape.radius * circleShape.radius;
-
-  if (distanceSquared < radiusSquared) {
-    const distance = Math.sqrt(distanceSquared);
-    const overlap = circleShape.radius - distance;
-
-    let normal: Vector2d;
-    if (distance === 0) {
-      const distanceToNearestVerticalSide = Math.min(
-        Math.abs(delta.x - halfWidth),
-        Math.abs(delta.x + halfWidth),
-      );
-      const distanceToNearestHorizontalSide = Math.min(
-        Math.abs(delta.y - halfHeight),
-        Math.abs(delta.y + halfHeight),
-      );
-      if (distanceToNearestVerticalSide < distanceToNearestHorizontalSide) {
-        normal = new Vector2d({
-          x: delta.x > 0
-            ? 1
-            : -1,
-          y: 0,
-        });
-      }
-      else {
-        normal = new Vector2d({
-          x: 0,
-          y: delta.y > 0
-            ? 1
-            : -1,
-        });
-      }
-    }
-    else {
-      normal = deltaToClosestPointOnBox.getUnit();
+    // If there's a gap, there's no collision
+    if (projectionBox.max < projectionCircle.min || projectionCircle.max < projectionBox.min) {
+      return { isColliding: false };
     }
 
-    return {
-      isColliding: true,
-      normal,
-      overlap,
-    };
+    // Calculate overlap on this axis
+    const overlap = Math.min(projectionBox.max, projectionCircle.max) - Math.max(projectionBox.min, projectionCircle.min);
+
+    // Update minimum overlap and corresponding axis
+    if (overlap < minOverlap) {
+      minOverlap = overlap;
+      smallestAxis = axis;
+    }
+  }
+
+  // Ensure the MTV (normal) always points from circle to box
+  if (smallestAxis && Vector2d.dotProduct(transformA.position.subtract(transformB.position), smallestAxis) < 0) {
+    smallestAxis = smallestAxis.multiply(-1);
   }
 
   return {
-    isColliding: false,
+    isColliding: true,
+    normal: smallestAxis!,
+    overlap: minOverlap,
   };
 }

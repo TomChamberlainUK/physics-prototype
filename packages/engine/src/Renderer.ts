@@ -62,6 +62,7 @@ export default class Renderer {
     /** The stroke color of the circle (optional). */
     strokeColor?: string;
   }) {
+    this.ctx.save();
     this.ctx.beginPath();
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
     this.ctx.closePath();
@@ -73,6 +74,7 @@ export default class Renderer {
       this.ctx.strokeStyle = strokeColor;
       this.ctx.stroke();
     }
+    this.ctx.restore();
   }
 
   /**
@@ -105,6 +107,7 @@ export default class Renderer {
     fillColor?: string;
     strokeColor?: string;
   }) {
+    this.ctx.save();
     const topLeftX = x - width / 2;
     const topLeftY = y - height / 2;
     if (fillColor) {
@@ -115,6 +118,7 @@ export default class Renderer {
       this.ctx.strokeStyle = strokeColor;
       this.ctx.strokeRect(topLeftX, topLeftY, width, height);
     }
+    this.ctx.restore();
   }
 
   /**
@@ -176,6 +180,7 @@ export default class Renderer {
       throw new Error('Vertex 0 is undefined');
     }
 
+    this.ctx.save();
     this.ctx.beginPath();
     this.ctx.moveTo(vertices[0].x, vertices[0].y);
     for (let i = 1; i < vertices.length; i++) {
@@ -194,6 +199,7 @@ export default class Renderer {
       this.ctx.strokeStyle = strokeColor;
       this.ctx.stroke();
     }
+    this.ctx.restore();
   }
 
   /**

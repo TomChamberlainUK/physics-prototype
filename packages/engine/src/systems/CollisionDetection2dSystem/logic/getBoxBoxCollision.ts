@@ -3,6 +3,8 @@ import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import getBoxAxes from './getBoxAxes';
+import getSegmentIntersection from './getSegmentIntersection';
+import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectVertices from './projectVertices';
 
 /**
@@ -67,9 +69,62 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
     smallestAxis = smallestAxis.multiply(-1);
   }
 
+  // Project all vertices onto the MTV and collect those inside the overlap region
+  const projectionA = projectVertices({ vertices: verticesA, axis: smallestAxis });
+  const projectionB = projectVertices({ vertices: verticesB, axis: smallestAxis });
+
+  // Get the min and max of the overlap region
+  const overlapMin = Math.max(projectionA.min, projectionB.min);
+  const overlapMax = Math.min(projectionA.max, projectionB.max);
+  const epsilon = 1e-6;
+
+  // Collect vertices from both polygons that lie within the overlap region on the smallest axis
+  const overlappingPoints = new Map<string, Vector2d>();
+  for (const vertex of verticesA) {
+    const projection = Vector2d.dotProduct(vertex, smallestAxis);
+    if (
+      projection >= overlapMin - epsilon
+      && projection <= overlapMax + epsilon
+      && isPointInConvexPolygon({ point: vertex, polygonVertices: verticesB })
+    ) {
+      overlappingPoints.set(`x: ${vertex.x}; y: ${vertex.y}`, vertex);
+    }
+  }
+  for (const vertex of verticesB) {
+    const projection = Vector2d.dotProduct(vertex, smallestAxis);
+    if (
+      projection >= overlapMin - epsilon
+      && projection <= overlapMax + epsilon
+      && isPointInConvexPolygon({ point: vertex, polygonVertices: verticesA })
+    ) {
+      overlappingPoints.set(`x: ${vertex.x}; y: ${vertex.y}`, vertex);
+    }
+  }
+
+  // Collect contact points from edges intersecting the overlap region
+  for (let i = 0; i < verticesA.length; i++) {
+    const segmentAStart = verticesA[i];
+    const segmentAEnd = verticesA[(i + 1) % verticesA.length];
+    if (!segmentAStart || !segmentAEnd) {
+      throw new Error('Undefined vertex in box collider');
+    }
+    for (let j = 0; j < verticesB.length; j++) {
+      const segmentBStart = verticesB[j];
+      const segmentBEnd = verticesB[(j + 1) % verticesB.length];
+      if (!segmentBStart || !segmentBEnd) {
+        throw new Error('Undefined vertex in box collider');
+      }
+      const intersection = getSegmentIntersection({ segmentAStart, segmentAEnd, segmentBStart, segmentBEnd });
+      if (intersection) {
+        overlappingPoints.set(`x: ${intersection.x}; y: ${intersection.y}`, intersection);
+      }
+    }
+  }
+
   return {
     isColliding: true,
     normal: smallestAxis,
     overlap: minOverlap,
+    contactPoints: Array.from(overlappingPoints.values()),
   };
 }

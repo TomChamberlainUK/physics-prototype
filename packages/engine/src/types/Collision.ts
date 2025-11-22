@@ -10,6 +10,6 @@ export type Collision = {
   normal: Vector2d;
   /** The amount of overlap between the two entities. */
   overlap: number;
-  /** The contact point of the collision. */
-  contactPoint?: Vector2d;
+  /** The contact points of the collision. */
+  contactPoints?: Vector2d[];
 };

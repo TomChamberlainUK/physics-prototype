@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
+import { Vector2d } from '#/maths';
 import { getBoxBoxCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { getWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
 
@@ -14,6 +15,8 @@ describe('getBoxBoxCollision', () => {
   let transformB: Transform2dComponent;
   let colliderA: Collider2dComponent;
   let colliderB: Collider2dComponent;
+
+  let result: ReturnType<typeof getBoxBoxCollision>;
 
   beforeEach(() => {
     entityA = new Entity();
@@ -51,16 +54,25 @@ describe('getBoxBoxCollision', () => {
       transformB.position.x = width - overlap;
       colliderA.worldVertices = getWorldVertices(entityA);
       colliderB.worldVertices = getWorldVertices(entityB);
+      result = getBoxBoxCollision(entityA, entityB);
     });
 
-    it('Should return collision data', () => {
-      const result = getBoxBoxCollision(entityA, entityB);
+    it('Should detect a collision', () => {
+      expect(result.isColliding).toBe(true);
+    });
 
-      expect(result).toEqual({
-        isColliding: true,
-        normal: { x: -1, y: 0 },
-        overlap: overlap,
-      });
+    it('Should return the collision normal pointing from B to A', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
+      }
+      expect(result.normal).toEqual({ x: -1, y: 0 });
+    });
+
+    it('Should return the overlap distance', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
+      }
+      expect(result.overlap).toBe(overlap);
     });
   });
 
@@ -71,11 +83,10 @@ describe('getBoxBoxCollision', () => {
       transformB.position.x = width + gap;
       colliderA.worldVertices = getWorldVertices(entityA);
       colliderB.worldVertices = getWorldVertices(entityB);
+      result = getBoxBoxCollision(entityA, entityB);
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {
-      const result = getBoxBoxCollision(entityA, entityB);
-
       expect(result).toEqual({
         isColliding: false,
       });
@@ -90,24 +101,27 @@ describe('getBoxBoxCollision', () => {
       transformB.position.x = width - overlap;
       colliderA.worldVertices = getWorldVertices(entityA);
       colliderB.worldVertices = getWorldVertices(entityB);
+      result = getBoxBoxCollision(entityA, entityB);
     });
 
-    it('Should return collision data', () => {
-      const result = getBoxBoxCollision(entityA, entityB);
+    it('Should detect a collision', () => {
+      expect(result.isColliding).toBe(true);
+    });
 
-      expect(result).toEqual({
-        isColliding: true,
-        normal: expect.objectContaining({
-          x: expect.any(Number),
-          y: expect.any(Number),
-        }),
-        overlap: expect.any(Number),
-      });
-
-      if (!result.isColliding || !result.normal || !result.overlap) {
-        throw new Error('Expected collision data to be defined');
+    it('Should return the collision normal pointing from B to A', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
       }
+      expect(result.normal).toBeInstanceOf(Vector2d);
+      const centerDelta = transformA.position.subtract(transformB.position);
+      const dot = centerDelta.x * result.normal.x + centerDelta.y * result.normal.y;
+      expect(dot).toBeGreaterThan(0);
+    });
 
+    it('Should return the overlap distance', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
+      }
       expect(result.overlap).toBeGreaterThan(overlap);
     });
   });
@@ -120,11 +134,10 @@ describe('getBoxBoxCollision', () => {
       transformB.position.x = width + gap;
       colliderA.worldVertices = getWorldVertices(entityA);
       colliderB.worldVertices = getWorldVertices(entityB);
+      result = getBoxBoxCollision(entityA, entityB);
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {
-      const result = getBoxBoxCollision(entityA, entityB);
-
       expect(result).toEqual({
         isColliding: false,
       });

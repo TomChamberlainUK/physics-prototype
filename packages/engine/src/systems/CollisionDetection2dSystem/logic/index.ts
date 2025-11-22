@@ -7,5 +7,6 @@ export { default as getCircleCircleCollision } from './getCircleCircleCollision'
 export { default as getClosestBoxVertex } from './getClosestBoxVertex';
 export { default as getCollision } from './getCollision';
 export { default as getNarrowPhasePairs } from './getNarrowPhasePairs';
+export { default as isPointInConvexPolygon } from './isPointInConvexPolygon';
 export { default as projectCircle } from './projectCircle';
 export { default as projectVertices } from './projectVertices';

@@ -5,6 +5,7 @@ export { default as getBoxCircleCollision } from './getBoxCircleCollision';
 export { default as getBroadPhasePairs } from './getBroadPhasePairs';
 export { default as getCircleCircleCollision } from './getCircleCircleCollision';
 export { default as getClosestBoxVertex } from './getClosestBoxVertex';
+export { default as getClosestPointOnEdgeOfBox } from './getClosestPointOnEdgeOfBox';
 export { default as getCollision } from './getCollision';
 export { default as getNarrowPhasePairs } from './getNarrowPhasePairs';
 export { default as getSegmentIntersection } from './getSegmentIntersection';

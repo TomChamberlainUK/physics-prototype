@@ -4,6 +4,8 @@ import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import getBoxAxes from './getBoxAxes';
 import getClosestBoxVertex from './getClosestBoxVertex';
+import getClosestPointOnEdgeOfBox from './getClosestPointOnEdgeOfBox';
+import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectCircle from './projectCircle';
 import projectVertices from './projectVertices';
 
@@ -73,14 +75,32 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity):
     }
   }
 
-  // Ensure the MTV (normal) always points from circle to box
-  if (smallestAxis && Vector2d.dotProduct(transformA.position.subtract(transformB.position), smallestAxis) < 0) {
+  if (smallestAxis === null) {
+    throw new Error('Collision detected but no separating axis found');
+  }
+
+  // Ensure the MTV (normal) always points from B to A
+  const centerDelta = transformA.position.subtract(transformB.position);
+  if (smallestAxis && Vector2d.dotProduct(centerDelta, smallestAxis) < 0) {
     smallestAxis = smallestAxis.multiply(-1);
+  }
+
+  // Determine contact points
+  const contactPoints: Vector2d[] = [];
+
+  // Add the closest point on the box as a contact point
+  const closestPointOnBox = getClosestPointOnEdgeOfBox({ boxVertices, point: circlePosition });
+  contactPoints.push(closestPointOnBox);
+
+  // If the circle center is inside the box, add it as a contact point
+  if (isPointInConvexPolygon({ point: circlePosition, polygonVertices: boxVertices })) {
+    contactPoints.push(circlePosition);
   }
 
   return {
     isColliding: true,
-    normal: smallestAxis!,
+    normal: smallestAxis,
     overlap: minOverlap,
+    contactPoints,
   };
 }

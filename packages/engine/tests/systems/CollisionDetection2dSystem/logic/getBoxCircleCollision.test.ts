@@ -1,13 +1,15 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import getWorldVertices from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
 import { getBoxCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { isPointNearConvexPolygon } from '../../../utils';
 
 describe('getBoxCircleCollision', () => {
   const width = 50;
   const height = 50;
+  const halfWidth = width / 2;
   const radius = 25;
 
   let entityA: Entity;
@@ -73,6 +75,14 @@ describe('getBoxCircleCollision', () => {
       }
       expect(result.overlap).toBe(overlap);
     });
+
+    it('Should return contact points', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
+      }
+      expect(result.contactPoints).toContainEqual(new Vector2d({ x: halfWidth, y: 0 }));
+      expect(result.contactPoints.length).toBe(1);
+    });
   });
 
   describe('When passed an axis-aligned box entity with non-colliding world vertices to a circle', () => {
@@ -120,6 +130,16 @@ describe('getBoxCircleCollision', () => {
         throw new Error('Expected a collision to be detected');
       }
       expect(result.overlap).toBeGreaterThan(overlap);
+    });
+
+    it('Should return contact points', () => {
+      if (!result.isColliding) {
+        throw new Error('Expected a collision to be detected');
+      }
+      for (const contactPoint of result.contactPoints) {
+        const isWithinBox = isPointNearConvexPolygon({ point: contactPoint, polygonVertices: colliderA.worldVertices! });
+        expect(isWithinBox).toBe(true);
+      }
     });
   });
 

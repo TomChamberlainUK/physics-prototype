@@ -12,6 +12,8 @@ describe('getCircleCircleCollision', () => {
   let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
 
+  let result: ReturnType<typeof getCircleCircleCollision>;
+
   beforeEach(() => {
     entityA = new Entity();
     entityB = new Entity();
@@ -41,36 +43,37 @@ describe('getCircleCircleCollision', () => {
         x: (radius * 2) - overlap,
         y: 0,
       });
+      result = getCircleCircleCollision(entityA, entityB);
     });
 
-    it('Should return that the circles are colliding', () => {
-      const collision = getCircleCircleCollision(entityA, entityB);
-      expect(collision.isColliding).toBe(true);
+    it('Should detect a collision', () => {
+      expect(result.isColliding).toBe(true);
     });
 
-    it('Should return the collision normal', () => {
-      const collision = getCircleCircleCollision(entityA, entityB);
-      if (!collision.isColliding) {
+    it('Should return the collision normal pointing from B to A', () => {
+      if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      expect(collision.normal).toEqual(new Vector2d({ x: -1, y: 0 }));
+      expect(result.normal).toEqual(new Vector2d({ x: -1, y: 0 }));
     });
 
     it('Should return the overlap distance', () => {
-      const collision = getCircleCircleCollision(entityA, entityB);
-      if (!collision.isColliding) {
+      if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      expect(collision.overlap).toBe(overlap);
+      expect(result.overlap).toBe(overlap);
     });
 
-    it('Should return the contact point', () => {
-      const collision = getCircleCircleCollision(entityA, entityB);
-      if (!collision.isColliding) {
+    it('Should return contact points', () => {
+      if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      const expectedContactPoint = transformA.position.subtract(collision.normal.multiply(radius));
-      expect(collision.contactPoint).toEqual(expectedContactPoint);
+      for (const contactPoint of result.contactPoints) {
+        const distanceFromCenterA = contactPoint.subtract(transformA.position);
+        const distanceFromCenterB = contactPoint.subtract(transformB.position);
+        expect(distanceFromCenterA.getLengthSquared()).toBeLessThanOrEqual(radius * radius);
+        expect(distanceFromCenterB.getLengthSquared()).toBeLessThanOrEqual(radius * radius);
+      }
     });
   });
 
@@ -80,11 +83,11 @@ describe('getCircleCircleCollision', () => {
         x: (radius * 2) + 10,
         y: 0,
       });
+      result = getCircleCircleCollision(entityA, entityB);
     });
 
     it('Should return that the circles are not colliding', () => {
-      const collision = getCircleCircleCollision(entityA, entityB);
-      expect(collision.isColliding).toBe(false);
+      expect(result.isColliding).toBe(false);
     });
   });
 });

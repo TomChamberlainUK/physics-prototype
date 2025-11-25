@@ -28,13 +28,26 @@ export default function getCircleCircleCollision(entityA: Entity, entityB: Entit
       const normal = distance === 0
         ? new Vector2d({ x: 1, y: 0 })
         : delta.getUnit();
-      const contactPoint = transformA.position.subtract(normal.multiply(colliderA.shape.radius));
+
+      // Calculate contact points on the surface of each circle
+      let contactPointA = transformA.position.subtract(normal.multiply(colliderA.shape.radius));
+      let contactPointB = transformB.position.add(normal.multiply(colliderB.shape.radius));
+
+      // Clamp the contact points to the edges of the circles in case of deep overlap
+      const contactPointAToCircleB = contactPointA.subtract(transformB.position);
+      if (contactPointAToCircleB.getLengthSquared() > colliderB.shape.radius * colliderB.shape.radius) {
+        contactPointA = transformB.position.add(contactPointAToCircleB.getUnit().multiply(colliderB.shape.radius));
+      }
+      const contactPointBToCircleA = contactPointB.subtract(transformA.position);
+      if (contactPointBToCircleA.getLengthSquared() > colliderA.shape.radius * colliderA.shape.radius) {
+        contactPointB = transformA.position.add(contactPointBToCircleA.getUnit().multiply(colliderA.shape.radius));
+      }
 
       return {
         isColliding: true,
         normal,
         overlap,
-        contactPoint,
+        contactPoints: [contactPointA, contactPointB],
       };
     }
   }

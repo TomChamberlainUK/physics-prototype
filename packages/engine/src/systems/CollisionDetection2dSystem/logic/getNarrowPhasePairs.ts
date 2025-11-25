@@ -19,6 +19,7 @@ export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]) 
       entityB,
       normal: collision.normal,
       overlap: collision.overlap,
+      contactPoints: collision.contactPoints,
     });
   }
   return collisionPairs;

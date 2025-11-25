@@ -55,6 +55,7 @@ describe('getNarrowPhasePairs', () => {
         isColliding: true,
         normal: new Vector2d({ x: 0, y: 1 }),
         overlap: 1,
+        contactPoints: [new Vector2d({ x: 0, y: 0 })],
       });
     });
 
@@ -66,18 +67,21 @@ describe('getNarrowPhasePairs', () => {
           entityB,
           normal: new Vector2d({ x: 0, y: 1 }),
           overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: 0 })],
         },
         {
           entityA,
           entityB: entityC,
           normal: new Vector2d({ x: 0, y: 1 }),
           overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: 0 })],
         },
         {
           entityA: entityB,
           entityB: entityC,
           normal: new Vector2d({ x: 0, y: 1 }),
           overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: 0 })],
         },
       ]);
     });

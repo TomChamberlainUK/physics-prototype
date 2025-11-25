@@ -138,7 +138,9 @@ describe('getBoxCircleCollision', () => {
       }
       for (const contactPoint of result.contactPoints) {
         const isWithinBox = isPointNearConvexPolygon({ point: contactPoint, polygonVertices: colliderA.worldVertices! });
+        const distanceFromCircleCenter = contactPoint.subtract(transformB.position);
         expect(isWithinBox).toBe(true);
+        expect(distanceFromCircleCenter.getLengthSquared()).toBeLessThanOrEqual(radius * radius);
       }
     });
   });

@@ -88,8 +88,13 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity):
   // Determine contact points
   const contactPoints: Vector2d[] = [];
 
-  // Add the closest point on the box as a contact point
-  const closestPointOnBox = getClosestPointOnEdgeOfBox({ boxVertices, point: circlePosition });
+  // Add the closest point on the box as a contact point, clamped to the circle's edge if needed
+  let closestPointOnBox = getClosestPointOnEdgeOfBox({ boxVertices, point: circlePosition });
+  const closestPointOnBoxToCircle = closestPointOnBox.subtract(circlePosition);
+  if (closestPointOnBoxToCircle.getLengthSquared() > circleRadius * circleRadius) {
+    // Clamp to circle's edge
+    closestPointOnBox = circlePosition.add(closestPointOnBoxToCircle.getUnit().multiply(circleRadius));
+  }
   contactPoints.push(closestPointOnBox);
 
   // If the circle center is inside the box, add it as a contact point

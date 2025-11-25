@@ -13,7 +13,7 @@ import projectVertices from './projectVertices';
  * Determines the collision information between a box-shaped collider and a circle-shaped collider using Separating Axis Theorem (SAT).
  * @param entityA - The first entity with a box or circle collider.
  * @param entityB - The second entity with a box or circle collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
+ * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
  */
 export default function getBoxCircleCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');

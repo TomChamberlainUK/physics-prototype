@@ -7,7 +7,7 @@ import type { Collision } from '#/types';
  * Determines the collision information between two circle-shaped colliders.
  * @param entityA - The first entity with a circle collider.
  * @param entityB - The second entity with a circle collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, and the overlap distance.
+ * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
  */
 export default function getCircleCircleCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');

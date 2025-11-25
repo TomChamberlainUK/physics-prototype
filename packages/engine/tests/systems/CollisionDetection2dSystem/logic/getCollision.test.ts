@@ -5,6 +5,8 @@ import { getCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import * as getBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/getBoxBoxCollision';
 import * as getBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getBoxCircleCollision';
 import * as getCircleCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getCircleCircleCollision';
+import { Vector2d } from '#/maths';
+import type { Collision } from '#/types';
 
 describe('getCollision', () => {
   let entityA: Entity;
@@ -12,6 +14,18 @@ describe('getCollision', () => {
   let getBoxBoxCollisionSpy: MockInstance<typeof getBoxBoxCollision.default>;
   let getBoxCircleCollisionSpy: MockInstance<typeof getBoxCircleCollision.default>;
   let getCircleCircleCollisionSpy: MockInstance<typeof getCircleCircleCollision.default>;
+
+  const collisions: Collision[] = [
+    {
+      isColliding: true,
+      normal: new Vector2d({ x: 1, y: 0 }),
+      overlap: 5,
+      contactPoints: [new Vector2d({ x: 0, y: 0 }), new Vector2d({ x: 1, y: 1 })],
+    },
+    {
+      isColliding: false,
+    },
+  ];
 
   beforeAll(() => {
     getBoxBoxCollisionSpy = vi.spyOn(getBoxBoxCollision, 'default');
@@ -30,14 +44,7 @@ describe('getCollision', () => {
     getCircleCircleCollisionSpy.mockRestore();
   });
 
-  it.each([
-    {
-      isColliding: true,
-    },
-    {
-      isColliding: false,
-    },
-  ])('Should return collision data for two circles when isColliding is $isColliding', ({ isColliding }) => {
+  it.each(collisions)('Should return collision data for two circles when isColliding is $isColliding', (collision) => {
     const radius = 16;
 
     [entityA, entityB].forEach((entity) => {
@@ -50,22 +57,15 @@ describe('getCollision', () => {
         }),
       ]);
     });
-    getCircleCircleCollisionSpy.mockImplementation(() => ({ isColliding }));
+    getCircleCircleCollisionSpy.mockImplementation(() => collision);
 
     const result = getCollision(entityA, entityB);
 
     expect(getCircleCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result.isColliding).toEqual(isColliding);
+    expect(result).toEqual(collision);
   });
 
-  it.each([
-    {
-      isColliding: true,
-    },
-    {
-      isColliding: false,
-    },
-  ])('Should return collision data for two boxes when isColliding is $isColliding', ({ isColliding }) => {
+  it.each(collisions)('Should return collision data for two boxes when isColliding is $isColliding', (collision) => {
     const width = 32;
     const height = 32;
 
@@ -80,22 +80,15 @@ describe('getCollision', () => {
         }),
       ]);
     });
-    getBoxBoxCollisionSpy.mockImplementation(() => ({ isColliding }));
+    getBoxBoxCollisionSpy.mockImplementation(() => (collision));
 
     const result = getCollision(entityA, entityB);
 
     expect(getBoxBoxCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result.isColliding).toEqual(isColliding);
+    expect(result).toEqual(collision);
   });
 
-  it.each([
-    {
-      isColliding: true,
-    },
-    {
-      isColliding: false,
-    },
-  ])('Should return collision data for a box and a circle when isColliding is $isColliding', ({ isColliding }) => {
+  it.each(collisions)('Should return collision data for a box and a circle when isColliding is $isColliding', (collision) => {
     const boxWidth = 32;
     const boxHeight = 32;
     const circleRadius = 16;
@@ -118,21 +111,14 @@ describe('getCollision', () => {
       }),
     ]);
 
-    getBoxCircleCollisionSpy.mockImplementation(() => ({ isColliding }));
+    getBoxCircleCollisionSpy.mockImplementation(() => (collision));
     const result = getCollision(entityA, entityB);
 
     expect(getBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result.isColliding).toEqual(isColliding);
+    expect(result).toEqual(collision);
   });
 
-  it.each([
-    {
-      isColliding: true,
-    },
-    {
-      isColliding: false,
-    },
-  ])('Should return collision data for a circle and a box when isColliding is $isColliding', ({ isColliding }) => {
+  it.each(collisions)('Should return collision data for a circle and a box when isColliding is $isColliding', (collision) => {
     const boxWidth = 32;
     const boxHeight = 32;
     const circleRadius = 16;
@@ -155,10 +141,10 @@ describe('getCollision', () => {
       }),
     ]);
 
-    getBoxCircleCollisionSpy.mockImplementation(() => ({ isColliding }));
+    getBoxCircleCollisionSpy.mockImplementation(() => (collision));
     const result = getCollision(entityA, entityB);
 
     expect(getBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result.isColliding).toEqual(isColliding);
+    expect(result).toEqual(collision);
   });
 });

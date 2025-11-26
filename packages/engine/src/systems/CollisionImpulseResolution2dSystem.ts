@@ -1,4 +1,4 @@
-import type { RigidBody2dComponent } from '#/components';
+import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
@@ -23,29 +23,63 @@ export default class CollisionImpulseResolution2dSystem extends System {
     const filteredCollisionPairs = narrowPhaseCollisionPairs.filter(({ entityA, entityB }) => (
       entityA.hasComponents(['RigidBody2d']) && entityB.hasComponents(['RigidBody2d'])
     ));
-    for (const { entityA, entityB, normal } of filteredCollisionPairs) {
+    for (const { entityA, entityB, normal, contactPoints } of filteredCollisionPairs) {
       const rigidBodyA = entityA.getComponent<RigidBody2dComponent>('RigidBody2d');
       const rigidBodyB = entityB.getComponent<RigidBody2dComponent>('RigidBody2d');
+      const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
+      const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
 
-      const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
-      if (totalInverseMass === 0) continue; // Both static
+      for (const contactPoint of contactPoints) {
+        const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
 
-      // Calculate relative velocity
-      const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
-      const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
+        // Both static
+        if (totalInverseMass === 0) {
+          continue;
+        }
 
-      if (velocityAlongNormal > 0) continue; // Already separating
+        // Vectors from center of mass to contact point
+        const vectorToContactA = contactPoint.subtract(transformA.position);
+        const vectorToContactB = contactPoint.subtract(transformB.position);
 
-      // Calculate restitution (bounciness)
-      const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
+        // Relative velocity at contact (linear + angular)
+        const velocityAtContactA = rigidBodyA.velocity.add(new Vector2d({
+          x: -rigidBodyA.angularVelocity * vectorToContactA.y,
+          y: rigidBodyA.angularVelocity * vectorToContactA.x,
+        }));
+        const velocityAtContactB = rigidBodyB.velocity.add(new Vector2d({
+          x: -rigidBodyB.angularVelocity * vectorToContactB.y,
+          y: rigidBodyB.angularVelocity * vectorToContactB.x,
+        }));
+        const relativeVelocity = velocityAtContactA.subtract(velocityAtContactB);
+        const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
 
-      // Calculate impulse scalar
-      const impulseMagnitude = -(1 + restitution) * velocityAlongNormal / totalInverseMass;
-      const impulse = normal.multiply(impulseMagnitude);
+        // Already separating
+        if (velocityAlongNormal > 0) {
+          continue;
+        }
 
-      // Apply impulse to velocities
-      rigidBodyA.impulse = rigidBodyA.impulse.add(impulse.multiply(rigidBodyA.inverseMass));
-      rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse.multiply(rigidBodyB.inverseMass));
+        // Calculate restitution (bounciness)
+        const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
+
+        // Calculate impulse
+        const vectorToContactANormalCrossProduct = Vector2d.crossProduct(vectorToContactA, normal);
+        const vectorToContactBNormalCrossProduct = Vector2d.crossProduct(vectorToContactB, normal);
+        const vectorToContactANormalCrossProductSquared = vectorToContactANormalCrossProduct * vectorToContactANormalCrossProduct;
+        const vectorToContactBNormalCrossProductSquared = vectorToContactBNormalCrossProduct * vectorToContactBNormalCrossProduct;
+        const inverseMomentOfInertiaA = rigidBodyA.inverseMomentOfInertia ?? 0;
+        const inverseMomentOfInertiaB = rigidBodyB.inverseMomentOfInertia ?? 0;
+        const denominator = totalInverseMass + (vectorToContactANormalCrossProductSquared) * inverseMomentOfInertiaA + (vectorToContactBNormalCrossProductSquared) * inverseMomentOfInertiaB;
+        const impulseMagnitude = (-(1 + restitution) * velocityAlongNormal / denominator) / contactPoints.length;
+        const impulse = normal.multiply(impulseMagnitude);
+
+        // Apply impulse to linear velocities
+        rigidBodyA.impulse = rigidBodyA.impulse.add(impulse.multiply(rigidBodyA.inverseMass));
+        rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse.multiply(rigidBodyB.inverseMass));
+
+        // Apply impulse to angular velocities
+        rigidBodyA.angularImpulse += vectorToContactANormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaA;
+        rigidBodyB.angularImpulse -= vectorToContactBNormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaB;
+      }
     }
   }
 }

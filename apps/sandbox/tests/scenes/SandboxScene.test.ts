@@ -25,7 +25,7 @@ describe('SandboxScene', () => {
   const sceneAddSystemSpy = vi.spyOn(SandboxScene.prototype, 'addSystem');
   const sceneSetContextSpy = vi.spyOn(SandboxScene.prototype, 'setContext');
 
-  const BoxEntityConstructorMock = vi.hoisted(() => (
+  const PhysicsEntityConstructorMock = vi.hoisted(() => (
     vi.fn()
       .mockImplementation(({ name }) => ({ name }))
   ));
@@ -33,20 +33,13 @@ describe('SandboxScene', () => {
     vi.fn()
       .mockImplementation(() => ({ name: 'player-entity' }))
   ));
-  const CircleEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(({ name }) => ({ name }))
-  ));
 
   beforeAll(() => {
-    vi.mock('#/entities/BoxEntity', () => ({
-      default: BoxEntityConstructorMock,
+    vi.mock('#/entities/PhysicsEntity', () => ({
+      default: PhysicsEntityConstructorMock,
     }));
     vi.mock('#/entities/PlayerEntity', () => ({
       default: PlayerEntityConstructorMock,
-    }));
-    vi.mock('#/entities/CircleEntity', () => ({
-      default: CircleEntityConstructorMock,
     }));
   });
 
@@ -110,9 +103,12 @@ describe('SandboxScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(BoxEntityConstructorMock).toHaveBeenCalledWith({
-      width: wallWidth,
-      height: wallHeight,
+    expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith({
+      shape: {
+        type: 'box',
+        width: wallWidth,
+        height: wallHeight,
+      },
       mass: 0,
       position: {
         x,
@@ -127,12 +123,15 @@ describe('SandboxScene', () => {
   it('Should add 500 circle entities to the scene', () => {
     for (let i = 0; i < 500; i++) {
       const name = `circle-${i}`;
-      expect(CircleEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
         position: {
           x: expect.any(Number),
           y: expect.any(Number),
         },
-        radius: expect.any(Number),
+        shape: {
+          type: 'circle',
+          radius: expect.any(Number),
+        },
         fillColor: expect.any(String),
         name,
       }));

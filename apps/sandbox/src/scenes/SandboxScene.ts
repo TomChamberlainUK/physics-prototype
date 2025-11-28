@@ -16,7 +16,7 @@ import {
   Vector2d,
   type ControlScheme,
 } from 'engine';
-import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
+import { PlayerEntity, PhysicsEntity } from '#/entities';
 
 type Props = {
   height: number;
@@ -81,9 +81,12 @@ export default class SandboxScene extends Scene {
         wallHeight: height,
       },
     ]) {
-      const wallEntity = new BoxEntity({
-        width: wallWidth,
-        height: wallHeight,
+      const wallEntity = new PhysicsEntity({
+        shape: {
+          type: 'box',
+          width: wallWidth,
+          height: wallHeight,
+        },
         mass: 0,
         position: new Vector2d({ x, y }),
         fillColor: 'grey',
@@ -95,12 +98,12 @@ export default class SandboxScene extends Scene {
     for (let i = 0; i < 500; i++) {
       const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const size = Math.random() * 16;
-      const circleEntity = new CircleEntity({
+      const circleEntity = new PhysicsEntity({
         position: new Vector2d({
           x: (Math.random() * width) - (width / 2),
           y: (Math.random() * height) - (height / 2),
         }),
-        radius: size,
+        shape: { type: 'circle', radius: size },
         fillColor,
         name: `circle-${i}`,
       });

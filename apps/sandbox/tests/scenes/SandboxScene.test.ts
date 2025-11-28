@@ -120,8 +120,8 @@ describe('SandboxScene', () => {
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
   });
 
-  it('Should add 500 circle entities to the scene', () => {
-    for (let i = 0; i < 500; i++) {
+  it('Should add 250 circle entities to the scene', () => {
+    for (let i = 0; i < 250; i++) {
       const name = `circle-${i}`;
       expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
         position: {
@@ -131,6 +131,26 @@ describe('SandboxScene', () => {
         shape: {
           type: 'circle',
           radius: expect.any(Number),
+        },
+        fillColor: expect.any(String),
+        name,
+      }));
+      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+    }
+  });
+
+  it('Should add 250 box entities to the scene', () => {
+    for (let i = 0; i < 250; i++) {
+      const name = `box-${i}`;
+      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+        position: {
+          x: expect.any(Number),
+          y: expect.any(Number),
+        },
+        shape: {
+          type: 'box',
+          width: expect.any(Number),
+          height: expect.any(Number),
         },
         fillColor: expect.any(String),
         name,

@@ -95,7 +95,7 @@ export default class SandboxScene extends Scene {
       this.addEntity(wallEntity);
     }
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 250; i++) {
       const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const size = Math.random() * 16;
       const circleEntity = new PhysicsEntity({
@@ -108,6 +108,22 @@ export default class SandboxScene extends Scene {
         name: `circle-${i}`,
       });
       this.addEntity(circleEntity);
+    }
+
+    for (let i = 0; i < 250; i++) {
+      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      const boxSize = Math.random() * 32;
+      const boxEntity = new PhysicsEntity({
+        position: new Vector2d({
+          x: (Math.random() * width) - (width / 2),
+          y: (Math.random() * height) - (height / 2),
+        }),
+        rotation: Math.random() * 2 * Math.PI,
+        shape: { type: 'box', width: boxSize, height: boxSize },
+        fillColor,
+        name: `box-${i}`,
+      });
+      this.addEntity(boxEntity);
     }
 
     const interpolationSync2dSystem = new InterpolationSync2dSystem();

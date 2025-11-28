@@ -1,10 +1,8 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { InputImpulseComponent, RigidBody2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { KeyboardInput } from '#/input';
 import Vector2d from '#/maths/Vector2d';
 import { InputImpulseSystem } from '#/systems';
-
-import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('InputImpulseSystem', () => {
   describe('constructor()', () => {
@@ -17,7 +15,7 @@ describe('InputImpulseSystem', () => {
   });
 
   describe('update()', () => {
-    const force = 3600;
+    const force = 150000;
     const deltaTime = 1 / 60;
 
     let inputImpulseSystem: InputImpulseSystem;

@@ -14,7 +14,7 @@ export default class BoxEntity extends Entity {
     position = new Vector2d({ x: 0, y: 0 }),
     width = 16,
     height = 16,
-    mass = 16,
+    mass,
     fillColor = 'white',
     name,
   }: Props = {}) {
@@ -39,7 +39,7 @@ export default class BoxEntity extends Entity {
         },
       }),
       new RigidBody2dComponent({
-        mass,
+        mass: mass ?? width * height,
         restitution: 0.8,
       }),
     ]);

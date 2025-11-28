@@ -12,6 +12,7 @@ import {
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
+  RigidBodyUpdate2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
 
@@ -171,6 +172,10 @@ describe('SandboxScene', () => {
     {
       name: 'colliderUpdate2d',
       System: ColliderUpdate2dSystem,
+    },
+    {
+      name: 'rigidBodyUpdate2d',
+      System: RigidBodyUpdate2dSystem,
     },
     {
       name: 'collisionDetection2d',

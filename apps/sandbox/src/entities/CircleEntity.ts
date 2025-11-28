@@ -27,7 +27,7 @@ export default class CircleEntity extends Entity {
         },
       }),
       new RigidBody2dComponent({
-        mass: radius,
+        mass: Math.PI * radius * radius,
       }),
       new Collider2dComponent({
         shape: {

@@ -41,7 +41,7 @@ describe('CircleEntity', () => {
     const player = new CircleEntity({ radius });
     const rigidBody = player.getComponent<RigidBody2dComponent>('RigidBody2d');
     expect(rigidBody).toBeInstanceOf(RigidBody2dComponent);
-    expect(rigidBody.mass).toBe(radius);
+    expect(rigidBody.mass).toBe(Math.PI * radius * radius);
   });
 
   it('Should have a collider component', () => {

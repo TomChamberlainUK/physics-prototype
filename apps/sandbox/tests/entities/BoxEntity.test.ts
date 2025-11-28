@@ -16,13 +16,16 @@ describe('BoxEntity', () => {
 
   it('Should have a transform component', () => {
     const position = { x: 10, y: 20 };
+    const rotation = Math.PI / 4;
     const player = new BoxEntity({
       position: new Vector2d(position),
+      rotation,
     });
     const transform = player.getComponent<Transform2dComponent>('Transform2d');
     expect(transform).toBeInstanceOf(Transform2dComponent);
     expect(transform.position.x).toBe(position.x);
     expect(transform.position.y).toBe(position.y);
+    expect(transform.rotation).toBe(rotation);
   });
 
   it('Should have a geometry component', () => {

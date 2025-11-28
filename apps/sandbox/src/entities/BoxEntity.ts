@@ -2,6 +2,7 @@ import { Collider2dComponent, Entity, Geometry2dComponent, RigidBody2dComponent,
 
 type Props = {
   position?: Vector2d;
+  rotation?: number;
   width?: number;
   height?: number;
   mass?: number;
@@ -15,6 +16,7 @@ export default class BoxEntity extends Entity {
     width = 16,
     height = 16,
     mass,
+    rotation = 0,
     fillColor = 'white',
     name,
   }: Props = {}) {
@@ -22,6 +24,7 @@ export default class BoxEntity extends Entity {
     this.addComponents([
       new Transform2dComponent({
         position,
+        rotation,
       }),
       new Geometry2dComponent({
         fillColor,

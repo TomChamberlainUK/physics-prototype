@@ -1,36 +1,18 @@
-import { Collider2dComponent, Entity, Geometry2dComponent, InputImpulseComponent, RigidBody2dComponent, Transform2dComponent, Vector2d } from 'engine';
+import { InputImpulseComponent, Vector2d, type Shape } from 'engine';
+import PhysicsEntity from './PhysicsEntity';
 
 type Props = {
   position?: Vector2d;
-  radius?: number;
+  shape?: Shape;
 };
 
-export default class PlayerEntity extends Entity {
+export default class PlayerEntity extends PhysicsEntity {
   constructor({
     position = new Vector2d({ x: 0, y: 0 }),
-    radius = 16,
+    shape = { type: 'circle', radius: 16 },
   }: Props = {}) {
-    super({ name: 'player-entity' });
+    super({ name: 'player-entity', position, shape });
     this.addComponents([
-      new Transform2dComponent({
-        position,
-      }),
-      new Geometry2dComponent({
-        fillColor: 'red',
-        shape: {
-          type: 'circle',
-          radius: radius,
-        },
-      }),
-      new RigidBody2dComponent({
-        mass: radius,
-      }),
-      new Collider2dComponent({
-        shape: {
-          type: 'circle',
-          radius: radius,
-        },
-      }),
       new InputImpulseComponent(),
     ]);
   }

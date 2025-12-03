@@ -31,16 +31,17 @@ describe('CollisionImpulseResolution2dSystem', () => {
       entityB = new Entity();
       transformA = new Transform2dComponent();
       transformB = new Transform2dComponent();
-      rigidBodyA = new RigidBody2dComponent();
-      rigidBodyB = new RigidBody2dComponent();
+      rigidBodyA = new RigidBody2dComponent({
+        restitution: 1,
+      });
+      rigidBodyB = new RigidBody2dComponent({
+        restitution: 1,
+      });
       entityA.addComponents([transformA, rigidBodyA]);
       entityB.addComponents([transformB, rigidBodyB]);
     });
 
     it('Should apply a linear impulse to colliding entities', () => {
-      const restitution = 1;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
       rigidBodyA.velocity = new Vector2d(speed, 0);
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
@@ -56,9 +57,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
     });
 
     it('Should apply an angular impulse to colliding entities', () => {
-      const restitution = 1;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
       rigidBodyA.inverseMomentOfInertia = 1;
       rigidBodyB.inverseMomentOfInertia = 1;
       rigidBodyA.velocity = new Vector2d(speed, 0);
@@ -76,9 +74,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
     });
 
     it('Should not apply a linear impulse to separating entities', () => {
-      const restitution = 1;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
       rigidBodyA.velocity = new Vector2d(speed, 0);
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
@@ -94,9 +89,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
     });
 
     it('Should not apply an angular impulse to separating entities', () => {
-      const restitution = 1;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
       rigidBodyA.inverseMomentOfInertia = 1;
       rigidBodyB.inverseMomentOfInertia = 1;
       rigidBodyA.velocity = new Vector2d(speed, 0);
@@ -150,9 +142,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
     });
 
     it('Should scale applied angular impulse based on moment of inertia', () => {
-      const restitution = 1;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
       rigidBodyA.inverseMomentOfInertia = 0.1;
       rigidBodyB.inverseMomentOfInertia = 0.1;
       rigidBodyA.velocity = new Vector2d(speed, 0);

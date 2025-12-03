@@ -77,15 +77,13 @@ describe('getBoxBoxCollision', () => {
       expect(result.overlap).toBe(overlap);
     });
 
-    it('Should return the contact points of the collision', () => {
+    it('Should return the two most significant contact points of the collision', () => {
       if (!result.isColliding || !result.contactPoints) {
         throw new Error('Expected a collision to be detected');
       }
       const expectedContactPoints = [
         new Vector2d(halfWidth, -halfHeight),
-        new Vector2d(halfWidth, halfHeight),
         new Vector2d(halfWidth - overlap, -halfHeight),
-        new Vector2d(halfWidth - overlap, halfHeight),
       ];
       for (const expectedContactPoint of expectedContactPoints) {
         expect(result.contactPoints).toContainEqual(expectedContactPoint);

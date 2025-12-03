@@ -121,10 +121,26 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
     }
   }
 
+  const normal = smallestAxis;
+  let contactPoints = Array.from(overlappingPoints.values());
+
+  // Reduce contact points to 2 most significant points:
+  // - The deepest penetrating point
+  // - The point farthest along the collision normal from the deepest point
+  if (contactPoints.length > 2) {
+    // Project each contact point onto the normal
+    const projections = contactPoints.map(point => Vector2d.dotProduct(point, normal));
+    // Find indices of min and max projection
+    const minIndex = projections.indexOf(Math.min(...projections));
+    const maxIndex = projections.indexOf(Math.max(...projections));
+    // Set contact points to these two points
+    contactPoints = [contactPoints[minIndex]!, contactPoints[maxIndex]!];
+  }
+
   return {
     isColliding: true,
-    normal: smallestAxis,
+    normal,
     overlap: minOverlap,
-    contactPoints: Array.from(overlappingPoints.values()),
+    contactPoints,
   };
 }

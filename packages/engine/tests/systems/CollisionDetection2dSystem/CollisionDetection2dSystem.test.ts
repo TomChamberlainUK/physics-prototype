@@ -87,8 +87,11 @@ describe('CollisionDetection2dSystem', () => {
         const narrowPhaseCollisionPairs: NarrowPhaseCollisionPair[] = [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 0, y: 1 }),
-          overlap: 1,
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: 1 }),
+            overlap: 1,
+            contactPoints: [],
+          },
         }];
         const context = {
           narrowPhaseCollisionPairs: [],

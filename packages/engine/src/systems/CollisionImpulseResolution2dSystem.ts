@@ -79,6 +79,25 @@ export default class CollisionImpulseResolution2dSystem extends System {
         // Apply impulse to angular velocities
         rigidBodyA.angularImpulse += vectorToContactANormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaA;
         rigidBodyB.angularImpulse -= vectorToContactBNormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaB;
+
+        // Calculate friction impulse
+        const tangent = new Vector2d({ x: -normal.y, y: normal.x }).getUnit();
+        const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
+        const frictionCoefficient = Math.sqrt(rigidBodyA.friction * rigidBodyB.friction);
+        const frictionImpulseMagnitude = -velocityAlongTangent / denominator / contactPoints.length;
+        const maxFrictionImpulse = impulseMagnitude * frictionCoefficient;
+        const clampedFrictionImpulseMagnitude = Math.max(-maxFrictionImpulse, Math.min(frictionImpulseMagnitude, maxFrictionImpulse));
+        const frictionImpulse = tangent.multiply(clampedFrictionImpulseMagnitude);
+
+        // Apply friction impulse to linear velocities
+        rigidBodyA.impulse = rigidBodyA.impulse.add(frictionImpulse.multiply(rigidBodyA.inverseMass));
+        rigidBodyB.impulse = rigidBodyB.impulse.subtract(frictionImpulse.multiply(rigidBodyB.inverseMass));
+
+        // Apply friction impulse to angular velocities
+        const vectorToContactATangentCrossProduct = Vector2d.crossProduct(vectorToContactA, tangent);
+        const vectorToContactBTangentCrossProduct = Vector2d.crossProduct(vectorToContactB, tangent);
+        rigidBodyA.angularImpulse += vectorToContactATangentCrossProduct * clampedFrictionImpulseMagnitude * inverseMomentOfInertiaA;
+        rigidBodyB.angularImpulse -= vectorToContactBTangentCrossProduct * clampedFrictionImpulseMagnitude * inverseMomentOfInertiaB;
       }
     }
   }

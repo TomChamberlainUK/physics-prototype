@@ -33,9 +33,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
       transformB = new Transform2dComponent();
       rigidBodyA = new RigidBody2dComponent({
         restitution: 1,
+        friction: 0,
       });
       rigidBodyB = new RigidBody2dComponent({
         restitution: 1,
+        friction: 0,
       });
       entityA.addComponents([transformA, rigidBodyA]);
       entityB.addComponents([transformB, rigidBodyB]);
@@ -209,6 +211,44 @@ describe('CollisionImpulseResolution2dSystem', () => {
       });
       expect(rigidBodyA.angularImpulse).toBeLessThan(2.5);
       expect(rigidBodyB.angularImpulse).toBeGreaterThan(-2.5);
+    });
+
+    it('Should apply a linear impulse from friction', () => {
+      rigidBodyA.friction = 0.5;
+      rigidBodyB.friction = 0.5;
+      rigidBodyA.velocity = new Vector2d(speed, speed);
+      collisionImpulseResolution2dSystem.update([], {
+        narrowPhaseCollisionPairs: [{
+          entityA,
+          entityB,
+          normal: new Vector2d({ x: 0, y: -1 }),
+          overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+        }],
+      });
+      expect(rigidBodyA.impulse.x).toBe(-2.5);
+      expect(rigidBodyA.impulse.y).toBe(-5);
+      expect(rigidBodyB.impulse.x).toBe(2.5);
+      expect(rigidBodyB.impulse.y).toBe(5);
+    });
+
+    it('Should apply an angular impulse from friction', () => {
+      rigidBodyA.friction = 0.5;
+      rigidBodyB.friction = 0.5;
+      rigidBodyA.inverseMomentOfInertia = 1;
+      rigidBodyB.inverseMomentOfInertia = 1;
+      rigidBodyA.velocity = new Vector2d(speed, speed);
+      collisionImpulseResolution2dSystem.update([], {
+        narrowPhaseCollisionPairs: [{
+          entityA,
+          entityB,
+          normal: new Vector2d({ x: 0, y: -1 }),
+          overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: -1 })],
+        }],
+      });
+      expect(rigidBodyA.angularImpulse).toBe(-2.5);
+      expect(rigidBodyB.angularImpulse).toBe(2.5);
     });
   });
 });

@@ -22,11 +22,13 @@ export default class CollisionPositionCorrection2dSystem extends System {
     const filteredCollisionPairs = narrowPhaseCollisionPairs.filter(({ entityA, entityB }) => (
       entityA.hasComponents(['RigidBody2d', 'Transform2d']) && entityB.hasComponents(['RigidBody2d', 'Transform2d'])
     ));
-    for (const { entityA, entityB, overlap, normal } of filteredCollisionPairs) {
+    for (const { entityA, entityB, contactManifold } of filteredCollisionPairs) {
       const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
       const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
       const rigidBodyA = entityA.getComponent<RigidBody2dComponent>('RigidBody2d');
       const rigidBodyB = entityB.getComponent<RigidBody2dComponent>('RigidBody2d');
+
+      const { normal, overlap } = contactManifold;
 
       const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
 

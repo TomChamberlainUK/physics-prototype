@@ -23,11 +23,13 @@ export default class CollisionImpulseResolution2dSystem extends System {
     const filteredCollisionPairs = narrowPhaseCollisionPairs.filter(({ entityA, entityB }) => (
       entityA.hasComponents(['RigidBody2d']) && entityB.hasComponents(['RigidBody2d'])
     ));
-    for (const { entityA, entityB, normal, contactPoints } of filteredCollisionPairs) {
+    for (const { entityA, entityB, contactManifold } of filteredCollisionPairs) {
       const rigidBodyA = entityA.getComponent<RigidBody2dComponent>('RigidBody2d');
       const rigidBodyB = entityB.getComponent<RigidBody2dComponent>('RigidBody2d');
       const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
       const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
+
+      const { normal, contactPoints } = contactManifold;
 
       for (const contactPoint of contactPoints) {
         const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;

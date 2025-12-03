@@ -49,9 +49,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: -1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: -1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         }],
       });
       expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: -5, y: 0 }));
@@ -66,9 +68,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: -1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          contactManifold: {
+            normal: new Vector2d({ x: -1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          },
         }],
       });
       expect(rigidBodyA.angularImpulse).toBe(2.5);
@@ -81,9 +85,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         }],
       });
       expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: 0, y: 0 }));
@@ -98,9 +104,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          },
         }],
       });
       expect(rigidBodyA.angularImpulse).toBe(0);
@@ -131,9 +139,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal,
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal,
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         }],
       });
 
@@ -151,9 +161,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: -1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          contactManifold: {
+            normal: new Vector2d({ x: -1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          },
         }],
       });
       expect(rigidBodyA.angularImpulse).toBeLessThan(2.5);
@@ -181,9 +193,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal,
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal,
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         }],
       });
 
@@ -204,9 +218,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: -1, y: 0 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          contactManifold: {
+            normal: new Vector2d({ x: -1, y: 0 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 1 })],
+          },
         }],
       });
       expect(rigidBodyA.angularImpulse).toBeLessThan(2.5);
@@ -221,9 +237,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 0, y: -1 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: -1 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         }],
       });
       expect(rigidBodyA.impulse.x).toBe(-2.5);
@@ -242,9 +260,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 0, y: -1 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: -1 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: -1 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: -1 })],
+          },
         }],
       });
       expect(rigidBodyA.angularImpulse).toBe(-2.5);

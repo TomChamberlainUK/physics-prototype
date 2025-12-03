@@ -53,35 +53,43 @@ describe('getNarrowPhasePairs', () => {
     beforeEach(() => {
       getCollisionSpy.mockReturnValue({
         isColliding: true,
-        normal: new Vector2d({ x: 0, y: 1 }),
-        overlap: 1,
-        contactPoints: [new Vector2d({ x: 0, y: 0 })],
+        contactManifold: {
+          normal: new Vector2d({ x: 0, y: 1 }),
+          overlap: 1,
+          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+        },
       });
     });
 
-    it('Should return them as collision pairs with collision data', () => {
+    it('Should return them as collision pairs with contact manifolds', () => {
       const collisionPairs = getNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
       expect(collisionPairs).toEqual([
         {
           entityA,
           entityB,
-          normal: new Vector2d({ x: 0, y: 1 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: 1 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         },
         {
           entityA,
           entityB: entityC,
-          normal: new Vector2d({ x: 0, y: 1 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: 1 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         },
         {
           entityA: entityB,
           entityB: entityC,
-          normal: new Vector2d({ x: 0, y: 1 }),
-          overlap: 1,
-          contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: 1 }),
+            overlap: 1,
+            contactPoints: [new Vector2d({ x: 0, y: 0 })],
+          },
         },
       ]);
     });

@@ -45,9 +45,11 @@ export default function getCircleCircleCollision(entityA: Entity, entityB: Entit
 
       return {
         isColliding: true,
-        normal,
-        overlap,
-        contactPoints: [contactPointA, contactPointB],
+        contactManifold: {
+          normal,
+          overlap,
+          contactPoints: [contactPointA, contactPointB],
+        },
       };
     }
   }

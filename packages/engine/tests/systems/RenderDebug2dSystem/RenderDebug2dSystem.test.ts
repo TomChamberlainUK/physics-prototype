@@ -104,8 +104,11 @@ describe('RenderDebug2dSystem', () => {
           {
             entityA: new Entity(),
             entityB: new Entity(),
-            normal: new Vector2d(),
-            overlap: 0,
+            contactManifold: {
+              normal: new Vector2d(),
+              overlap: 0,
+              contactPoints: [],
+            },
           },
         ];
         system.update([], { renderer, narrowPhaseCollisionPairs });

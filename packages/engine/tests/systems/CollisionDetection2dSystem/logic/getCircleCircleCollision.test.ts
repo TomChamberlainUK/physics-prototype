@@ -54,21 +54,21 @@ describe('getCircleCircleCollision', () => {
       if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      expect(result.normal).toEqual(new Vector2d({ x: -1, y: 0 }));
+      expect(result.contactManifold.normal).toEqual(new Vector2d({ x: -1, y: 0 }));
     });
 
     it('Should return the overlap distance', () => {
       if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      expect(result.overlap).toBe(overlap);
+      expect(result.contactManifold.overlap).toBe(overlap);
     });
 
     it('Should return contact points', () => {
       if (!result.isColliding) {
         throw new Error('Expected circles to be colliding');
       }
-      for (const contactPoint of result.contactPoints) {
+      for (const contactPoint of result.contactManifold.contactPoints) {
         const distanceFromCenterA = contactPoint.subtract(transformA.position);
         const distanceFromCenterB = contactPoint.subtract(transformB.position);
         expect(distanceFromCenterA.getLengthSquared()).toBeLessThanOrEqual(radius * radius);

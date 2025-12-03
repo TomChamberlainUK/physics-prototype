@@ -49,8 +49,11 @@ describe('CollisionPositionCorrection2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal: initialDistanceVector.getUnit(),
-          overlap: radius * 2 - initialDistanceVector.getLength(),
+          contactManifold: {
+            normal: initialDistanceVector.getUnit(),
+            overlap: radius * 2 - initialDistanceVector.getLength(),
+            contactPoints: [],
+          },
         }],
       });
       const distance = transformA.position.subtract(transformB.position).getLength();
@@ -73,8 +76,11 @@ describe('CollisionPositionCorrection2dSystem', () => {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          normal,
-          overlap,
+          contactManifold: {
+            normal,
+            overlap,
+            contactPoints: [],
+          },
         }],
       });
 

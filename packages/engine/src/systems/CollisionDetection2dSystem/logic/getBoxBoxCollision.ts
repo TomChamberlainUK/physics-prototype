@@ -122,6 +122,7 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
   }
 
   const normal = smallestAxis;
+  const overlap = minOverlap;
   let contactPoints = Array.from(overlappingPoints.values());
 
   // Reduce contact points to 2 most significant points:
@@ -139,8 +140,10 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
 
   return {
     isColliding: true,
-    normal,
-    overlap: minOverlap,
-    contactPoints,
+    contactManifold: {
+      normal,
+      overlap,
+      contactPoints,
+    },
   };
 }

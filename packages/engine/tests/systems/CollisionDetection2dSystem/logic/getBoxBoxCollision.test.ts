@@ -67,18 +67,18 @@ describe('getBoxBoxCollision', () => {
       if (!result.isColliding) {
         throw new Error('Expected a collision to be detected');
       }
-      expect(result.normal).toEqual({ x: -1, y: 0 });
+      expect(result.contactManifold.normal).toEqual({ x: -1, y: 0 });
     });
 
     it('Should return the overlap distance', () => {
       if (!result.isColliding) {
         throw new Error('Expected a collision to be detected');
       }
-      expect(result.overlap).toBe(overlap);
+      expect(result.contactManifold.overlap).toBe(overlap);
     });
 
     it('Should return the two most significant contact points of the collision', () => {
-      if (!result.isColliding || !result.contactPoints) {
+      if (!result.isColliding || !result.contactManifold.contactPoints) {
         throw new Error('Expected a collision to be detected');
       }
       const expectedContactPoints = [
@@ -86,15 +86,15 @@ describe('getBoxBoxCollision', () => {
         new Vector2d(halfWidth - overlap, -halfHeight),
       ];
       for (const expectedContactPoint of expectedContactPoints) {
-        expect(result.contactPoints).toContainEqual(expectedContactPoint);
+        expect(result.contactManifold.contactPoints).toContainEqual(expectedContactPoint);
       }
-      for (const contactPoint of result.contactPoints) {
+      for (const contactPoint of result.contactManifold.contactPoints) {
         const isWithinBoxA = isPointInConvexPolygon({ point: contactPoint, polygonVertices: colliderA.worldVertices! });
         const isWithinBoxB = isPointInConvexPolygon({ point: contactPoint, polygonVertices: colliderB.worldVertices! });
         expect(isWithinBoxA).toBe(true);
         expect(isWithinBoxB).toBe(true);
       }
-      expect(result.contactPoints.length).toBe(expectedContactPoints.length);
+      expect(result.contactManifold.contactPoints.length).toBe(expectedContactPoints.length);
     });
   });
 
@@ -134,9 +134,9 @@ describe('getBoxBoxCollision', () => {
       if (!result.isColliding) {
         throw new Error('Expected a collision to be detected');
       }
-      expect(result.normal).toBeInstanceOf(Vector2d);
+      expect(result.contactManifold.normal).toBeInstanceOf(Vector2d);
       const centerDelta = transformA.position.subtract(transformB.position);
-      const dot = centerDelta.x * result.normal.x + centerDelta.y * result.normal.y;
+      const dot = centerDelta.x * result.contactManifold.normal.x + centerDelta.y * result.contactManifold.normal.y;
       expect(dot).toBeGreaterThan(0);
     });
 
@@ -144,20 +144,20 @@ describe('getBoxBoxCollision', () => {
       if (!result.isColliding) {
         throw new Error('Expected a collision to be detected');
       }
-      expect(result.overlap).toBeGreaterThan(overlap);
+      expect(result.contactManifold.overlap).toBeGreaterThan(overlap);
     });
 
     it('Should return the contact points of the collision', () => {
-      if (!result.isColliding || !result.contactPoints) {
+      if (!result.isColliding || !result.contactManifold.contactPoints) {
         throw new Error('Expected a collision to be detected');
       }
-      for (const contactPoint of result.contactPoints) {
+      for (const contactPoint of result.contactManifold.contactPoints) {
         const isWithinBoxA = isPointInConvexPolygon({ point: contactPoint, polygonVertices: colliderA.worldVertices! });
         const isWithinBoxB = isPointInConvexPolygon({ point: contactPoint, polygonVertices: colliderB.worldVertices! });
         expect(isWithinBoxA).toBe(true);
         expect(isWithinBoxB).toBe(true);
       }
-      expect(result.contactPoints.length).toBeGreaterThan(0);
+      expect(result.contactManifold.contactPoints.length).toBeGreaterThan(0);
     });
   });
 

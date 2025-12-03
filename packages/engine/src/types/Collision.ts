@@ -1,15 +1,14 @@
-import type { Vector2d } from '#/maths';
+import type { ContactManifold } from './ContactManifold';
 
+/**
+ * Represents the result of a collision detection between two entities.
+ */
 export type Collision = {
   /** Indicates whether a collision has occurred. */
   isColliding: false;
 } | {
   /** Indicates whether a collision has occurred. */
   isColliding: true;
-  /** The normal vector at the point of collision. */
-  normal: Vector2d;
-  /** The amount of overlap between the two entities. */
-  overlap: number;
-  /** The contact points of the collision. */
-  contactPoints: Vector2d[];
+  /** The contact manifold of the collision. */
+  contactManifold: ContactManifold;
 };

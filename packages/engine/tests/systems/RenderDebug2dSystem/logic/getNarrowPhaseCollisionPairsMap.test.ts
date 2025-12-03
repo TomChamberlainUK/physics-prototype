@@ -13,20 +13,29 @@ describe('getNarrowPhaseCollisionPairsMap', () => {
       {
         entityA,
         entityB,
-        normal: new Vector2d(),
-        overlap: 0,
+        contactManifold: {
+          normal: new Vector2d(),
+          overlap: 0,
+          contactPoints: [],
+        },
       },
       {
         entityA: entityB,
         entityB: entityC,
-        normal: new Vector2d(),
-        overlap: 0,
+        contactManifold: {
+          normal: new Vector2d(),
+          overlap: 0,
+          contactPoints: [],
+        },
       },
       {
         entityA,
         entityB: entityC,
-        normal: new Vector2d(),
-        overlap: 0,
+        contactManifold: {
+          normal: new Vector2d(),
+          overlap: 0,
+          contactPoints: [],
+        },
       },
     ];
     const result = getNarrowPhaseCollisionPairsMap(narrowPhaseCollisionPairs);

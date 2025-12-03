@@ -7,7 +7,7 @@ import getCollision from './getCollision';
  * @param candidatePairs - The candidate entity pairs to check for collisions.
  * @returns An array of narrow-phase collision pairs with detailed collision information.
  */
-export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]) {
+export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]): NarrowPhaseCollisionPair[] {
   const collisionPairs: NarrowPhaseCollisionPair[] = [];
   for (const [entityA, entityB] of candidatePairs) {
     const collision = getCollision(entityA, entityB);
@@ -17,9 +17,7 @@ export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]) 
     collisionPairs.push({
       entityA,
       entityB,
-      normal: collision.normal,
-      overlap: collision.overlap,
-      contactPoints: collision.contactPoints,
+      contactManifold: collision.contactManifold,
     });
   }
   return collisionPairs;

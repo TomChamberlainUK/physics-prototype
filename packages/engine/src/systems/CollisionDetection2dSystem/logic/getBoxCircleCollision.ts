@@ -102,10 +102,15 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity):
     contactPoints.push(circlePosition);
   }
 
+  const normal = smallestAxis;
+  const overlap = minOverlap;
+
   return {
     isColliding: true,
-    normal: smallestAxis,
-    overlap: minOverlap,
-    contactPoints,
+    contactManifold: {
+      normal,
+      overlap,
+      contactPoints,
+    },
   };
 }

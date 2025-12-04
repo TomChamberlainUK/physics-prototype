@@ -75,12 +75,12 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const impulse = normal.multiply(impulseMagnitude);
 
         // Apply impulse to linear velocities
-        rigidBodyA.impulse = rigidBodyA.impulse.add(impulse.multiply(rigidBodyA.inverseMass));
-        rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse.multiply(rigidBodyB.inverseMass));
+        rigidBodyA.impulse = rigidBodyA.impulse.add(impulse);
+        rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse);
 
         // Apply impulse to angular velocities
-        rigidBodyA.angularImpulse += vectorToContactANormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaA;
-        rigidBodyB.angularImpulse -= vectorToContactBNormalCrossProduct * impulseMagnitude * inverseMomentOfInertiaB;
+        rigidBodyA.angularImpulse += vectorToContactANormalCrossProduct * impulseMagnitude;
+        rigidBodyB.angularImpulse -= vectorToContactBNormalCrossProduct * impulseMagnitude;
 
         // Calculate friction impulse
         const tangent = new Vector2d({ x: -normal.y, y: normal.x }).getUnit();
@@ -92,14 +92,14 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const frictionImpulse = tangent.multiply(clampedFrictionImpulseMagnitude);
 
         // Apply friction impulse to linear velocities
-        rigidBodyA.impulse = rigidBodyA.impulse.add(frictionImpulse.multiply(rigidBodyA.inverseMass));
-        rigidBodyB.impulse = rigidBodyB.impulse.subtract(frictionImpulse.multiply(rigidBodyB.inverseMass));
+        rigidBodyA.impulse = rigidBodyA.impulse.add(frictionImpulse);
+        rigidBodyB.impulse = rigidBodyB.impulse.subtract(frictionImpulse);
 
         // Apply friction impulse to angular velocities
         const vectorToContactATangentCrossProduct = Vector2d.crossProduct(vectorToContactA, tangent);
         const vectorToContactBTangentCrossProduct = Vector2d.crossProduct(vectorToContactB, tangent);
-        rigidBodyA.angularImpulse += vectorToContactATangentCrossProduct * clampedFrictionImpulseMagnitude * inverseMomentOfInertiaA;
-        rigidBodyB.angularImpulse -= vectorToContactBTangentCrossProduct * clampedFrictionImpulseMagnitude * inverseMomentOfInertiaB;
+        rigidBodyA.angularImpulse += vectorToContactATangentCrossProduct * clampedFrictionImpulseMagnitude;
+        rigidBodyB.angularImpulse -= vectorToContactBTangentCrossProduct * clampedFrictionImpulseMagnitude;
       }
     }
   }

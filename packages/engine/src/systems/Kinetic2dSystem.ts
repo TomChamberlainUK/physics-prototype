@@ -27,13 +27,13 @@ export default class Kinetic2dSystem extends System {
       const rigidBody = entity.getComponent<RigidBody2dComponent>('RigidBody2d');
 
       // Update linear motion
-      rigidBody.velocity = rigidBody.velocity.add(rigidBody.impulse);
+      rigidBody.velocity = rigidBody.velocity.add(rigidBody.impulse.multiply(rigidBody.inverseMass));
       rigidBody.impulse = new Vector2d();
       rigidBody.velocity = rigidBody.velocity.add(rigidBody.acceleration.multiply(deltaTime));
       transform.position = transform.position.add(rigidBody.velocity.multiply(deltaTime));
 
       // Update angular motion
-      rigidBody.angularVelocity += rigidBody.angularImpulse;
+      rigidBody.angularVelocity += rigidBody.angularImpulse * (rigidBody.inverseMomentOfInertia ?? 0);
       rigidBody.angularImpulse = 0;
       rigidBody.angularVelocity += rigidBody.angularAcceleration * deltaTime;
       transform.rotation += rigidBody.angularVelocity * deltaTime;

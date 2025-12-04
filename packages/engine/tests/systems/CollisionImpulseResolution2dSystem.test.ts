@@ -119,59 +119,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
 
     it.todo('Should not apply an angular impulse to static entities');
 
-    it('Should scale applied linear impulse based on mass', () => {
-      rigidBodyA.mass = 10;
-      rigidBodyB.mass = 1;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
-      rigidBodyB.velocity = new Vector2d(0, 0);
-
-      const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
-      const normal = new Vector2d({ x: -1, y: 0 });
-      const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
-      const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
-      const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
-      const impulseMagnitude = -(1 + restitution) * velocityAlongNormal / totalInverseMass;
-      const impulse = normal.multiply(impulseMagnitude);
-      const expectedImpulseA = impulse.multiply(rigidBodyA.inverseMass);
-      const expectedImpulseB = impulse.multiply(-rigidBodyB.inverseMass);
-
-      collisionImpulseResolution2dSystem.update([], {
-        narrowPhaseCollisionPairs: [{
-          entityA,
-          entityB,
-          contactManifold: {
-            normal,
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 0 })],
-          },
-        }],
-      });
-
-      expect(rigidBodyA.impulse.x).toBeCloseTo(expectedImpulseA.x);
-      expect(rigidBodyA.impulse.y).toBeCloseTo(expectedImpulseA.y);
-      expect(rigidBodyB.impulse.x).toBeCloseTo(expectedImpulseB.x);
-      expect(rigidBodyB.impulse.y).toBeCloseTo(expectedImpulseB.y);
-    });
-
-    it('Should scale applied angular impulse based on moment of inertia', () => {
-      rigidBodyA.inverseMomentOfInertia = 0.1;
-      rigidBodyB.inverseMomentOfInertia = 0.1;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
-      collisionImpulseResolution2dSystem.update([], {
-        narrowPhaseCollisionPairs: [{
-          entityA,
-          entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: -1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 1 })],
-          },
-        }],
-      });
-      expect(rigidBodyA.angularImpulse).toBeLessThan(2.5);
-      expect(rigidBodyB.angularImpulse).toBeGreaterThan(-2.5);
-    });
-
     it('Should scale applied linear impulse based on restitution', () => {
       const restitution = 0.5;
       rigidBodyA.restitution = restitution;

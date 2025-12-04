@@ -56,4 +56,37 @@ describe('RigidBody2dComponent', () => {
       });
     });
   });
+
+  describe('get restitution()', () => {
+    it('Should return the restitution', () => {
+      const rigidBody2dComponent = new RigidBody2dComponent({ restitution: 0.5 });
+      expect(rigidBody2dComponent.restitution).toBe(0.5);
+    });
+  });
+
+  describe('set restitution()', () => {
+    it('Should set the restitution', () => {
+      const rigidBody2dComponent = new RigidBody2dComponent();
+      rigidBody2dComponent.restitution = 0.9;
+      expect(rigidBody2dComponent.restitution).toBe(0.9);
+    });
+
+    describe('When restitution is set below 0', () => {
+      it('Should throw an error', () => {
+        const rigidBody2dComponent = new RigidBody2dComponent();
+        expect(() => {
+          rigidBody2dComponent.restitution = -0.1;
+        }).toThrowError('Restitution must be between 0 and 1.');
+      });
+    });
+
+    describe('When restitution is set above 1', () => {
+      it('Should throw an error', () => {
+        const rigidBody2dComponent = new RigidBody2dComponent();
+        expect(() => {
+          rigidBody2dComponent.restitution = 1.1;
+        }).toThrowError('Restitution must be between 0 and 1.');
+      });
+    });
+  });
 });

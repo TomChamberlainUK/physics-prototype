@@ -54,7 +54,7 @@ export default class RigidBody2dComponent extends Component {
   /** The inverse of moment of inertia, used for efficient calculations. Unit: 1/(kg·m²). */
   inverseMomentOfInertia: number | null;
   /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
-  restitution: number;
+  #restitution!: number;
   /** The resistance to sliding motion. Range: 0–1. */
   friction: number;
 
@@ -109,5 +109,18 @@ export default class RigidBody2dComponent extends Component {
     this.inverseMass = value !== 0
       ? 1 / value
       : 0;
+  }
+
+  /** Gets the restitution coefficient of the rigid body. */
+  get restitution() {
+    return this.#restitution;
+  }
+
+  /** Sets the restitution coefficient of the rigid body. */
+  set restitution(value: number) {
+    if (value < 0 || value > 1) {
+      throw new Error('Restitution must be between 0 and 1.');
+    }
+    this.#restitution = value;
   }
 }

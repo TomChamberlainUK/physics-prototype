@@ -46,9 +46,9 @@ export default class RigidBody2dComponent extends Component {
   /** Instantaneous change in angular momentum, applied this frame. Unit: newton-meter-seconds (N·m·s). */
   angularImpulse: number;
   /** The mass of the body, affecting resistance to force. Unit: kilograms (kg). */
-  mass: number;
+  #mass!: number;
   /** The inverse of mass, used for efficient calculations. Unit: 1/kg. */
-  inverseMass: number;
+  inverseMass!: number;
   /** The moment of inertia, affecting resistance to angular acceleration. Unit: kilogram meter squared (kg·m²). */
   momentOfInertia: number | null;
   /** The inverse of moment of inertia, used for efficient calculations. Unit: 1/(kg·m²). */
@@ -92,12 +92,22 @@ export default class RigidBody2dComponent extends Component {
     this.angularAcceleration = angularAcceleration;
     this.angularImpulse = angularImpulse;
     this.mass = mass;
-    this.inverseMass = mass !== 0
-      ? 1 / mass
-      : 0;
     this.momentOfInertia = null;
     this.inverseMomentOfInertia = null;
     this.restitution = restitution;
     this.friction = friction;
+  }
+
+  /** Gets the mass of the rigid body. */
+  get mass() {
+    return this.#mass;
+  }
+
+  /** Sets the mass and updates the inverse mass accordingly. */
+  set mass(value: number) {
+    this.#mass = value;
+    this.inverseMass = value !== 0
+      ? 1 / value
+      : 0;
   }
 }

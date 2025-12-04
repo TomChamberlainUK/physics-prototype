@@ -56,7 +56,7 @@ export default class RigidBody2dComponent extends Component {
   /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
   #restitution!: number;
   /** The resistance to sliding motion. Range: 0–1. */
-  friction: number;
+  #friction!: number;
 
   /**
    * Creates an instance of the RigidBody2dComponent.
@@ -96,6 +96,19 @@ export default class RigidBody2dComponent extends Component {
     this.inverseMomentOfInertia = null;
     this.restitution = restitution;
     this.friction = friction;
+  }
+
+  /** Gets the friction coefficient of the rigid body. */
+  get friction() {
+    return this.#friction;
+  }
+
+  /** Sets the friction coefficient of the rigid body. */
+  set friction(value: number) {
+    if (value < 0 || value > 1) {
+      throw new Error('Friction must be between 0 and 1.');
+    }
+    this.#friction = value;
   }
 
   /** Gets the mass of the rigid body. */

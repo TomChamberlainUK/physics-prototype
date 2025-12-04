@@ -32,6 +32,39 @@ describe('RigidBody2dComponent', () => {
     });
   });
 
+  describe('get friction()', () => {
+    it('Should return the friction', () => {
+      const rigidBody2dComponent = new RigidBody2dComponent({ friction: 0.4 });
+      expect(rigidBody2dComponent.friction).toBe(0.4);
+    });
+  });
+
+  describe('set friction()', () => {
+    it('Should set the friction', () => {
+      const rigidBody2dComponent = new RigidBody2dComponent();
+      rigidBody2dComponent.friction = 0.6;
+      expect(rigidBody2dComponent.friction).toBe(0.6);
+    });
+
+    describe('When friction is set below 0', () => {
+      it('Should throw an error', () => {
+        const rigidBody2dComponent = new RigidBody2dComponent();
+        expect(() => {
+          rigidBody2dComponent.friction = -0.1;
+        }).toThrowError('Friction must be between 0 and 1.');
+      });
+    });
+
+    describe('When friction is set above 1', () => {
+      it('Should throw an error', () => {
+        const rigidBody2dComponent = new RigidBody2dComponent();
+        expect(() => {
+          rigidBody2dComponent.friction = 1.1;
+        }).toThrowError('Friction must be between 0 and 1.');
+      });
+    });
+  });
+
   describe('get mass()', () => {
     it('Should return the mass', () => {
       const rigidBody2dComponent = new RigidBody2dComponent({ mass: 5 });

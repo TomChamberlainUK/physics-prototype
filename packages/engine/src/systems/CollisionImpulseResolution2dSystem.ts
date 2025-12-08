@@ -39,20 +39,20 @@ export default class CollisionImpulseResolution2dSystem extends System {
           continue;
         }
 
-        // Vectors from center of mass to contact point
-        const vectorToContactA = contactPoint.subtract(transformA.position);
-        const vectorToContactB = contactPoint.subtract(transformB.position);
+        // Distance from center of mass to contact point
+        const leverArmA = contactPoint.subtract(transformA.position);
+        const leverArmB = contactPoint.subtract(transformB.position);
 
         // Relative velocity at contact (linear + angular)
-        const velocityAtContactA = rigidBodyA.velocity.add(new Vector2d({
-          x: -rigidBodyA.angularVelocity * vectorToContactA.y,
-          y: rigidBodyA.angularVelocity * vectorToContactA.x,
+        const contactVelocityA = rigidBodyA.velocity.add(new Vector2d({
+          x: -rigidBodyA.angularVelocity * leverArmA.y,
+          y: rigidBodyA.angularVelocity * leverArmA.x,
         }));
-        const velocityAtContactB = rigidBodyB.velocity.add(new Vector2d({
-          x: -rigidBodyB.angularVelocity * vectorToContactB.y,
-          y: rigidBodyB.angularVelocity * vectorToContactB.x,
+        const contactVelocityB = rigidBodyB.velocity.add(new Vector2d({
+          x: -rigidBodyB.angularVelocity * leverArmB.y,
+          y: rigidBodyB.angularVelocity * leverArmB.x,
         }));
-        const relativeVelocity = velocityAtContactA.subtract(velocityAtContactB);
+        const relativeVelocity = contactVelocityA.subtract(contactVelocityB);
         const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
 
         // Already separating
@@ -64,14 +64,14 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
 
         // Calculate impulse
-        const vectorToContactANormalCrossProduct = Vector2d.crossProduct(vectorToContactA, normal);
-        const vectorToContactBNormalCrossProduct = Vector2d.crossProduct(vectorToContactB, normal);
-        const vectorToContactANormalCrossProductSquared = vectorToContactANormalCrossProduct * vectorToContactANormalCrossProduct;
-        const vectorToContactBNormalCrossProductSquared = vectorToContactBNormalCrossProduct * vectorToContactBNormalCrossProduct;
+        const torqueArmA = Vector2d.crossProduct(leverArmA, normal);
+        const torqueArmB = Vector2d.crossProduct(leverArmB, normal);
+        const torqueArmASquared = torqueArmA * torqueArmA;
+        const torqueArmBSquared = torqueArmB * torqueArmB;
         const inverseMomentOfInertiaA = rigidBodyA.inverseMomentOfInertia ?? 0;
         const inverseMomentOfInertiaB = rigidBodyB.inverseMomentOfInertia ?? 0;
-        const denominator = totalInverseMass + (vectorToContactANormalCrossProductSquared) * inverseMomentOfInertiaA + (vectorToContactBNormalCrossProductSquared) * inverseMomentOfInertiaB;
-        const impulseMagnitude = (-(1 + restitution) * velocityAlongNormal / denominator) / contactPoints.length;
+        const effectiveMass = totalInverseMass + (torqueArmASquared) * inverseMomentOfInertiaA + (torqueArmBSquared) * inverseMomentOfInertiaB;
+        const impulseMagnitude = (-(1 + restitution) * velocityAlongNormal / effectiveMass) / contactPoints.length;
         const impulse = normal.multiply(impulseMagnitude);
 
         // Apply impulse to linear velocities
@@ -79,14 +79,14 @@ export default class CollisionImpulseResolution2dSystem extends System {
         rigidBodyB.impulse = rigidBodyB.impulse.subtract(impulse);
 
         // Apply impulse to angular velocities
-        rigidBodyA.angularImpulse += vectorToContactANormalCrossProduct * impulseMagnitude;
-        rigidBodyB.angularImpulse -= vectorToContactBNormalCrossProduct * impulseMagnitude;
+        rigidBodyA.angularImpulse += torqueArmA * impulseMagnitude;
+        rigidBodyB.angularImpulse -= torqueArmB * impulseMagnitude;
 
         // Calculate friction impulse
         const tangent = new Vector2d({ x: -normal.y, y: normal.x }).getUnit();
         const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
         const frictionCoefficient = Math.sqrt(rigidBodyA.friction * rigidBodyB.friction);
-        const frictionImpulseMagnitude = -velocityAlongTangent / denominator / contactPoints.length;
+        const frictionImpulseMagnitude = -velocityAlongTangent / effectiveMass / contactPoints.length;
         const maxFrictionImpulse = impulseMagnitude * frictionCoefficient;
         const clampedFrictionImpulseMagnitude = Math.max(-maxFrictionImpulse, Math.min(frictionImpulseMagnitude, maxFrictionImpulse));
         const frictionImpulse = tangent.multiply(clampedFrictionImpulseMagnitude);
@@ -96,10 +96,10 @@ export default class CollisionImpulseResolution2dSystem extends System {
         rigidBodyB.impulse = rigidBodyB.impulse.subtract(frictionImpulse);
 
         // Apply friction impulse to angular velocities
-        const vectorToContactATangentCrossProduct = Vector2d.crossProduct(vectorToContactA, tangent);
-        const vectorToContactBTangentCrossProduct = Vector2d.crossProduct(vectorToContactB, tangent);
-        rigidBodyA.angularImpulse += vectorToContactATangentCrossProduct * clampedFrictionImpulseMagnitude;
-        rigidBodyB.angularImpulse -= vectorToContactBTangentCrossProduct * clampedFrictionImpulseMagnitude;
+        const frictionTorqueArmA = Vector2d.crossProduct(leverArmA, tangent);
+        const frictionTorqueArmB = Vector2d.crossProduct(leverArmB, tangent);
+        rigidBodyA.angularImpulse += frictionTorqueArmA * clampedFrictionImpulseMagnitude;
+        rigidBodyB.angularImpulse -= frictionTorqueArmB * clampedFrictionImpulseMagnitude;
       }
     }
   }

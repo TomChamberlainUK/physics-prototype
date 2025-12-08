@@ -2,7 +2,7 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
-import System from './System';
+import System from '../System';
 
 /**
  * A system that resolves collision impulses between 2D rigid bodies.

@@ -2,6 +2,7 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
+import { computeEffectiveMass } from './logic';
 import System from '../System';
 
 /**
@@ -66,11 +67,13 @@ export default class CollisionImpulseResolution2dSystem extends System {
         // Calculate impulse
         const torqueArmA = Vector2d.crossProduct(leverArmA, normal);
         const torqueArmB = Vector2d.crossProduct(leverArmB, normal);
-        const torqueArmASquared = torqueArmA * torqueArmA;
-        const torqueArmBSquared = torqueArmB * torqueArmB;
-        const inverseMomentOfInertiaA = rigidBodyA.inverseMomentOfInertia ?? 0;
-        const inverseMomentOfInertiaB = rigidBodyB.inverseMomentOfInertia ?? 0;
-        const effectiveMass = totalInverseMass + (torqueArmASquared) * inverseMomentOfInertiaA + (torqueArmBSquared) * inverseMomentOfInertiaB;
+        const effectiveMass = computeEffectiveMass({
+          totalInverseMass,
+          torqueArmA,
+          torqueArmB,
+          inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia ?? 0,
+          inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia ?? 0,
+        });
         const impulseMagnitude = (-(1 + restitution) * velocityAlongNormal / effectiveMass) / contactPoints.length;
         const impulse = normal.multiply(impulseMagnitude);
 

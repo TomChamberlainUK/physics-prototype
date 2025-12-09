@@ -44,15 +44,14 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const leverArmA = contactPoint.subtract(transformA.position);
         const leverArmB = contactPoint.subtract(transformB.position);
 
-        // Relative velocity at contact (linear + angular)
-        const contactVelocityA = rigidBodyA.velocity.add(new Vector2d({
-          x: -rigidBodyA.angularVelocity * leverArmA.y,
-          y: rigidBodyA.angularVelocity * leverArmA.x,
-        }));
-        const contactVelocityB = rigidBodyB.velocity.add(new Vector2d({
-          x: -rigidBodyB.angularVelocity * leverArmB.y,
-          y: rigidBodyB.angularVelocity * leverArmB.x,
-        }));
+        // Rotational velocity at contact point due to angular velocity
+        const rotationalVelocityAtContactA = Vector2d.crossProduct(rigidBodyA.angularVelocity, leverArmA);
+        const rotationalVelocityAtContactB = Vector2d.crossProduct(rigidBodyB.angularVelocity, leverArmB);
+
+        // Combined velocity at contact point (linear + angular)
+        const contactVelocityA = rigidBodyA.velocity.add(rotationalVelocityAtContactA);
+        const contactVelocityB = rigidBodyB.velocity.add(rotationalVelocityAtContactB);
+
         const relativeVelocity = contactVelocityA.subtract(contactVelocityB);
         const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
 

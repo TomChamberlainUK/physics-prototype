@@ -40,6 +40,10 @@ export default class CollisionImpulseResolution2dSystem extends System {
           continue;
         }
 
+        // Ensure moment of inertia values are defined
+        const inverseMomentOfInertiaA = rigidBodyA.inverseMomentOfInertia ?? 0;
+        const inverseMomentOfInertiaB = rigidBodyB.inverseMomentOfInertia ?? 0;
+
         // Distance from center of mass to contact point
         const leverArmA = contactPoint.subtract(transformA.position);
         const leverArmB = contactPoint.subtract(transformB.position);
@@ -65,23 +69,23 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
 
         // Rotational leverage for normal impulse
-        const torqueArmA = Vector2d.crossProduct(leverArmA, normal);
-        const torqueArmB = Vector2d.crossProduct(leverArmB, normal);
+        const normalTorqueArmA = Vector2d.crossProduct(leverArmA, normal);
+        const normalTorqueArmB = Vector2d.crossProduct(leverArmB, normal);
 
-        // Combined effect of mass and rotational inertia on the impulse
-        const effectiveMass = computeEffectiveMass({
+        // Combined effect of mass and rotational inertia on the normal impulse
+        const normalEffectiveMass = computeEffectiveMass({
           totalInverseMass,
-          torqueArmA,
-          torqueArmB,
-          inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia ?? 0,
-          inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia ?? 0,
+          torqueArmA: normalTorqueArmA,
+          torqueArmB: normalTorqueArmB,
+          inverseMomentOfInertiaA,
+          inverseMomentOfInertiaB,
         });
 
         // Impulse applied along the contact normal
-        const normalImpulseMagnitude = (-(1 + restitution) * velocityAlongNormal / effectiveMass) / contactPoints.length;
+        const normalImpulseMagnitude = (-(1 + restitution) * velocityAlongNormal / normalEffectiveMass) / contactPoints.length;
         const normalLinearImpulse = normal.multiply(normalImpulseMagnitude);
-        const normalAngularImpulseA = torqueArmA * normalImpulseMagnitude;
-        const normalAngularImpulseB = torqueArmB * normalImpulseMagnitude;
+        const normalAngularImpulseA = normalTorqueArmA * normalImpulseMagnitude;
+        const normalAngularImpulseB = normalTorqueArmB * normalImpulseMagnitude;
 
         // Apply normal impulse to linear velocities
         rigidBodyA.impulse = rigidBodyA.impulse.add(normalLinearImpulse);
@@ -101,11 +105,20 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const frictionTorqueArmA = Vector2d.crossProduct(leverArmA, tangent);
         const frictionTorqueArmB = Vector2d.crossProduct(leverArmB, tangent);
 
+        // Combined effect of mass and rotational inertia on the tangent impulse
+        const tangentEffectiveMass = computeEffectiveMass({
+          totalInverseMass,
+          torqueArmA: frictionTorqueArmA,
+          torqueArmB: frictionTorqueArmB,
+          inverseMomentOfInertiaA,
+          inverseMomentOfInertiaB,
+        });
+
         // Relative velocity along tangent
         const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
 
         // Impulse applied along the tangent
-        const frictionImpulseMagnitude = -velocityAlongTangent / effectiveMass / contactPoints.length;
+        const frictionImpulseMagnitude = -velocityAlongTangent / tangentEffectiveMass / contactPoints.length;
         const maxFrictionImpulse = normalImpulseMagnitude * frictionCoefficient;
         const clampedFrictionImpulseMagnitude = Math.max(-maxFrictionImpulse, Math.min(frictionImpulseMagnitude, maxFrictionImpulse));
         const frictionLinearImpulse = tangent.multiply(clampedFrictionImpulseMagnitude);

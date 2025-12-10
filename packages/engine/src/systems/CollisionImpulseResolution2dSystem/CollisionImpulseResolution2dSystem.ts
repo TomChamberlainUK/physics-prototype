@@ -95,21 +95,21 @@ export default class CollisionImpulseResolution2dSystem extends System {
         rigidBodyA.angularImpulse += normalAngularImpulseA;
         rigidBodyB.angularImpulse -= normalAngularImpulseB;
 
-        // Tangent direction for friction impulse
+        // Tangent direction for calculating impulse from friction
         const tangent = new Vector2d({ x: -normal.y, y: normal.x }).getUnit();
 
         // Calculate friction impulse (resistance to sliding)
         const frictionCoefficient = Math.sqrt(rigidBodyA.friction * rigidBodyB.friction);
 
-        // Rotational leverage for friction impulse
-        const frictionTorqueArmA = Vector2d.crossProduct(leverArmA, tangent);
-        const frictionTorqueArmB = Vector2d.crossProduct(leverArmB, tangent);
+        // Rotational leverage for tangent impulse
+        const tangentTorqueArmA = Vector2d.crossProduct(leverArmA, tangent);
+        const tangentTorqueArmB = Vector2d.crossProduct(leverArmB, tangent);
 
         // Combined effect of mass and rotational inertia on the tangent impulse
         const tangentEffectiveMass = computeEffectiveMass({
           totalInverseMass,
-          torqueArmA: frictionTorqueArmA,
-          torqueArmB: frictionTorqueArmB,
+          torqueArmA: tangentTorqueArmA,
+          torqueArmB: tangentTorqueArmB,
           inverseMomentOfInertiaA,
           inverseMomentOfInertiaB,
         });
@@ -118,20 +118,20 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
 
         // Impulse applied along the tangent
-        const frictionImpulseMagnitude = -velocityAlongTangent / tangentEffectiveMass / contactPoints.length;
-        const maxFrictionImpulse = normalImpulseMagnitude * frictionCoefficient;
-        const clampedFrictionImpulseMagnitude = Math.max(-maxFrictionImpulse, Math.min(frictionImpulseMagnitude, maxFrictionImpulse));
-        const frictionLinearImpulse = tangent.multiply(clampedFrictionImpulseMagnitude);
-        const frictionAngularImpulseA = frictionTorqueArmA * clampedFrictionImpulseMagnitude;
-        const frictionAngularImpulseB = frictionTorqueArmB * clampedFrictionImpulseMagnitude;
+        const tangentImpulseMagnitude = -velocityAlongTangent / tangentEffectiveMass / contactPoints.length;
+        const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient;
+        const clampedTangentImpulseMagnitude = Math.max(-maxTangentImpulse, Math.min(tangentImpulseMagnitude, maxTangentImpulse));
+        const tangentLinearImpulse = tangent.multiply(clampedTangentImpulseMagnitude);
+        const tangentAngularImpulseA = tangentTorqueArmA * clampedTangentImpulseMagnitude;
+        const tangentAngularImpulseB = tangentTorqueArmB * clampedTangentImpulseMagnitude;
 
-        // Apply friction impulse to linear velocities
-        rigidBodyA.impulse = rigidBodyA.impulse.add(frictionLinearImpulse);
-        rigidBodyB.impulse = rigidBodyB.impulse.subtract(frictionLinearImpulse);
+        // Apply tangent impulse to linear velocities
+        rigidBodyA.impulse = rigidBodyA.impulse.add(tangentLinearImpulse);
+        rigidBodyB.impulse = rigidBodyB.impulse.subtract(tangentLinearImpulse);
 
-        // Apply friction impulse to angular velocities
-        rigidBodyA.angularImpulse += frictionAngularImpulseA;
-        rigidBodyB.angularImpulse -= frictionAngularImpulseB;
+        // Apply tangent impulse to angular velocities
+        rigidBodyA.angularImpulse += tangentAngularImpulseA;
+        rigidBodyB.angularImpulse -= tangentAngularImpulseB;
       }
     }
   }

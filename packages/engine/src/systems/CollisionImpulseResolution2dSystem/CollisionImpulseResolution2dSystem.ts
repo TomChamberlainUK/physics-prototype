@@ -2,7 +2,7 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
-import { computeEffectiveMass } from './logic';
+import { computeEffectiveMass, computeNormalImpulseMagnitude } from './logic';
 import System from '../System';
 
 /**
@@ -82,7 +82,13 @@ export default class CollisionImpulseResolution2dSystem extends System {
         });
 
         // Impulse applied along the contact normal
-        const normalImpulseMagnitude = (-(1 + restitution) * velocityAlongNormal / normalEffectiveMass) / contactPoints.length;
+        const normalImpulseMagnitude = computeNormalImpulseMagnitude({
+          effectiveMass: normalEffectiveMass,
+          restitution,
+          velocity: velocityAlongNormal,
+        }) / contactPoints.length;
+
+        // Linear and angular components of the normal impulse
         const normalLinearImpulse = normal.multiply(normalImpulseMagnitude);
         const normalAngularImpulseA = normalTorqueArmA * normalImpulseMagnitude;
         const normalAngularImpulseB = normalTorqueArmB * normalImpulseMagnitude;

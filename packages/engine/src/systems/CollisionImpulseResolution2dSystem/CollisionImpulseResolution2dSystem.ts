@@ -2,7 +2,12 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
-import { computeEffectiveMass, computeNormalImpulseMagnitude, computeTangentImpulseMagnitude } from './logic';
+import {
+  clampTangentImpulseMagnitude,
+  computeEffectiveMass,
+  computeNormalImpulseMagnitude,
+  computeTangentImpulseMagnitude,
+} from './logic';
 import System from '../System';
 
 /**
@@ -128,8 +133,15 @@ export default class CollisionImpulseResolution2dSystem extends System {
           effectiveMass: tangentEffectiveMass,
           velocity: velocityAlongTangent,
         }) / contactPoints.length;
+
+        // Maximum allowable tangent impulse based on friction
         const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient;
-        const clampedTangentImpulseMagnitude = Math.max(-maxTangentImpulse, Math.min(tangentImpulseMagnitude, maxTangentImpulse));
+        const clampedTangentImpulseMagnitude = clampTangentImpulseMagnitude({
+          tangentImpulseMagnitude,
+          maxTangentImpulse,
+        });
+
+        // Linear and angular components of the tangent impulse
         const tangentLinearImpulse = tangent.multiply(clampedTangentImpulseMagnitude);
         const tangentAngularImpulseA = tangentTorqueArmA * clampedTangentImpulseMagnitude;
         const tangentAngularImpulseB = tangentTorqueArmB * clampedTangentImpulseMagnitude;

@@ -135,7 +135,7 @@ export default class CollisionImpulseResolution2dSystem extends System {
         }) / contactPoints.length;
 
         // Maximum allowable tangent impulse based on friction
-        const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient;
+        const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient / contactPoints.length;
         const clampedTangentImpulseMagnitude = clampTangentImpulseMagnitude({
           tangentImpulseMagnitude,
           maxTangentImpulse,

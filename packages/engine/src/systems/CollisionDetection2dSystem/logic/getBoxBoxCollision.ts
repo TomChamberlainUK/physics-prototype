@@ -138,6 +138,14 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
     contactPoints = [contactPoints[minIndex]!, contactPoints[maxIndex]!];
   }
 
+  // Fallback: If no contact points found, use the center of the overlap region projected onto the collision normal
+  if (contactPoints.length === 0) {
+    // Project the center of box A onto the collision normal, then move by half the overlap
+    const centerA = transformA.position;
+    const fallbackPoint = centerA.add(normal.multiply(overlap / 2));
+    contactPoints = [fallbackPoint];
+  }
+
   return {
     isColliding: true,
     contactManifold: {

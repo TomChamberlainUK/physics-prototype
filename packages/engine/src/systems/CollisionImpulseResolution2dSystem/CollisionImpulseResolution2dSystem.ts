@@ -2,7 +2,7 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
-import { computeEffectiveMass, computeNormalImpulseMagnitude } from './logic';
+import { computeEffectiveMass, computeNormalImpulseMagnitude, computeTangentImpulseMagnitude } from './logic';
 import System from '../System';
 
 /**
@@ -124,7 +124,10 @@ export default class CollisionImpulseResolution2dSystem extends System {
         const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
 
         // Impulse applied along the tangent
-        const tangentImpulseMagnitude = -velocityAlongTangent / tangentEffectiveMass / contactPoints.length;
+        const tangentImpulseMagnitude = computeTangentImpulseMagnitude({
+          effectiveMass: tangentEffectiveMass,
+          velocity: velocityAlongTangent,
+        }) / contactPoints.length;
         const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient;
         const clampedTangentImpulseMagnitude = Math.max(-maxTangentImpulse, Math.min(tangentImpulseMagnitude, maxTangentImpulse));
         const tangentLinearImpulse = tangent.multiply(clampedTangentImpulseMagnitude);

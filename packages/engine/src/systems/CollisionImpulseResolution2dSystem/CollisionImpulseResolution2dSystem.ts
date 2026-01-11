@@ -2,12 +2,7 @@ import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Context } from '#/types';
-import {
-  clampTangentImpulseMagnitude,
-  computeEffectiveMass,
-  computeNormalImpulseMagnitude,
-  computeTangentImpulseMagnitude,
-} from './logic';
+import { computeContactImpulse } from './logic';
 import System from '../System';
 
 /**
@@ -37,123 +32,78 @@ export default class CollisionImpulseResolution2dSystem extends System {
 
       const { normal, contactPoints } = contactManifold;
 
+      let totalNormalLinearImpulse = new Vector2d({ x: 0, y: 0 });
+      let totalNormalAngularImpulseA = 0;
+      let totalNormalAngularImpulseB = 0;
+      let totalTangentLinearImpulse = new Vector2d({ x: 0, y: 0 });
+      let totalTangentAngularImpulseA = 0;
+      let totalTangentAngularImpulseB = 0;
+
       for (const contactPoint of contactPoints) {
-        const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
+        const contactImpulse = computeContactImpulse({
+          angularVelocityA: rigidBodyA.angularVelocity,
+          angularVelocityB: rigidBodyB.angularVelocity,
+          contactPoint,
+          frictionA: rigidBodyA.friction,
+          frictionB: rigidBodyB.friction,
+          inverseMassA: rigidBodyA.inverseMass,
+          inverseMassB: rigidBodyB.inverseMass,
+          inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia ?? 0,
+          inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia ?? 0,
+          normal,
+          positionA: transformA.position,
+          positionB: transformB.position,
+          restitutionA: rigidBodyA.restitution,
+          restitutionB: rigidBodyB.restitution,
+          velocityA: rigidBodyA.velocity,
+          velocityB: rigidBodyB.velocity,
+        });
 
-        // Both static
-        if (totalInverseMass === 0) {
+        if (!contactImpulse) {
           continue;
         }
 
-        // Ensure moment of inertia values are defined
-        const inverseMomentOfInertiaA = rigidBodyA.inverseMomentOfInertia ?? 0;
-        const inverseMomentOfInertiaB = rigidBodyB.inverseMomentOfInertia ?? 0;
+        const {
+          normalLinearImpulse,
+          normalAngularImpulseA,
+          normalAngularImpulseB,
+          tangentLinearImpulse,
+          tangentAngularImpulseA,
+          tangentAngularImpulseB,
+        } = contactImpulse;
 
-        // Distance from center of mass to contact point
-        const leverArmA = contactPoint.subtract(transformA.position);
-        const leverArmB = contactPoint.subtract(transformB.position);
-
-        // Rotational velocity at contact point due to angular velocity
-        const rotationalVelocityAtContactA = Vector2d.crossProduct(rigidBodyA.angularVelocity, leverArmA);
-        const rotationalVelocityAtContactB = Vector2d.crossProduct(rigidBodyB.angularVelocity, leverArmB);
-
-        // Combined velocity at contact point (linear + angular)
-        const contactVelocityA = rigidBodyA.velocity.add(rotationalVelocityAtContactA);
-        const contactVelocityB = rigidBodyB.velocity.add(rotationalVelocityAtContactB);
-
-        // Relative velocity at contact point
-        const relativeVelocity = contactVelocityA.subtract(contactVelocityB);
-        const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
-
-        // Already separating
-        if (velocityAlongNormal > 0) {
-          continue;
-        }
-
-        // Calculate restitution (bounciness)
-        const restitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
-
-        // Rotational leverage for normal impulse
-        const normalTorqueArmA = Vector2d.crossProduct(leverArmA, normal);
-        const normalTorqueArmB = Vector2d.crossProduct(leverArmB, normal);
-
-        // Combined effect of mass and rotational inertia on the normal impulse
-        const normalEffectiveMass = computeEffectiveMass({
-          totalInverseMass,
-          torqueArmA: normalTorqueArmA,
-          torqueArmB: normalTorqueArmB,
-          inverseMomentOfInertiaA,
-          inverseMomentOfInertiaB,
-        });
-
-        // Impulse applied along the contact normal
-        const normalImpulseMagnitude = computeNormalImpulseMagnitude({
-          effectiveMass: normalEffectiveMass,
-          restitution,
-          velocity: velocityAlongNormal,
-        }) / contactPoints.length;
-
-        // Linear and angular components of the normal impulse
-        const normalLinearImpulse = normal.multiply(normalImpulseMagnitude);
-        const normalAngularImpulseA = normalTorqueArmA * normalImpulseMagnitude;
-        const normalAngularImpulseB = normalTorqueArmB * normalImpulseMagnitude;
-
-        // Apply normal impulse to linear velocities
-        rigidBodyA.impulse = rigidBodyA.impulse.add(normalLinearImpulse);
-        rigidBodyB.impulse = rigidBodyB.impulse.subtract(normalLinearImpulse);
-
-        // Apply normal impulse to angular velocities
-        rigidBodyA.angularImpulse += normalAngularImpulseA;
-        rigidBodyB.angularImpulse -= normalAngularImpulseB;
-
-        // Tangent direction for calculating impulse from friction
-        const tangent = new Vector2d({ x: -normal.y, y: normal.x }).getUnit();
-
-        // Calculate friction impulse (resistance to sliding)
-        const frictionCoefficient = Math.sqrt(rigidBodyA.friction * rigidBodyB.friction);
-
-        // Rotational leverage for tangent impulse
-        const tangentTorqueArmA = Vector2d.crossProduct(leverArmA, tangent);
-        const tangentTorqueArmB = Vector2d.crossProduct(leverArmB, tangent);
-
-        // Combined effect of mass and rotational inertia on the tangent impulse
-        const tangentEffectiveMass = computeEffectiveMass({
-          totalInverseMass,
-          torqueArmA: tangentTorqueArmA,
-          torqueArmB: tangentTorqueArmB,
-          inverseMomentOfInertiaA,
-          inverseMomentOfInertiaB,
-        });
-
-        // Relative velocity along tangent
-        const velocityAlongTangent = Vector2d.dotProduct(relativeVelocity, tangent);
-
-        // Impulse applied along the tangent
-        const tangentImpulseMagnitude = computeTangentImpulseMagnitude({
-          effectiveMass: tangentEffectiveMass,
-          velocity: velocityAlongTangent,
-        }) / contactPoints.length;
-
-        // Maximum allowable tangent impulse based on friction
-        const maxTangentImpulse = normalImpulseMagnitude * frictionCoefficient / contactPoints.length;
-        const clampedTangentImpulseMagnitude = clampTangentImpulseMagnitude({
-          tangentImpulseMagnitude,
-          maxTangentImpulse,
-        });
-
-        // Linear and angular components of the tangent impulse
-        const tangentLinearImpulse = tangent.multiply(clampedTangentImpulseMagnitude);
-        const tangentAngularImpulseA = tangentTorqueArmA * clampedTangentImpulseMagnitude;
-        const tangentAngularImpulseB = tangentTorqueArmB * clampedTangentImpulseMagnitude;
-
-        // Apply tangent impulse to linear velocities
-        rigidBodyA.impulse = rigidBodyA.impulse.add(tangentLinearImpulse);
-        rigidBodyB.impulse = rigidBodyB.impulse.subtract(tangentLinearImpulse);
-
-        // Apply tangent impulse to angular velocities
-        rigidBodyA.angularImpulse += tangentAngularImpulseA;
-        rigidBodyB.angularImpulse -= tangentAngularImpulseB;
+        totalNormalLinearImpulse = totalNormalLinearImpulse.add(normalLinearImpulse);
+        totalNormalAngularImpulseA += normalAngularImpulseA;
+        totalNormalAngularImpulseB += normalAngularImpulseB;
+        totalTangentLinearImpulse = totalTangentLinearImpulse.add(tangentLinearImpulse);
+        totalTangentAngularImpulseA += tangentAngularImpulseA;
+        totalTangentAngularImpulseB += tangentAngularImpulseB;
       }
+
+      if (contactPoints.length > 0) {
+        totalNormalLinearImpulse = totalNormalLinearImpulse.divide(contactPoints.length);
+        totalNormalAngularImpulseA /= contactPoints.length;
+        totalNormalAngularImpulseB /= contactPoints.length;
+        totalTangentLinearImpulse = totalTangentLinearImpulse.divide(contactPoints.length);
+        totalTangentAngularImpulseA /= contactPoints.length;
+        totalTangentAngularImpulseB /= contactPoints.length;
+      }
+
+      // Apply normal impulse to linear velocities
+      rigidBodyA.impulse = rigidBodyA.impulse.add(totalNormalLinearImpulse);
+      rigidBodyB.impulse = rigidBodyB.impulse.subtract(totalNormalLinearImpulse);
+
+      // Apply normal impulse to angular velocities
+      rigidBodyA.angularImpulse += totalNormalAngularImpulseA;
+      rigidBodyB.angularImpulse -= totalNormalAngularImpulseB;
+
+      // Apply tangent impulse to linear velocities
+      rigidBodyA.impulse = rigidBodyA.impulse.add(totalTangentLinearImpulse);
+      rigidBodyB.impulse = rigidBodyB.impulse.subtract(totalTangentLinearImpulse);
+
+      // Apply tangent impulse to angular velocities
+      rigidBodyA.angularImpulse += totalTangentAngularImpulseA;
+      rigidBodyB.angularImpulse -= totalTangentAngularImpulseB;
     }
   }
 }

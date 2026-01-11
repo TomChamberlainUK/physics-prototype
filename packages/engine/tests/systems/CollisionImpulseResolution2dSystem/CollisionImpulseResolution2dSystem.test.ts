@@ -1,8 +1,10 @@
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { CollisionImpulseResolution2dSystem } from '#/systems';
-import { beforeEach, describe, expect, it } from 'vitest';
+import * as computeContactImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactImpulse';
+import type { ContactManifold } from '#/types';
 
 describe('CollisionImpulseResolution2dSystem', () => {
   describe('constructor()', () => {
@@ -15,8 +17,6 @@ describe('CollisionImpulseResolution2dSystem', () => {
   });
 
   describe('update()', () => {
-    const speed = 5;
-
     let collisionImpulseResolution2dSystem: CollisionImpulseResolution2dSystem;
     let entityA: Entity;
     let entityB: Entity;
@@ -24,6 +24,13 @@ describe('CollisionImpulseResolution2dSystem', () => {
     let rigidBodyB: RigidBody2dComponent;
     let transformA: Transform2dComponent;
     let transformB: Transform2dComponent;
+    let contactManifold: ContactManifold;
+
+    let computeContactImpulseSpy: MockInstance<typeof computeContactImpulseModule.default>;
+
+    beforeAll(() => {
+      computeContactImpulseSpy = vi.spyOn(computeContactImpulseModule, 'default');
+    });
 
     beforeEach(() => {
       collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
@@ -39,183 +46,180 @@ describe('CollisionImpulseResolution2dSystem', () => {
         restitution: 1,
         friction: 0,
       });
+      rigidBodyA.inverseMomentOfInertia = 1;
+      rigidBodyB.inverseMomentOfInertia = 1;
       entityA.addComponents([transformA, rigidBodyA]);
       entityB.addComponents([transformB, rigidBodyB]);
+      contactManifold = {
+        normal: new Vector2d({ x: 0, y: 1 }),
+        contactPoints: [
+          new Vector2d({ x: 1, y: 1 }),
+          new Vector2d({ x: -1, y: 1 }),
+        ],
+        overlap: 0.5,
+      };
     });
 
-    it('Should apply a linear impulse to colliding entities', () => {
-      rigidBodyA.velocity = new Vector2d(speed, 0);
+    afterEach(() => {
+      computeContactImpulseSpy.mockClear();
+    });
+
+    afterAll(() => {
+      computeContactImpulseSpy.mockRestore();
+    });
+
+    it('Should compute the contact impulse for each contact point of each collision pair', () => {
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: -1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 0 })],
-          },
+          contactManifold,
         }],
       });
-      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: -5, y: 0 }));
-      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: 5, y: 0 }));
+      for (const contactPoint of contactManifold.contactPoints) {
+        expect(computeContactImpulseSpy).toHaveBeenCalledWith({
+          angularVelocityA: rigidBodyA.angularVelocity,
+          angularVelocityB: rigidBodyB.angularVelocity,
+          contactPoint,
+          frictionA: rigidBodyA.friction,
+          frictionB: rigidBodyB.friction,
+          inverseMassA: rigidBodyA.inverseMass,
+          inverseMassB: rigidBodyB.inverseMass,
+          inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia,
+          inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia,
+          normal: contactManifold.normal,
+          positionA: transformA.position,
+          positionB: transformB.position,
+          restitutionA: rigidBodyA.restitution,
+          restitutionB: rigidBodyB.restitution,
+          velocityA: rigidBodyA.velocity,
+          velocityB: rigidBodyB.velocity,
+        });
+      }
     });
 
-    it('Should apply an angular impulse to colliding entities', () => {
-      rigidBodyA.inverseMomentOfInertia = 1;
-      rigidBodyB.inverseMomentOfInertia = 1;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
+    it('Should apply the averaged normal linear impulse to the rigid bodies', () => {
+      const firstValue = 10;
+      const secondValue = 20;
+      const averagedValue = (firstValue + secondValue) / 2;
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: firstValue, y: firstValue }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: secondValue, y: secondValue }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: -1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 1 })],
-          },
+          contactManifold,
         }],
       });
-      expect(rigidBodyA.angularImpulse).toBe(2.5);
-      expect(rigidBodyB.angularImpulse).toBe(-2.5);
+      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: averagedValue, y: averagedValue }));
+      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -averagedValue, y: -averagedValue }));
     });
 
-    it('Should not apply a linear impulse to separating entities', () => {
-      rigidBodyA.velocity = new Vector2d(speed, 0);
+    it('Should apply the averaged normal angular impulse to the rigid bodies', () => {
+      const firstValue = 10;
+      const secondValue = 20;
+      const averagedValue = (firstValue + secondValue) / 2;
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: firstValue,
+        normalAngularImpulseB: firstValue,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: secondValue,
+        normalAngularImpulseB: secondValue,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: 1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 0 })],
-          },
+          contactManifold,
         }],
       });
-      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: 0, y: 0 }));
-      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: 0, y: 0 }));
+      expect(rigidBodyA.angularImpulse).toBe(averagedValue);
+      expect(rigidBodyB.angularImpulse).toBe(-averagedValue);
     });
 
-    it('Should not apply an angular impulse to separating entities', () => {
-      rigidBodyA.inverseMomentOfInertia = 1;
-      rigidBodyB.inverseMomentOfInertia = 1;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
+    it('Should apply the averaged tangent linear impulse to the rigid bodies', () => {
+      const firstValue = 10;
+      const secondValue = 20;
+      const averagedValue = (firstValue + secondValue) / 2;
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: firstValue, y: firstValue }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: secondValue, y: secondValue }),
+        tangentAngularImpulseA: 0,
+        tangentAngularImpulseB: 0,
+      });
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: 1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 1 })],
-          },
+          contactManifold,
         }],
       });
-      expect(rigidBodyA.angularImpulse).toBe(0);
-      expect(rigidBodyB.angularImpulse).toBe(0);
+      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: averagedValue, y: averagedValue }));
+      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -averagedValue, y: -averagedValue }));
     });
 
-    it.todo('Should not apply a linear impulse to static entities');
-
-    it.todo('Should not apply an angular impulse to static entities');
-
-    it('Should scale applied linear impulse based on restitution', () => {
-      const restitution = 0.5;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
-      rigidBodyB.velocity = new Vector2d(0, 0);
-
-      const minRestitution = Math.min(rigidBodyA.restitution, rigidBodyB.restitution);
-      const normal = new Vector2d({ x: -1, y: 0 });
-      const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
-      const velocityAlongNormal = Vector2d.dotProduct(relativeVelocity, normal);
-      const totalInverseMass = rigidBodyA.inverseMass + rigidBodyB.inverseMass;
-      const impulseMagnitude = -(1 + minRestitution) * velocityAlongNormal / totalInverseMass;
-      const impulse = normal.multiply(impulseMagnitude);
-      const expectedImpulseA = impulse.multiply(rigidBodyA.inverseMass);
-      const expectedImpulseB = impulse.multiply(-rigidBodyB.inverseMass);
-
+    it('Should apply the averaged tangent angular impulse to the rigid bodies', () => {
+      const firstValue = 10;
+      const secondValue = 20;
+      const averagedValue = (firstValue + secondValue) / 2;
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: firstValue,
+        tangentAngularImpulseB: firstValue,
+      });
+      computeContactImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        normalAngularImpulseA: 0,
+        normalAngularImpulseB: 0,
+        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
+        tangentAngularImpulseA: secondValue,
+        tangentAngularImpulseB: secondValue,
+      });
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
           entityB,
-          contactManifold: {
-            normal,
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 0 })],
-          },
+          contactManifold,
         }],
       });
-
-      expect(rigidBodyA.impulse.x).toBeCloseTo(expectedImpulseA.x);
-      expect(rigidBodyA.impulse.y).toBeCloseTo(expectedImpulseA.y);
-      expect(rigidBodyB.impulse.x).toBeCloseTo(expectedImpulseB.x);
-      expect(rigidBodyB.impulse.y).toBeCloseTo(expectedImpulseB.y);
-    });
-
-    it('Should scale applied angular impulse based on restitution', () => {
-      const restitution = 0.5;
-      rigidBodyA.restitution = restitution;
-      rigidBodyB.restitution = restitution;
-      rigidBodyA.inverseMomentOfInertia = 1;
-      rigidBodyB.inverseMomentOfInertia = 1;
-      rigidBodyA.velocity = new Vector2d(speed, 0);
-      collisionImpulseResolution2dSystem.update([], {
-        narrowPhaseCollisionPairs: [{
-          entityA,
-          entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: -1, y: 0 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 1 })],
-          },
-        }],
-      });
-      expect(rigidBodyA.angularImpulse).toBeLessThan(2.5);
-      expect(rigidBodyB.angularImpulse).toBeGreaterThan(-2.5);
-    });
-
-    it('Should apply a linear impulse from friction', () => {
-      rigidBodyA.friction = 0.5;
-      rigidBodyB.friction = 0.5;
-      rigidBodyA.velocity = new Vector2d(speed, speed);
-      collisionImpulseResolution2dSystem.update([], {
-        narrowPhaseCollisionPairs: [{
-          entityA,
-          entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: 0, y: -1 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: 0 })],
-          },
-        }],
-      });
-      expect(rigidBodyA.impulse.x).toBe(-2.5);
-      expect(rigidBodyA.impulse.y).toBe(-5);
-      expect(rigidBodyB.impulse.x).toBe(2.5);
-      expect(rigidBodyB.impulse.y).toBe(5);
-    });
-
-    it('Should apply an angular impulse from friction', () => {
-      rigidBodyA.friction = 0.5;
-      rigidBodyB.friction = 0.5;
-      rigidBodyA.inverseMomentOfInertia = 1;
-      rigidBodyB.inverseMomentOfInertia = 1;
-      rigidBodyA.velocity = new Vector2d(speed, speed);
-      collisionImpulseResolution2dSystem.update([], {
-        narrowPhaseCollisionPairs: [{
-          entityA,
-          entityB,
-          contactManifold: {
-            normal: new Vector2d({ x: 0, y: -1 }),
-            overlap: 1,
-            contactPoints: [new Vector2d({ x: 0, y: -1 })],
-          },
-        }],
-      });
-      expect(rigidBodyA.angularImpulse).toBe(-2.5);
-      expect(rigidBodyB.angularImpulse).toBe(2.5);
+      expect(rigidBodyA.angularImpulse).toBe(averagedValue);
+      expect(rigidBodyB.angularImpulse).toBe(-averagedValue);
     });
   });
 });

@@ -3,7 +3,7 @@ import { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { CollisionImpulseResolution2dSystem } from '#/systems';
-import * as computeContactImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactImpulse';
+import * as computeContactManifoldImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse';
 import type { ContactManifold } from '#/types';
 
 describe('CollisionImpulseResolution2dSystem', () => {
@@ -26,14 +26,14 @@ describe('CollisionImpulseResolution2dSystem', () => {
     let transformB: Transform2dComponent;
     let contactManifold: ContactManifold;
 
-    let computeContactImpulseSpy: MockInstance<typeof computeContactImpulseModule.default>;
+    let computeContactManifoldImpulseSpy: MockInstance<typeof computeContactManifoldImpulseModule.default>;
 
     beforeAll(() => {
-      computeContactImpulseSpy = vi.spyOn(computeContactImpulseModule, 'default');
+      computeContactManifoldImpulseSpy = vi.spyOn(computeContactManifoldImpulseModule, 'default');
+      collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
     });
 
     beforeEach(() => {
-      collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
       entityA = new Entity();
       entityB = new Entity();
       transformA = new Transform2dComponent();
@@ -61,14 +61,14 @@ describe('CollisionImpulseResolution2dSystem', () => {
     });
 
     afterEach(() => {
-      computeContactImpulseSpy.mockClear();
+      computeContactManifoldImpulseSpy.mockClear();
     });
 
     afterAll(() => {
-      computeContactImpulseSpy.mockRestore();
+      computeContactManifoldImpulseSpy.mockRestore();
     });
 
-    it('Should compute the contact impulse for each contact point of each collision pair', () => {
+    it('Should compute the contact manifold impulse', () => {
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
           entityA,
@@ -76,42 +76,30 @@ describe('CollisionImpulseResolution2dSystem', () => {
           contactManifold,
         }],
       });
-      for (const contactPoint of contactManifold.contactPoints) {
-        expect(computeContactImpulseSpy).toHaveBeenCalledWith({
-          angularVelocityA: rigidBodyA.angularVelocity,
-          angularVelocityB: rigidBodyB.angularVelocity,
-          contactPoint,
-          frictionA: rigidBodyA.friction,
-          frictionB: rigidBodyB.friction,
-          inverseMassA: rigidBodyA.inverseMass,
-          inverseMassB: rigidBodyB.inverseMass,
-          inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia,
-          inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia,
-          normal: contactManifold.normal,
-          positionA: transformA.position,
-          positionB: transformB.position,
-          restitutionA: rigidBodyA.restitution,
-          restitutionB: rigidBodyB.restitution,
-          velocityA: rigidBodyA.velocity,
-          velocityB: rigidBodyB.velocity,
-        });
-      }
+      expect(computeContactManifoldImpulseSpy).toHaveBeenCalledWith({
+        angularVelocityA: rigidBodyA.angularVelocity,
+        angularVelocityB: rigidBodyB.angularVelocity,
+        contactPoints: contactManifold.contactPoints,
+        frictionA: rigidBodyA.friction,
+        frictionB: rigidBodyB.friction,
+        inverseMassA: rigidBodyA.inverseMass,
+        inverseMassB: rigidBodyB.inverseMass,
+        inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia,
+        inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia,
+        normal: contactManifold.normal,
+        positionA: transformA.position,
+        positionB: transformB.position,
+        restitutionA: rigidBodyA.restitution,
+        restitutionB: rigidBodyB.restitution,
+        velocityA: rigidBodyA.velocity,
+        velocityB: rigidBodyB.velocity,
+      });
     });
 
-    it('Should apply the averaged normal linear impulse to the rigid bodies', () => {
-      const firstValue = 10;
-      const secondValue = 20;
-      const averagedValue = (firstValue + secondValue) / 2;
-      computeContactImpulseSpy.mockReturnValueOnce({
-        normalLinearImpulse: new Vector2d({ x: firstValue, y: firstValue }),
-        normalAngularImpulseA: 0,
-        normalAngularImpulseB: 0,
-        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        tangentAngularImpulseA: 0,
-        tangentAngularImpulseB: 0,
-      });
-      computeContactImpulseSpy.mockReturnValueOnce({
-        normalLinearImpulse: new Vector2d({ x: secondValue, y: secondValue }),
+    it('Should apply the normal linear impulse to the rigid bodies', () => {
+      const value = 10;
+      computeContactManifoldImpulseSpy.mockReturnValueOnce({
+        normalLinearImpulse: new Vector2d({ x: value, y: value }),
         normalAngularImpulseA: 0,
         normalAngularImpulseB: 0,
         tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
@@ -125,26 +113,16 @@ describe('CollisionImpulseResolution2dSystem', () => {
           contactManifold,
         }],
       });
-      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: averagedValue, y: averagedValue }));
-      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -averagedValue, y: -averagedValue }));
+      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: value, y: value }));
+      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -value, y: -value }));
     });
 
-    it('Should apply the averaged normal angular impulse to the rigid bodies', () => {
-      const firstValue = 10;
-      const secondValue = 20;
-      const averagedValue = (firstValue + secondValue) / 2;
-      computeContactImpulseSpy.mockReturnValueOnce({
+    it('Should apply the normal angular impulse to the rigid bodies', () => {
+      const value = 10;
+      computeContactManifoldImpulseSpy.mockReturnValueOnce({
         normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        normalAngularImpulseA: firstValue,
-        normalAngularImpulseB: firstValue,
-        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        tangentAngularImpulseA: 0,
-        tangentAngularImpulseB: 0,
-      });
-      computeContactImpulseSpy.mockReturnValueOnce({
-        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        normalAngularImpulseA: secondValue,
-        normalAngularImpulseB: secondValue,
+        normalAngularImpulseA: value,
+        normalAngularImpulseB: value,
         tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
         tangentAngularImpulseA: 0,
         tangentAngularImpulseB: 0,
@@ -156,27 +134,17 @@ describe('CollisionImpulseResolution2dSystem', () => {
           contactManifold,
         }],
       });
-      expect(rigidBodyA.angularImpulse).toBe(averagedValue);
-      expect(rigidBodyB.angularImpulse).toBe(-averagedValue);
+      expect(rigidBodyA.angularImpulse).toBe(value);
+      expect(rigidBodyB.angularImpulse).toBe(-value);
     });
 
-    it('Should apply the averaged tangent linear impulse to the rigid bodies', () => {
-      const firstValue = 10;
-      const secondValue = 20;
-      const averagedValue = (firstValue + secondValue) / 2;
-      computeContactImpulseSpy.mockReturnValueOnce({
+    it('Should apply the tangent linear impulse to the rigid bodies', () => {
+      const value = 10;
+      computeContactManifoldImpulseSpy.mockReturnValueOnce({
         normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
         normalAngularImpulseA: 0,
         normalAngularImpulseB: 0,
-        tangentLinearImpulse: new Vector2d({ x: firstValue, y: firstValue }),
-        tangentAngularImpulseA: 0,
-        tangentAngularImpulseB: 0,
-      });
-      computeContactImpulseSpy.mockReturnValueOnce({
-        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        normalAngularImpulseA: 0,
-        normalAngularImpulseB: 0,
-        tangentLinearImpulse: new Vector2d({ x: secondValue, y: secondValue }),
+        tangentLinearImpulse: new Vector2d({ x: value, y: value }),
         tangentAngularImpulseA: 0,
         tangentAngularImpulseB: 0,
       });
@@ -187,29 +155,19 @@ describe('CollisionImpulseResolution2dSystem', () => {
           contactManifold,
         }],
       });
-      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: averagedValue, y: averagedValue }));
-      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -averagedValue, y: -averagedValue }));
+      expect(rigidBodyA.impulse).toEqual(new Vector2d({ x: value, y: value }));
+      expect(rigidBodyB.impulse).toEqual(new Vector2d({ x: -value, y: -value }));
     });
 
-    it('Should apply the averaged tangent angular impulse to the rigid bodies', () => {
-      const firstValue = 10;
-      const secondValue = 20;
-      const averagedValue = (firstValue + secondValue) / 2;
-      computeContactImpulseSpy.mockReturnValueOnce({
+    it('Should apply the tangent angular impulse to the rigid bodies', () => {
+      const value = 10;
+      computeContactManifoldImpulseSpy.mockReturnValueOnce({
         normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
         normalAngularImpulseA: 0,
         normalAngularImpulseB: 0,
         tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        tangentAngularImpulseA: firstValue,
-        tangentAngularImpulseB: firstValue,
-      });
-      computeContactImpulseSpy.mockReturnValueOnce({
-        normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        normalAngularImpulseA: 0,
-        normalAngularImpulseB: 0,
-        tangentLinearImpulse: new Vector2d({ x: 0, y: 0 }),
-        tangentAngularImpulseA: secondValue,
-        tangentAngularImpulseB: secondValue,
+        tangentAngularImpulseA: value,
+        tangentAngularImpulseB: value,
       });
       collisionImpulseResolution2dSystem.update([], {
         narrowPhaseCollisionPairs: [{
@@ -218,8 +176,8 @@ describe('CollisionImpulseResolution2dSystem', () => {
           contactManifold,
         }],
       });
-      expect(rigidBodyA.angularImpulse).toBe(averagedValue);
-      expect(rigidBodyB.angularImpulse).toBe(-averagedValue);
+      expect(rigidBodyA.angularImpulse).toBe(value);
+      expect(rigidBodyB.angularImpulse).toBe(-value);
     });
   });
 });

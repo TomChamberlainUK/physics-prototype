@@ -1,30 +1,55 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import { Vector2d } from '#/maths';
 import { computeContactImpulse } from '#/systems/CollisionImpulseResolution2dSystem/logic';
 
 describe('computeContactImpulse', () => {
-  const defaultParams = {
-    angularVelocityA: 0,
-    angularVelocityB: 0,
-    contactPoint: new Vector2d({ x: 0, y: -1 }),
-    frictionA: 0.5,
-    frictionB: 0.5,
-    inverseMassA: 1,
-    inverseMassB: 1,
-    inverseMomentOfInertiaA: 1,
-    inverseMomentOfInertiaB: 1,
-    normal: new Vector2d({ x: -1, y: 0 }),
-    positionA: new Vector2d({ x: -1, y: 0 }),
-    positionB: new Vector2d({ x: 1, y: 0 }),
-    restitutionA: 0,
-    restitutionB: 0,
-    velocityA: new Vector2d({ x: 5, y: 0 }),
-    velocityB: new Vector2d({ x: 0, y: 0 }),
-  };
+  let contactPoint: Vector2d;
+  let normal: Vector2d;
+  let rigidBodyA: RigidBody2dComponent;
+  let rigidBodyB: RigidBody2dComponent;
+  let transformA: Transform2dComponent;
+  let transformB: Transform2dComponent;
+
+  beforeEach(() => {
+    contactPoint = new Vector2d({ x: 0, y: -1 });
+    normal = new Vector2d({ x: -1, y: 0 });
+    rigidBodyA = new RigidBody2dComponent({
+      restitution: 0,
+      friction: 0.5,
+      mass: 1,
+      velocity: new Vector2d({ x: 5, y: 0 }),
+      angularVelocity: 0,
+    });
+    rigidBodyA.inverseMomentOfInertia = 1;
+    rigidBodyB = new RigidBody2dComponent({
+      restitution: 0,
+      friction: 0.5,
+      mass: 1,
+      velocity: new Vector2d({ x: 0, y: 0 }),
+      angularVelocity: 0,
+    });
+    rigidBodyB.inverseMomentOfInertia = 1;
+    transformA = new Transform2dComponent({
+      position: new Vector2d({ x: -1, y: 0 }),
+      rotation: 0,
+    });
+    transformB = new Transform2dComponent({
+      position: new Vector2d({ x: 1, y: 0 }),
+      rotation: 0,
+    });
+  });
 
   describe('Directional Correctness', () => {
     it('Should return a normal linear impulse along the contact normal', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
@@ -32,12 +57,19 @@ describe('computeContactImpulse', () => {
 
       const { normalLinearImpulse } = result;
 
-      const dotProduct = Vector2d.dotProduct(normalLinearImpulse, defaultParams.normal);
+      const dotProduct = Vector2d.dotProduct(normalLinearImpulse, normal);
       expect(dotProduct).toBeGreaterThan(0);
     });
 
     it('Should return a tangent linear impulse perpindicular to the contact normal', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
@@ -45,21 +77,28 @@ describe('computeContactImpulse', () => {
 
       const { tangentLinearImpulse } = result;
 
-      const dotProduct = Vector2d.dotProduct(tangentLinearImpulse, defaultParams.normal);
+      const dotProduct = Vector2d.dotProduct(tangentLinearImpulse, normal);
       expect(dotProduct).toBeCloseTo(0);
     });
 
     it('Should return angular impulses matching the torque direction', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
       }
 
-      const leverArmA = defaultParams.contactPoint.subtract(defaultParams.positionA);
-      const leverArmB = defaultParams.contactPoint.subtract(defaultParams.positionB);
-      const normalTorqueArmA = Vector2d.crossProduct(leverArmA, defaultParams.normal);
-      const normalTorqueArmB = Vector2d.crossProduct(leverArmB, defaultParams.normal);
+      const leverArmA = contactPoint.subtract(transformA.position);
+      const leverArmB = contactPoint.subtract(transformB.position);
+      const normalTorqueArmA = Vector2d.crossProduct(leverArmA, normal);
+      const normalTorqueArmB = Vector2d.crossProduct(leverArmB, normal);
 
       const { normalAngularImpulseA, normalAngularImpulseB } = result;
 
@@ -70,21 +109,33 @@ describe('computeContactImpulse', () => {
 
   describe('Zero-impulse conditions', () => {
     it('Should return null when bodies are moving apart', () => {
+      normal = new Vector2d({ x: 1, y: 0 });
+      rigidBodyA.velocity = new Vector2d({ x: 1, y: 0 });
+      rigidBodyB.velocity = new Vector2d({ x: 0, y: 0 });
+
       const result = computeContactImpulse({
-        ...defaultParams,
-        normal: new Vector2d({ x: 1, y: 0 }),
-        velocityA: new Vector2d({ x: 1, y: 0 }),
-        velocityB: new Vector2d({ x: 0, y: 0 }),
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       expect(result).toBeNull();
     });
 
     it('Should return a tangent linear impulse of zero when there is no friction', () => {
+      rigidBodyA.friction = 0;
+      rigidBodyB.friction = 0;
+
       const result = computeContactImpulse({
-        ...defaultParams,
-        frictionA: 0,
-        frictionB: 0,
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       if (!result) {
@@ -97,11 +148,16 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should return angular impulses of zero when the contact point is at the center of mass', () => {
+      contactPoint = new Vector2d({ x: 0, y: 0 });
+      transformA.position = new Vector2d({ x: 0, y: 0 });
+      transformB.position = new Vector2d({ x: 0, y: 0 });
       const result = computeContactImpulse({
-        ...defaultParams,
-        contactPoint: new Vector2d({ x: 0, y: 0 }),
-        positionA: new Vector2d({ x: 0, y: 0 }),
-        positionB: new Vector2d({ x: 0, y: 0 }),
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       if (!result) {
@@ -124,7 +180,14 @@ describe('computeContactImpulse', () => {
 
   describe('Conservation-style invariants', () => {
     it('Should not increase normal relative velocity after applying impulse', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
@@ -132,23 +195,29 @@ describe('computeContactImpulse', () => {
 
       const { normalLinearImpulse } = result;
 
-      const impulseVelocityChangeA = normalLinearImpulse.multiply(defaultParams.inverseMassA);
-      const impulseVelocityChangeB = normalLinearImpulse.multiply(-defaultParams.inverseMassB);
+      const impulseVelocityChangeA = normalLinearImpulse.multiply(rigidBodyA.inverseMass);
+      const impulseVelocityChangeB = normalLinearImpulse.multiply(-rigidBodyB.inverseMass);
 
-      const newVelocityA = defaultParams.velocityA.add(impulseVelocityChangeA);
-      const newVelocityB = defaultParams.velocityB.add(impulseVelocityChangeB);
-
-      const previousRelativeVelocity = defaultParams.velocityA.subtract(defaultParams.velocityB);
+      const newVelocityA = rigidBodyA.velocity.add(impulseVelocityChangeA);
+      const newVelocityB = rigidBodyB.velocity.add(impulseVelocityChangeB);
+      const previousRelativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
       const newRelativeVelocity = newVelocityA.subtract(newVelocityB);
 
-      const previousNormalRelativeVelocity = Vector2d.dotProduct(previousRelativeVelocity, defaultParams.normal);
-      const newNormalRelativeVelocity = Vector2d.dotProduct(newRelativeVelocity, defaultParams.normal);
+      const previousNormalRelativeVelocity = Vector2d.dotProduct(previousRelativeVelocity, normal);
+      const newNormalRelativeVelocity = Vector2d.dotProduct(newRelativeVelocity, normal);
 
       expect(Math.abs(newNormalRelativeVelocity)).toBeLessThanOrEqual(Math.abs(previousNormalRelativeVelocity));
     });
 
     it('Should apply friction opposing tangetial motion', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
@@ -157,10 +226,10 @@ describe('computeContactImpulse', () => {
       const { tangentLinearImpulse } = result;
 
       const tangent = new Vector2d({
-        x: -defaultParams.normal.y,
-        y: defaultParams.normal.x,
+        x: -normal.y,
+        y: normal.x,
       });
-      const relativeVelocity = defaultParams.velocityA.subtract(defaultParams.velocityB);
+      const relativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
       const tangentRelativeVelocity = Vector2d.dotProduct(relativeVelocity, tangent);
       const tangentImpulseDirection = Vector2d.dotProduct(tangentLinearImpulse, tangent);
 
@@ -168,7 +237,14 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should clamp friction impulse based on normal impulse and friction coefficients', () => {
-      const result = computeContactImpulse({ ...defaultParams });
+      const result = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
@@ -179,7 +255,7 @@ describe('computeContactImpulse', () => {
       const normalImpulseMagnitude = normalLinearImpulse.getMagnitude();
       const tangentImpulseMagnitude = tangentLinearImpulse.getMagnitude();
 
-      const coefficientOfFriction = Math.sqrt(defaultParams.frictionA * defaultParams.frictionB);
+      const coefficientOfFriction = Math.sqrt(rigidBodyA.friction * rigidBodyB.friction);
       const maxFrictionImpulse = normalImpulseMagnitude * coefficientOfFriction;
 
       expect(tangentImpulseMagnitude).toBeLessThanOrEqual(maxFrictionImpulse);
@@ -188,29 +264,26 @@ describe('computeContactImpulse', () => {
 
   describe('Symmetry and equivalence', () => {
     it('Should mirror impulses when swapping bodies', () => {
-      const resultAB = computeContactImpulse({ ...defaultParams });
+      const resultAB = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!resultAB) {
         throw new Error('Expected a contact impulse to be computed for A-B');
       }
 
       const resultBA = computeContactImpulse({
-        ...defaultParams,
-        angularVelocityA: defaultParams.angularVelocityB,
-        angularVelocityB: defaultParams.angularVelocityA,
-        frictionA: defaultParams.frictionB,
-        frictionB: defaultParams.frictionA,
-        inverseMassA: defaultParams.inverseMassB,
-        inverseMassB: defaultParams.inverseMassA,
-        inverseMomentOfInertiaA: defaultParams.inverseMomentOfInertiaB,
-        inverseMomentOfInertiaB: defaultParams.inverseMomentOfInertiaA,
-        normal: defaultParams.normal.multiply(-1),
-        positionA: defaultParams.positionB,
-        positionB: defaultParams.positionA,
-        restitutionA: defaultParams.restitutionB,
-        restitutionB: defaultParams.restitutionA,
-        velocityA: defaultParams.velocityB,
-        velocityB: defaultParams.velocityA,
+        contactPoint,
+        normal: normal.multiply(-1),
+        rigidBodyA: rigidBodyB,
+        rigidBodyB: rigidBodyA,
+        transformA: transformB,
+        transformB: transformA,
       });
 
       if (!resultBA) {
@@ -228,18 +301,29 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should mirror angular impulses when the contact point is mirrored', () => {
-      const resultA = computeContactImpulse({ ...defaultParams });
+      const resultA = computeContactImpulse({
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
 
       if (!resultA) {
         throw new Error('Expected a contact impulse to be computed for A');
       }
 
       const resultB = computeContactImpulse({
-        ...defaultParams,
         contactPoint: new Vector2d({
-          x: -defaultParams.contactPoint.x,
-          y: -defaultParams.contactPoint.y,
+          x: -contactPoint.x,
+          y: -contactPoint.y,
         }),
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       if (!resultB) {
@@ -255,30 +339,35 @@ describe('computeContactImpulse', () => {
 
   describe('Restitution and friction bounds', () => {
     it('Should reverse normal velocity when restitution is 1', () => {
+      contactPoint = new Vector2d({ x: 0, y: 0 });
+      rigidBodyA.restitution = 1;
+      rigidBodyB.restitution = 1;
+
       const result = computeContactImpulse({
-        ...defaultParams,
-        contactPoint: new Vector2d({ x: 0, y: 0 }),
-        restitutionA: 1,
-        restitutionB: 1,
+        contactPoint,
+        normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       if (!result) {
         throw new Error('Expected a contact impulse to be computed');
       }
 
-      const previousRelativeVelocity = defaultParams.velocityA.subtract(defaultParams.velocityB);
-      const previousNormalRelativeVelocity = Vector2d.dotProduct(previousRelativeVelocity, defaultParams.normal);
+      const previousRelativeVelocity = rigidBodyA.velocity.subtract(rigidBodyB.velocity);
+      const previousNormalRelativeVelocity = Vector2d.dotProduct(previousRelativeVelocity, normal);
 
       const { normalLinearImpulse } = result;
 
-      const impulseVelocityChangeA = normalLinearImpulse.multiply(defaultParams.inverseMassA);
-      const impulseVelocityChangeB = normalLinearImpulse.multiply(defaultParams.inverseMassB);
+      const impulseVelocityChangeA = normalLinearImpulse.multiply(rigidBodyA.inverseMass);
+      const impulseVelocityChangeB = normalLinearImpulse.multiply(rigidBodyB.inverseMass);
 
-      const newVelocityA = defaultParams.velocityA.add(impulseVelocityChangeA);
-      const newVelocityB = defaultParams.velocityB.subtract(impulseVelocityChangeB);
-
+      const newVelocityA = rigidBodyA.velocity.add(impulseVelocityChangeA);
+      const newVelocityB = rigidBodyB.velocity.subtract(impulseVelocityChangeB);
       const newRelativeVelocity = newVelocityA.subtract(newVelocityB);
-      const newNormalRelativeVelocity = Vector2d.dotProduct(newRelativeVelocity, defaultParams.normal);
+      const newNormalRelativeVelocity = Vector2d.dotProduct(newRelativeVelocity, normal);
 
       expect(newNormalRelativeVelocity).toBeCloseTo(-previousNormalRelativeVelocity);
     });

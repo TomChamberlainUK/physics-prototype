@@ -29,8 +29,6 @@ export default class CollisionImpulseResolution2dSystem extends System {
       const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
       const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
 
-      const { normal, contactPoints } = contactManifold;
-
       const {
         normalLinearImpulse,
         normalAngularImpulseA,
@@ -39,22 +37,11 @@ export default class CollisionImpulseResolution2dSystem extends System {
         tangentAngularImpulseA,
         tangentAngularImpulseB,
       } = computeContactManifoldImpulse({
-        angularVelocityA: rigidBodyA.angularVelocity,
-        angularVelocityB: rigidBodyB.angularVelocity,
-        contactPoints,
-        frictionA: rigidBodyA.friction,
-        frictionB: rigidBodyB.friction,
-        inverseMassA: rigidBodyA.inverseMass,
-        inverseMassB: rigidBodyB.inverseMass,
-        inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia ?? 0,
-        inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia ?? 0,
-        normal,
-        positionA: transformA.position,
-        positionB: transformB.position,
-        restitutionA: rigidBodyA.restitution,
-        restitutionB: rigidBodyB.restitution,
-        velocityA: rigidBodyA.velocity,
-        velocityB: rigidBodyB.velocity,
+        contactManifold,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
 
       // Apply normal impulse to linear velocities

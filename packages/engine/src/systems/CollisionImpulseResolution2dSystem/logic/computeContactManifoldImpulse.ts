@@ -1,3 +1,4 @@
+import type { ContactManifold, RigidBody2dComponent, Transform2dComponent } from '#/index';
 import { Vector2d } from '#/maths';
 import computeContactImpulse from './computeContactImpulse';
 
@@ -5,38 +6,16 @@ import computeContactImpulse from './computeContactImpulse';
  * Parameter types for computeContactImpulse.
  */
 type Parameters = {
-  /** The angular velocity of body A. */
-  angularVelocityA: number;
-  /** The angular velocity of body B. */
-  angularVelocityB: number;
-  /** The contact points between the two bodies. */
-  contactPoints: Vector2d[];
-  /** The friction coefficient of body A. */
-  frictionA: number;
-  /** The friction coefficient of body B. */
-  frictionB: number;
-  /** The inverse mass of body A. */
-  inverseMassA: number;
-  /** The inverse mass of body B. */
-  inverseMassB: number;
-  /** The inverse moment of inertia of body A. */
-  inverseMomentOfInertiaA: number;
-  /** The inverse moment of inertia of body B. */
-  inverseMomentOfInertiaB: number;
-  /** The contact normal vector. */
-  normal: Vector2d;
-  /** The position of body A. */
-  positionA: Vector2d;
-  /** The position of body B. */
-  positionB: Vector2d;
-  /** The restitution coefficient of body A. */
-  restitutionA: number;
-  /** The restitution coefficient of body B. */
-  restitutionB: number;
-  /** The velocity of body A. */
-  velocityA: Vector2d;
-  /** The velocity of body B. */
-  velocityB: Vector2d;
+  /** The contact manifold between the two rigid bodies. */
+  contactManifold: ContactManifold;
+  /** The transform component for entity A. */
+  transformA: Transform2dComponent;
+  /** The transform component for entity B. */
+  transformB: Transform2dComponent;
+  /** The rigid body component for entity A. */
+  rigidBodyA: RigidBody2dComponent;
+  /** The rigid body component for entity B. */
+  rigidBodyB: RigidBody2dComponent;
 };
 
 /**
@@ -63,23 +42,14 @@ type Output = {
  * @returns The computed contact manifold impulse, see {@link Output}.
  */
 export default function computeContactManifoldImpulse({
-  angularVelocityA,
-  angularVelocityB,
-  contactPoints,
-  frictionA,
-  frictionB,
-  inverseMassA,
-  inverseMassB,
-  inverseMomentOfInertiaA,
-  inverseMomentOfInertiaB,
-  normal,
-  positionA,
-  positionB,
-  restitutionA,
-  restitutionB,
-  velocityA,
-  velocityB,
+  contactManifold,
+  rigidBodyA,
+  rigidBodyB,
+  transformA,
+  transformB,
 }: Parameters): Output {
+  const { contactPoints, normal } = contactManifold;
+
   let normalLinearImpulse = new Vector2d({ x: 0, y: 0 });
   let normalAngularImpulseA = 0;
   let normalAngularImpulseB = 0;
@@ -89,22 +59,12 @@ export default function computeContactManifoldImpulse({
 
   for (const contactPoint of contactPoints) {
     const contactImpulse = computeContactImpulse({
-      angularVelocityA,
-      angularVelocityB,
       contactPoint,
-      frictionA,
-      frictionB,
-      inverseMassA,
-      inverseMassB,
-      inverseMomentOfInertiaA,
-      inverseMomentOfInertiaB,
       normal,
-      positionA,
-      positionB,
-      restitutionA,
-      restitutionB,
-      velocityA,
-      velocityB,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
     });
 
     if (!contactImpulse) {

@@ -77,22 +77,11 @@ describe('CollisionImpulseResolution2dSystem', () => {
         }],
       });
       expect(computeContactManifoldImpulseSpy).toHaveBeenCalledWith({
-        angularVelocityA: rigidBodyA.angularVelocity,
-        angularVelocityB: rigidBodyB.angularVelocity,
-        contactPoints: contactManifold.contactPoints,
-        frictionA: rigidBodyA.friction,
-        frictionB: rigidBodyB.friction,
-        inverseMassA: rigidBodyA.inverseMass,
-        inverseMassB: rigidBodyB.inverseMass,
-        inverseMomentOfInertiaA: rigidBodyA.inverseMomentOfInertia,
-        inverseMomentOfInertiaB: rigidBodyB.inverseMomentOfInertia,
-        normal: contactManifold.normal,
-        positionA: transformA.position,
-        positionB: transformB.position,
-        restitutionA: rigidBodyA.restitution,
-        restitutionB: rigidBodyB.restitution,
-        velocityA: rigidBodyA.velocity,
-        velocityB: rigidBodyB.velocity,
+        contactManifold,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
       });
     });
 

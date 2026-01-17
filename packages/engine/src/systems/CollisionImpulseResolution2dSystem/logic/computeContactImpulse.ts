@@ -1,3 +1,4 @@
+import type { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import Vector2d from '#/maths/Vector2d';
 import {
   computeEffectiveMass,
@@ -10,38 +11,18 @@ import {
  * Parameter types for computeContactImpulse function.
  */
 type Parameters = {
-  /** The angular velocity of body A. */
-  angularVelocityA: number;
-  /** The angular velocity of body B. */
-  angularVelocityB: number;
-  /** The contact point between the two bodies. */
+  /** The contact point between the two rigid bodies. */
   contactPoint: Vector2d;
-  /** The friction coefficient of body A. */
-  frictionA: number;
-  /** The friction coefficient of body B. */
-  frictionB: number;
-  /** The inverse mass of body A. */
-  inverseMassA: number;
-  /** The inverse mass of body B. */
-  inverseMassB: number;
-  /** The inverse moment of inertia of body A. */
-  inverseMomentOfInertiaA: number;
-  /** The inverse moment of inertia of body B. */
-  inverseMomentOfInertiaB: number;
-  /** The contact normal vector. */
+  /** The contact normal vector at the contact point. */
   normal: Vector2d;
-  /** The position of body A. */
-  positionA: Vector2d;
-  /** The position of body B. */
-  positionB: Vector2d;
-  /** The restitution coefficient of body A. */
-  restitutionA: number;
-  /** The restitution coefficient of body B. */
-  restitutionB: number;
-  /** The linear velocity of body A. */
-  velocityA: Vector2d;
-  /** The linear velocity of body B. */
-  velocityB: Vector2d;
+  /** The transform component for entity A. */
+  transformA: Transform2dComponent;
+  /** The transform component for entity B. */
+  transformB: Transform2dComponent;
+  /** The rigid body component for entity A. */
+  rigidBodyA: RigidBody2dComponent;
+  /** The rigid body component for entity B. */
+  rigidBodyB: RigidBody2dComponent;
 };
 
 /**
@@ -50,41 +31,52 @@ type Parameters = {
 type Output = {
   /** The linear impulse along the contact normal. */
   normalLinearImpulse: Vector2d;
-  /** The angular impulse for body A along the contact normal. */
+  /** The angular impulse for entity A along the contact normal. */
   normalAngularImpulseA: number;
-  /** The angular impulse for body B along the contact normal. */
+  /** The angular impulse for entity B along the contact normal. */
   normalAngularImpulseB: number;
   /** The linear impulse along the contact tangent. */
   tangentLinearImpulse: Vector2d;
-  /** The angular impulse for body A along the contact tangent. */
+  /** The angular impulse for entity A along the contact tangent. */
   tangentAngularImpulseA: number;
-  /** The angular impulse for body B along the contact tangent. */
+  /** The angular impulse for entity B along the contact tangent. */
   tangentAngularImpulseB: number;
 };
 
 /**
  * Computes the contact impulse between two rigid bodies at a single contact point.
- * @param parameters - The conditions for the contact impulse computation, see {@link Parameters}.
+ * @param parameters - The components and conditions for the contact impulse computation, see {@link Parameters}.
  * @returns The computed contact impulse, see {@link Output}, or `null` if no impulse is applied.
  */
 export default function computeContactImpulse({
-  angularVelocityA,
-  angularVelocityB,
   contactPoint,
-  frictionA,
-  frictionB,
-  inverseMassA,
-  inverseMassB,
-  inverseMomentOfInertiaA,
-  inverseMomentOfInertiaB,
   normal,
-  positionA,
-  positionB,
-  restitutionA,
-  restitutionB,
-  velocityA,
-  velocityB,
+  rigidBodyA,
+  rigidBodyB,
+  transformA,
+  transformB,
 }: Parameters): Output | null {
+  const {
+    angularVelocity: angularVelocityA,
+    friction: frictionA,
+    inverseMass: inverseMassA,
+    inverseMomentOfInertia: inverseMomentOfInertiaA,
+    restitution: restitutionA,
+    velocity: velocityA,
+  } = rigidBodyA;
+
+  const {
+    angularVelocity: angularVelocityB,
+    friction: frictionB,
+    inverseMass: inverseMassB,
+    inverseMomentOfInertia: inverseMomentOfInertiaB,
+    restitution: restitutionB,
+    velocity: velocityB,
+  } = rigidBodyB;
+
+  const { position: positionA } = transformA;
+  const { position: positionB } = transformB;
+
   const totalInverseMass = inverseMassA + inverseMassB;
   // Both static
   if (totalInverseMass === 0) {
@@ -124,8 +116,8 @@ export default function computeContactImpulse({
     totalInverseMass,
     torqueArmA: normalTorqueArmA,
     torqueArmB: normalTorqueArmB,
-    inverseMomentOfInertiaA,
-    inverseMomentOfInertiaB,
+    inverseMomentOfInertiaA: inverseMomentOfInertiaA ?? 0,
+    inverseMomentOfInertiaB: inverseMomentOfInertiaB ?? 0,
   });
 
   // Impulse applied along the contact normal
@@ -155,8 +147,8 @@ export default function computeContactImpulse({
     totalInverseMass,
     torqueArmA: tangentTorqueArmA,
     torqueArmB: tangentTorqueArmB,
-    inverseMomentOfInertiaA,
-    inverseMomentOfInertiaB,
+    inverseMomentOfInertiaA: inverseMomentOfInertiaA ?? 0,
+    inverseMomentOfInertiaB: inverseMomentOfInertiaB ?? 0,
   });
 
   // Relative velocity along tangent

@@ -1,31 +1,16 @@
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import * as computeContactImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactImpulse';
 import Vector2d from '#/maths/Vector2d';
 import computeContactManifoldImpulse from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse';
+import { RigidBody2dComponent, Transform2dComponent } from '#/components';
+import type { ContactManifold } from '#/types';
 
 describe('computeContactManifoldImpulse', () => {
-  const defaultParams = {
-    angularVelocityA: 0,
-    angularVelocityB: 0,
-    contactPoints: [
-      new Vector2d({ x: 1, y: 1 }),
-      new Vector2d({ x: -1, y: 1 }),
-      new Vector2d({ x: 0, y: -1 }),
-    ],
-    frictionA: 0.5,
-    frictionB: 0.5,
-    inverseMassA: 1,
-    inverseMassB: 1,
-    inverseMomentOfInertiaA: 1,
-    inverseMomentOfInertiaB: 1,
-    normal: new Vector2d({ x: -1, y: 0 }),
-    positionA: new Vector2d({ x: -1, y: 0 }),
-    positionB: new Vector2d({ x: 1, y: 0 }),
-    restitutionA: 0,
-    restitutionB: 0,
-    velocityA: new Vector2d({ x: 5, y: 0 }),
-    velocityB: new Vector2d({ x: 0, y: 0 }),
-  };
+  let contactManifold: ContactManifold;
+  let rigidBodyA: RigidBody2dComponent;
+  let rigidBodyB: RigidBody2dComponent;
+  let transformA: Transform2dComponent;
+  let transformB: Transform2dComponent;
 
   const defaultOutput = {
     normalLinearImpulse: new Vector2d({ x: 0, y: 0 }),
@@ -47,6 +32,22 @@ describe('computeContactManifoldImpulse', () => {
     computeContactImpulseSpy = vi.spyOn(computeContactImpulseModule, 'default');
   });
 
+  beforeEach(() => {
+    contactManifold = {
+      normal: new Vector2d({ x: -1, y: 0 }),
+      contactPoints: [
+        new Vector2d({ x: 1, y: 1 }),
+        new Vector2d({ x: -1, y: 1 }),
+        new Vector2d({ x: 0, y: -1 }),
+      ],
+      overlap: 0.5,
+    };
+    rigidBodyA = new RigidBody2dComponent();
+    rigidBodyB = new RigidBody2dComponent();
+    transformA = new Transform2dComponent();
+    transformB = new Transform2dComponent();
+  });
+
   afterEach(() => {
     computeContactImpulseSpy.mockClear();
   });
@@ -56,10 +57,22 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should compute the contact impulse for each contact point', () => {
-    computeContactManifoldImpulse({ ...defaultParams });
-    const { contactPoints: _contactPoints, ...expectedParams } = defaultParams;
-    for (const contactPoint of defaultParams.contactPoints) {
-      expect(computeContactImpulseSpy).toHaveBeenCalledWith({ ...expectedParams, contactPoint });
+    computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
+    for (const contactPoint of contactManifold.contactPoints) {
+      expect(computeContactImpulseSpy).toHaveBeenCalledWith({
+        contactPoint,
+        normal: contactManifold.normal,
+        rigidBodyA,
+        rigidBodyB,
+        transformA,
+        transformB,
+      });
     }
   });
 
@@ -86,7 +99,13 @@ describe('computeContactManifoldImpulse', () => {
       }),
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');
@@ -114,7 +133,13 @@ describe('computeContactManifoldImpulse', () => {
       normalAngularImpulseA: thirdValue,
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');
@@ -137,7 +162,13 @@ describe('computeContactManifoldImpulse', () => {
       normalAngularImpulseB: thirdValue,
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');
@@ -169,7 +200,13 @@ describe('computeContactManifoldImpulse', () => {
       }),
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');
@@ -197,7 +234,13 @@ describe('computeContactManifoldImpulse', () => {
       tangentAngularImpulseA: thirdValue,
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');
@@ -220,7 +263,13 @@ describe('computeContactManifoldImpulse', () => {
       tangentAngularImpulseB: thirdValue,
     });
 
-    const result = computeContactManifoldImpulse({ ...defaultParams });
+    const result = computeContactManifoldImpulse({
+      contactManifold,
+      rigidBodyA,
+      rigidBodyB,
+      transformA,
+      transformB,
+    });
 
     if (!result) {
       throw new Error('Expected a contact impulse to be computed');

@@ -7,6 +7,8 @@ type Props = {
   mass?: number;
   fillColor?: string;
   name?: string;
+  restitution?: number;
+  friction?: number;
 };
 
 export default class PhysicsEntity extends Entity {
@@ -17,6 +19,8 @@ export default class PhysicsEntity extends Entity {
     rotation = 0,
     fillColor = 'white',
     name = 'physics-entity',
+    restitution = 0.6,
+    friction = 0.5,
   }: Props = {}) {
     super({ name });
 
@@ -46,7 +50,8 @@ export default class PhysicsEntity extends Entity {
       }),
       new RigidBody2dComponent({
         mass: computedMass,
-        restitution: 0.8,
+        restitution,
+        friction,
       }),
     ]);
   }

@@ -15,7 +15,7 @@ describe('InputImpulseSystem', () => {
   });
 
   describe('update()', () => {
-    const force = 150;
+    const force = 150000;
     const deltaTime = 1 / 60;
 
     let inputImpulseSystem: InputImpulseSystem;

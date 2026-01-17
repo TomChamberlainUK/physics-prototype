@@ -48,7 +48,7 @@ type Output = {
  * @param parameters - The components and conditions for the contact impulse computation, see {@link Parameters}.
  * @returns The computed contact impulse, see {@link Output}, or `null` if no impulse is applied.
  */
-export default function computeContactImpulse({
+export default function computeContactPointImpulse({
   contactPoint,
   normal,
   rigidBodyA,

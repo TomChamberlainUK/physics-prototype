@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import * as computeContactImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactImpulse';
-import Vector2d from '#/maths/Vector2d';
-import computeContactManifoldImpulse from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse';
 import { RigidBody2dComponent, Transform2dComponent } from '#/components';
+import Vector2d from '#/maths/Vector2d';
+import * as computeContactPointImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactPointImpulse';
+import computeContactManifoldImpulse from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse';
 import type { ContactManifold } from '#/types';
 
 describe('computeContactManifoldImpulse', () => {
@@ -26,10 +26,10 @@ describe('computeContactManifoldImpulse', () => {
   const thirdValue = 30;
   const averagedValue = (firstValue + secondValue + thirdValue) / 3;
 
-  let computeContactImpulseSpy: MockInstance<typeof computeContactImpulseModule.default>;
+  let computeContactPointImpulseSpy: MockInstance<typeof computeContactPointImpulseModule.default>;
 
   beforeAll(() => {
-    computeContactImpulseSpy = vi.spyOn(computeContactImpulseModule, 'default');
+    computeContactPointImpulseSpy = vi.spyOn(computeContactPointImpulseModule, 'default');
   });
 
   beforeEach(() => {
@@ -49,11 +49,11 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   afterEach(() => {
-    computeContactImpulseSpy.mockClear();
+    computeContactPointImpulseSpy.mockClear();
   });
 
   afterAll(() => {
-    computeContactImpulseSpy.mockRestore();
+    computeContactPointImpulseSpy.mockRestore();
   });
 
   it('Should compute the contact impulse for each contact point', () => {
@@ -65,7 +65,7 @@ describe('computeContactManifoldImpulse', () => {
       transformB,
     });
     for (const contactPoint of contactManifold.contactPoints) {
-      expect(computeContactImpulseSpy).toHaveBeenCalledWith({
+      expect(computeContactPointImpulseSpy).toHaveBeenCalledWith({
         contactPoint,
         normal: contactManifold.normal,
         rigidBodyA,
@@ -77,21 +77,21 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a normal linear impulse averaged over all contact points', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalLinearImpulse: new Vector2d({
         x: firstValue,
         y: firstValue,
       }),
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalLinearImpulse: new Vector2d({
         x: secondValue,
         y: secondValue,
       }),
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalLinearImpulse: new Vector2d({
         x: thirdValue,
@@ -120,15 +120,15 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a normal angular impulse averaged over all contact points for rigid body A', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseA: firstValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseA: secondValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseA: thirdValue,
     });
@@ -149,15 +149,15 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a normal angular impulse averaged over all contact points for rigid body B', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseB: firstValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseB: secondValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       normalAngularImpulseB: thirdValue,
     });
@@ -178,21 +178,21 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a tangent linear impulse averaged over all contact points', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentLinearImpulse: new Vector2d({
         x: firstValue,
         y: firstValue,
       }),
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentLinearImpulse: new Vector2d({
         x: secondValue,
         y: secondValue,
       }),
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentLinearImpulse: new Vector2d({
         x: thirdValue,
@@ -221,15 +221,15 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a tangent angular impulse averaged over all contact points for rigid body A', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseA: firstValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseA: secondValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseA: thirdValue,
     });
@@ -250,15 +250,15 @@ describe('computeContactManifoldImpulse', () => {
   });
 
   it('Should return a tangent angular impulse averaged over all contact points for rigid body B', () => {
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseB: firstValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseB: secondValue,
     });
-    computeContactImpulseSpy.mockReturnValueOnce({
+    computeContactPointImpulseSpy.mockReturnValueOnce({
       ...defaultOutput,
       tangentAngularImpulseB: thirdValue,
     });

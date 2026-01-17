@@ -1,9 +1,9 @@
 import type { ContactManifold, RigidBody2dComponent, Transform2dComponent } from '#/index';
 import { Vector2d } from '#/maths';
-import computeContactImpulse from './computeContactImpulse';
+import computeContactPointImpulse from './computeContactPointImpulse';
 
 /**
- * Parameter types for computeContactImpulse.
+ * Parameter types for computeContactManifoldImpulse.
  */
 type Parameters = {
   /** The contact manifold between the two rigid bodies. */
@@ -19,7 +19,7 @@ type Parameters = {
 };
 
 /**
- * Output types for computeContactImpulse.
+ * Output types for computeContactManifoldImpulse.
  */
 type Output = {
   /** The linear impulse along the contact normal. */
@@ -58,7 +58,7 @@ export default function computeContactManifoldImpulse({
   let tangentAngularImpulseB = 0;
 
   for (const contactPoint of contactPoints) {
-    const contactImpulse = computeContactImpulse({
+    const contactImpulse = computeContactPointImpulse({
       contactPoint,
       normal,
       rigidBodyA,

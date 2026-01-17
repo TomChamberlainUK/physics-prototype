@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { RigidBody2dComponent, Transform2dComponent } from '#/components';
 import { Vector2d } from '#/maths';
-import { computeContactImpulse } from '#/systems/CollisionImpulseResolution2dSystem/logic';
+import { computeContactPointImpulse } from '#/systems/CollisionImpulseResolution2dSystem/logic';
 
-describe('computeContactImpulse', () => {
+describe('computeContactPointImpulse', () => {
   let contactPoint: Vector2d;
   let normal: Vector2d;
   let rigidBodyA: RigidBody2dComponent;
@@ -42,7 +42,7 @@ describe('computeContactImpulse', () => {
 
   describe('Directional Correctness', () => {
     it('Should return a normal linear impulse along the contact normal', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -62,7 +62,7 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should return a tangent linear impulse perpindicular to the contact normal', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -82,7 +82,7 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should return angular impulses matching the torque direction', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -113,7 +113,7 @@ describe('computeContactImpulse', () => {
       rigidBodyA.velocity = new Vector2d({ x: 1, y: 0 });
       rigidBodyB.velocity = new Vector2d({ x: 0, y: 0 });
 
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -129,7 +129,7 @@ describe('computeContactImpulse', () => {
       rigidBodyA.friction = 0;
       rigidBodyB.friction = 0;
 
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -151,7 +151,7 @@ describe('computeContactImpulse', () => {
       contactPoint = new Vector2d({ x: 0, y: 0 });
       transformA.position = new Vector2d({ x: 0, y: 0 });
       transformB.position = new Vector2d({ x: 0, y: 0 });
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -180,7 +180,7 @@ describe('computeContactImpulse', () => {
 
   describe('Conservation-style invariants', () => {
     it('Should not increase normal relative velocity after applying impulse', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -210,7 +210,7 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should apply friction opposing tangetial motion', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -237,7 +237,7 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should clamp friction impulse based on normal impulse and friction coefficients', () => {
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -264,7 +264,7 @@ describe('computeContactImpulse', () => {
 
   describe('Symmetry and equivalence', () => {
     it('Should mirror impulses when swapping bodies', () => {
-      const resultAB = computeContactImpulse({
+      const resultAB = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -277,7 +277,7 @@ describe('computeContactImpulse', () => {
         throw new Error('Expected a contact impulse to be computed for A-B');
       }
 
-      const resultBA = computeContactImpulse({
+      const resultBA = computeContactPointImpulse({
         contactPoint,
         normal: normal.multiply(-1),
         rigidBodyA: rigidBodyB,
@@ -301,7 +301,7 @@ describe('computeContactImpulse', () => {
     });
 
     it('Should mirror angular impulses when the contact point is mirrored', () => {
-      const resultA = computeContactImpulse({
+      const resultA = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,
@@ -314,7 +314,7 @@ describe('computeContactImpulse', () => {
         throw new Error('Expected a contact impulse to be computed for A');
       }
 
-      const resultB = computeContactImpulse({
+      const resultB = computeContactPointImpulse({
         contactPoint: new Vector2d({
           x: -contactPoint.x,
           y: -contactPoint.y,
@@ -343,7 +343,7 @@ describe('computeContactImpulse', () => {
       rigidBodyA.restitution = 1;
       rigidBodyB.restitution = 1;
 
-      const result = computeContactImpulse({
+      const result = computeContactPointImpulse({
         contactPoint,
         normal,
         rigidBodyA,

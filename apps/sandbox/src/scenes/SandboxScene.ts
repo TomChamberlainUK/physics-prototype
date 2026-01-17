@@ -92,6 +92,7 @@ export default class SandboxScene extends Scene {
         position: new Vector2d({ x, y }),
         fillColor: 'grey',
         name,
+        restitution: 0.1,
       });
       this.addEntity(wallEntity);
     }

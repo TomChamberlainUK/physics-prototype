@@ -117,6 +117,7 @@ describe('SandboxScene', () => {
       },
       fillColor: 'grey',
       name,
+      restitution: 0.1,
     });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
   });

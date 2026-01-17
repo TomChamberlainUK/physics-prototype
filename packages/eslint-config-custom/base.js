@@ -21,4 +21,15 @@ export default defineConfig([
       'tsdoc/syntax': 'warn',
     },
   },
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
 ]);

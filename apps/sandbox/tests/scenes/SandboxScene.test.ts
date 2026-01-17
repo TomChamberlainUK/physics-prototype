@@ -64,7 +64,13 @@ describe('SandboxScene', () => {
   });
 
   it('Should add a player entity', () => {
-    expect(PlayerEntityConstructorMock).toHaveBeenCalled();
+    expect(PlayerEntityConstructorMock).toHaveBeenCalledWith({
+      shape: {
+        type: 'box',
+        width: 32,
+        height: 32,
+      },
+    });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
   });
 

@@ -48,7 +48,13 @@ export default class SandboxScene extends Scene {
     });
     input.enable();
 
-    const playerEntity = new PlayerEntity();
+    const playerEntity = new PlayerEntity({
+      shape: {
+        type: 'box',
+        width: 32,
+        height: 32,
+      },
+    });
     this.addEntity(playerEntity);
 
     const wallThickness = 10;

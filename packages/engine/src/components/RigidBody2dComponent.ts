@@ -4,7 +4,7 @@ import Component from './Component';
 /**
  * Parameters for constructing a RigidBody2dComponent.
  */
-type ConstructorParams = {
+type ConstructorParameters = {
   /** The current linear velocity of the body. Unit: meters per second (m/s). */
   velocity?: Vector2d;
   /** The current linear acceleration of the body. Unit: meters per second squared (m/s²). */
@@ -60,16 +60,7 @@ export default class RigidBody2dComponent extends Component {
 
   /**
    * Creates an instance of the RigidBody2dComponent.
-   * @param velocity - The current linear velocity of the body. Unit: meters per second (m/s).
-   * @param acceleration - The current linear acceleration of the body. Unit: meters per second squared (m/s²).
-   * @param force - The total force to be applied this frame. Unit: newtons (N).
-   * @param impulse - Instantaneous change in linear momentum, applied this frame. Unit: newton-seconds (N·s).
-   * @param angularVelocity - The current angular velocity (rate of rotation). Unit: radians per second (rad/s).
-   * @param angularAcceleration - The current angular acceleration (rate of change of angular velocity). Unit: radians per second squared (rad/s²).
-   * @param angularImpulse - Instantaneous change in angular momentum, applied this frame. Unit: newton-meter-seconds (N·m·s).
-   * @param mass - The mass of the body, affecting resistance to force. Unit: kilograms (kg).
-   * @param restitution - The restitution coefficient (bounciness) of the body in collisions. Range: 0–1.
-   * @param friction - The resistance to sliding motion. Range: 0–1.
+   * @param parameters - The parameters to define the rigid body, see {@link ConstructorParameters}.
    */
   constructor({
     velocity = new Vector2d(),
@@ -82,7 +73,7 @@ export default class RigidBody2dComponent extends Component {
     mass = 1,
     restitution = 0.8,
     friction = 0.3,
-  }: ConstructorParams = {}) {
+  }: ConstructorParameters = {}) {
     super('RigidBody2d');
     this.velocity = velocity;
     this.acceleration = acceleration;

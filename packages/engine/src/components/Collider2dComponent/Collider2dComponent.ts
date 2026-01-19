@@ -26,7 +26,7 @@ export default class Collider2dComponent extends Component {
 
   /**
    * Creates an instance of the Collider2dComponent.
-   * @param shape - The shape of the collider.
+   * @param parameters - The shape of the collider, see {@link ConstructorParams}.
    */
   constructor({ shape }: ConstructorParams) {
     super('Collider2d');

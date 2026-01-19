@@ -61,8 +61,8 @@ describe('CollisionPositionCorrection2dSystem', () => {
     });
 
     it('Should correct the positions of overlapping entities based on their mass', () => {
-      rigidBodyA.inverseMass = 1; // mass = 1
-      rigidBodyB.inverseMass = 0.5; // mass = 2
+      rigidBodyA.mass = 1;
+      rigidBodyB.mass = 2;
       transformA.position = new Vector2d({ x: 0, y: 0 });
       transformB.position = new Vector2d({ x: 1, y: 0 });
 

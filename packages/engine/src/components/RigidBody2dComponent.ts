@@ -48,11 +48,11 @@ export default class RigidBody2dComponent extends Component {
   /** The mass of the body, affecting resistance to force. Unit: kilograms (kg). */
   #mass!: number;
   /** The inverse of mass, used for efficient calculations. Unit: 1/kg. */
-  inverseMass!: number;
+  #inverseMass!: number;
   /** The moment of inertia, affecting resistance to angular acceleration. Unit: kilogram meter squared (kg·m²). */
   #momentOfInertia!: number | null;
   /** The inverse of moment of inertia, used for efficient calculations. Unit: 1/(kg·m²). */
-  inverseMomentOfInertia: number | null;
+  #inverseMomentOfInertia!: number | null;
   /** The restitution coefficient (bounciness) of the body in collisions. Range: 0–1. */
   #restitution!: number;
   /** The resistance to sliding motion. Range: 0–1. */
@@ -84,7 +84,6 @@ export default class RigidBody2dComponent extends Component {
     this.angularImpulse = angularImpulse;
     this.mass = mass;
     this.momentOfInertia = null;
-    this.inverseMomentOfInertia = null;
     this.restitution = restitution;
     this.friction = friction;
   }
@@ -110,9 +109,19 @@ export default class RigidBody2dComponent extends Component {
   /** Sets the moment of inertia and updates the inverse moment of inertia accordingly. */
   set momentOfInertia(value: number | null) {
     this.#momentOfInertia = value;
-    this.inverseMomentOfInertia = value && value > 0
-      ? 1 / value
-      : 0;
+    if (value === null) {
+      this.#inverseMomentOfInertia = null;
+    }
+    else {
+      this.#inverseMomentOfInertia = value > 0
+        ? 1 / value
+        : 0;
+    }
+  }
+
+  /** The inverse of moment of inertia, used for efficient calculations. Unit: 1/(kg·m²). */
+  get inverseMomentOfInertia() {
+    return this.#inverseMomentOfInertia;
   }
 
   /** The mass of the body, affecting resistance to force. Unit: kilograms (kg). */
@@ -123,9 +132,14 @@ export default class RigidBody2dComponent extends Component {
   /** Sets the mass and updates the inverse mass accordingly. */
   set mass(value: number) {
     this.#mass = value;
-    this.inverseMass = value !== 0
+    this.#inverseMass = value !== 0
       ? 1 / value
       : 0;
+  }
+
+  /** The inverse of mass, used for efficient calculations. Unit: 1/kg. */
+  get inverseMass() {
+    return this.#inverseMass;
   }
 
   /** Gets the restitution coefficient of the rigid body. */

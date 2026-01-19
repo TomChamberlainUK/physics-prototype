@@ -21,7 +21,7 @@ describe('computeContactPointImpulse', () => {
       velocity: new Vector2d({ x: 5, y: 0 }),
       angularVelocity: 0,
     });
-    rigidBodyA.inverseMomentOfInertia = 1;
+    rigidBodyA.momentOfInertia = 1;
     rigidBodyB = new RigidBody2dComponent({
       restitution: 0,
       friction: 0.5,
@@ -29,7 +29,7 @@ describe('computeContactPointImpulse', () => {
       velocity: new Vector2d({ x: 0, y: 0 }),
       angularVelocity: 0,
     });
-    rigidBodyB.inverseMomentOfInertia = 1;
+    rigidBodyB.momentOfInertia = 1;
     transformA = new Transform2dComponent({
       position: new Vector2d({ x: -1, y: 0 }),
       rotation: 0,

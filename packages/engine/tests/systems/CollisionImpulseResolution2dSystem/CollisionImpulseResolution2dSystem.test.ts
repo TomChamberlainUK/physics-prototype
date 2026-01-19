@@ -46,8 +46,8 @@ describe('CollisionImpulseResolution2dSystem', () => {
         restitution: 1,
         friction: 0,
       });
-      rigidBodyA.inverseMomentOfInertia = 1;
-      rigidBodyB.inverseMomentOfInertia = 1;
+      rigidBodyA.momentOfInertia = 1;
+      rigidBodyB.momentOfInertia = 1;
       entityA.addComponents([transformA, rigidBodyA]);
       entityB.addComponents([transformB, rigidBodyB]);
       contactManifold = {

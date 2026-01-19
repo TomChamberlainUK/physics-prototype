@@ -44,9 +44,6 @@ export default class RigidBodyUpdate2dSystem extends System {
       }
 
       rigidBody.momentOfInertia = momentOfInertia;
-      rigidBody.inverseMomentOfInertia = momentOfInertia > 0
-        ? 1 / momentOfInertia
-        : 0;
     }
   }
 }

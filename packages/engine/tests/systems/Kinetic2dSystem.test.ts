@@ -80,11 +80,12 @@ describe('Kinetic2dSystem', () => {
     it('Should increase an entity\'s angular velocity by its angular impulse multiplied by inverse moment of inertia', () => {
       const initialAngularVelocity = 0;
       const angularImpulse = Math.PI; // Radians per second
-      const inverseMomentOfInertia = 2;
+      const momentOfInertia = 2;
+      const inverseMomentOfInertia = 1 / momentOfInertia;
       const expectedAngularVelocity = initialAngularVelocity + angularImpulse * inverseMomentOfInertia;
       rigidBody2dComponent.angularVelocity = initialAngularVelocity;
       rigidBody2dComponent.angularImpulse = angularImpulse;
-      rigidBody2dComponent.inverseMomentOfInertia = inverseMomentOfInertia;
+      rigidBody2dComponent.momentOfInertia = momentOfInertia;
       kinetic2dSystem.update([entity], { deltaTime });
       expect(rigidBody2dComponent.angularVelocity).toBeCloseTo(expectedAngularVelocity);
     });

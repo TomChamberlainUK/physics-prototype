@@ -12,8 +12,7 @@ type Parameters = {
 
 /**
  * Calculates and returns the vertices of a box centered at the origin.
- * @param width - The width of the box.
- * @param height - The height of the box.
+ * @param parameters - The width and height of the box, see {@link Parameters}.
  * @returns An array of vertices representing the corners of the box.
  */
 export default function getBoxVertices({ width, height }: Parameters) {

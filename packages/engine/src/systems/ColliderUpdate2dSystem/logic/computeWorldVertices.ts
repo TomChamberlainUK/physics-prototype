@@ -3,11 +3,11 @@ import type Entity from '#/Entity';
 import { Matrix2d, Vector2d } from '#/maths';
 
 /**
- * Retrieves the world vertices of a 2D collider attached to a given entity.
+ * Computes the world vertices of a 2D collider attached to a given entity.
  * @param entity - The entity containing the Collider2d and Transform2d components.
  * @returns An array of world vertices or null if components are missing.
  */
-export default function getWorldVertices(entity: Entity) {
+export default function computeWorldVertices(entity: Entity) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
     return null;
   }

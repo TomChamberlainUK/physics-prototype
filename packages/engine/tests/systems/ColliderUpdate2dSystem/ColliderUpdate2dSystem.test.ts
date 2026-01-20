@@ -4,7 +4,7 @@ import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { ColliderUpdate2dSystem } from '#/systems';
 import * as computeAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeAABB';
-import * as getWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
+import * as computeWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/computeWorldVertices';
 
 describe('ColliderUpdate2dSystem', () => {
   describe('constructor()', () => {
@@ -21,11 +21,11 @@ describe('ColliderUpdate2dSystem', () => {
     let system: ColliderUpdate2dSystem;
 
     let computeAABBSpy: MockInstance<typeof computeAABBModule.default>;
-    let getWorldVerticesSpy: MockInstance<typeof getWorldVerticesModule.default>;
+    let computeWorldVerticesSpy: MockInstance<typeof computeWorldVerticesModule.default>;
 
     beforeAll(() => {
       computeAABBSpy = vi.spyOn(computeAABBModule, 'default');
-      getWorldVerticesSpy = vi.spyOn(getWorldVerticesModule, 'default');
+      computeWorldVerticesSpy = vi.spyOn(computeWorldVerticesModule, 'default');
     });
 
     beforeEach(() => {
@@ -35,12 +35,12 @@ describe('ColliderUpdate2dSystem', () => {
 
     afterEach(() => {
       computeAABBSpy.mockClear();
-      getWorldVerticesSpy.mockClear();
+      computeWorldVerticesSpy.mockClear();
     });
 
     afterAll(() => {
       computeAABBSpy.mockRestore();
-      getWorldVerticesSpy.mockRestore();
+      computeWorldVerticesSpy.mockRestore();
     });
 
     describe('When passed entities with required components', () => {
@@ -85,7 +85,7 @@ describe('ColliderUpdate2dSystem', () => {
           new Vector2d({ x: 0.5, y: 0.5 }),
           new Vector2d({ x: -0.5, y: 0.5 }),
         ];
-        getWorldVerticesSpy.mockReturnValueOnce(expectedWorldVertices);
+        computeWorldVerticesSpy.mockReturnValueOnce(expectedWorldVertices);
         system.update([entity]);
         expect(collider2dComponent.worldVertices).toEqual(expectedWorldVertices);
       });
@@ -99,7 +99,7 @@ describe('ColliderUpdate2dSystem', () => {
 
       it('Should not update the worldVertices of entities', () => {
         system.update([entity]);
-        expect(getWorldVerticesSpy).not.toHaveBeenCalled();
+        expect(computeWorldVerticesSpy).not.toHaveBeenCalled();
       });
     });
   });

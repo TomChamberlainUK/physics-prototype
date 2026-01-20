@@ -1,9 +1,9 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { getWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
+import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-describe('getWorldVertices', () => {
+describe('computeWorldVertices', () => {
   let entity: Entity;
   let collider: Collider2dComponent;
   let transform: Transform2dComponent;
@@ -42,7 +42,7 @@ describe('getWorldVertices', () => {
           { x: halfWidth, y: halfHeight },
           { x: -halfWidth, y: halfHeight },
         ];
-        const vertices = getWorldVertices(entity);
+        const vertices = computeWorldVertices(entity);
         expect(vertices).toEqual(expectedVertices);
       });
 
@@ -55,7 +55,7 @@ describe('getWorldVertices', () => {
           { x: transform.position.x + halfWidth, y: transform.position.y + halfHeight },
           { x: transform.position.x - halfWidth, y: transform.position.y + halfHeight },
         ];
-        const vertices = getWorldVertices(entity);
+        const vertices = computeWorldVertices(entity);
         expect(vertices).toEqual(expectedVertices);
       });
 
@@ -72,7 +72,7 @@ describe('getWorldVertices', () => {
           x: vertex.x * cos - vertex.y * sin,
           y: vertex.x * sin + vertex.y * cos,
         }));
-        const vertices = getWorldVertices(entity);
+        const vertices = computeWorldVertices(entity);
         expect(vertices).toEqual(expectedVertices);
       });
 
@@ -91,7 +91,7 @@ describe('getWorldVertices', () => {
           x: vertex.x * cos - vertex.y * sin + transform.position.x,
           y: vertex.x * sin + vertex.y * cos + transform.position.y,
         }));
-        const vertices = getWorldVertices(entity);
+        const vertices = computeWorldVertices(entity);
         expect(vertices).toEqual(expectedVertices);
       });
     });
@@ -108,7 +108,7 @@ describe('getWorldVertices', () => {
       });
 
       it('Should return null', () => {
-        const vertices = getWorldVertices(entity);
+        const vertices = computeWorldVertices(entity);
         expect(vertices).toBeNull();
       });
     });
@@ -116,7 +116,7 @@ describe('getWorldVertices', () => {
 
   describe('When passed an entity without valid components', () => {
     it('Should return null', () => {
-      const vertices = getWorldVertices(entity);
+      const vertices = computeWorldVertices(entity);
       expect(vertices).toBeNull();
     });
   });

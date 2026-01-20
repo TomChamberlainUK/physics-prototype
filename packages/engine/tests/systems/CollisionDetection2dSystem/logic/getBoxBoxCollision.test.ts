@@ -3,7 +3,7 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { getBoxBoxCollision, isPointInConvexPolygon } from '#/systems/CollisionDetection2dSystem/logic';
-import { getWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
+import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
 
 describe('getBoxBoxCollision', () => {
   const width = 50;
@@ -54,8 +54,8 @@ describe('getBoxBoxCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = getWorldVertices(entityA);
-      colliderB.worldVertices = getWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices(entityA);
+      colliderB.worldVertices = computeWorldVertices(entityB);
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -103,8 +103,8 @@ describe('getBoxBoxCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width + gap;
-      colliderA.worldVertices = getWorldVertices(entityA);
-      colliderB.worldVertices = getWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices(entityA);
+      colliderB.worldVertices = computeWorldVertices(entityB);
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -121,8 +121,8 @@ describe('getBoxBoxCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = getWorldVertices(entityA);
-      colliderB.worldVertices = getWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices(entityA);
+      colliderB.worldVertices = computeWorldVertices(entityB);
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -167,8 +167,8 @@ describe('getBoxBoxCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width + gap;
-      colliderA.worldVertices = getWorldVertices(entityA);
-      colliderB.worldVertices = getWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices(entityA);
+      colliderB.worldVertices = computeWorldVertices(entityB);
       result = getBoxBoxCollision(entityA, entityB);
     });
 

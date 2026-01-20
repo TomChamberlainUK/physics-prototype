@@ -1,5 +1,6 @@
+import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
-import { Matrix2d, Vector2d, type Collider2dComponent, type Transform2dComponent } from '#/index';
+import { Matrix2d, Vector2d } from '#/maths';
 
 export default function getWorldVertices(entity: Entity) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {

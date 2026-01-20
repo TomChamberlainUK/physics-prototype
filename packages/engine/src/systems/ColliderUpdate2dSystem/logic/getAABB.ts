@@ -1,5 +1,5 @@
 import type Entity from '#/Entity';
-import type { Collider2dComponent, Transform2dComponent } from '#/index';
+import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import getBoxAABB from './getBoxAABB';
 import getCircleAABB from './getCircleAABB';
 

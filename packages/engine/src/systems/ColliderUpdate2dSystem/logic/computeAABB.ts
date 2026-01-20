@@ -1,6 +1,6 @@
 import type Entity from '#/Entity';
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import getBoxAABB from './getBoxAABB';
+import computeBoxAABB from './computeBoxAABB';
 import getCircleAABB from './getCircleAABB';
 
 /**
@@ -18,7 +18,7 @@ export default function computeAABB(entity: Entity) {
 
   switch (collider.shape.type) {
     case 'box': {
-      return getBoxAABB({
+      return computeBoxAABB({
         width: collider.shape.width,
         height: collider.shape.height,
         position: transform.position,

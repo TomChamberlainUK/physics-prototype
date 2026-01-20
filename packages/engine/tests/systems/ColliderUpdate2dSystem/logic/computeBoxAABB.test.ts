@@ -1,7 +1,7 @@
-import { getBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
+import { computeBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-describe('getBoxAABB', () => {
+describe('computeBoxAABB', () => {
   let width: number;
   let height: number;
   let halfWidth: number;
@@ -19,7 +19,7 @@ describe('getBoxAABB', () => {
   });
 
   it('Should return an AABB for a box', () => {
-    const aabb = getBoxAABB({ width, height, position, rotation });
+    const aabb = computeBoxAABB({ width, height, position, rotation });
     const expectedAABB = {
       min: { x: -halfWidth, y: -halfHeight },
       max: { x: halfWidth, y: halfHeight },
@@ -29,7 +29,7 @@ describe('getBoxAABB', () => {
 
   it('Should return an AABB for a translated box', () => {
     position = { x: 100, y: 50 };
-    const aabb = getBoxAABB({ width, height, position, rotation });
+    const aabb = computeBoxAABB({ width, height, position, rotation });
     const expectedAABB = {
       min: { x: position.x - halfWidth, y: position.y - halfHeight },
       max: { x: position.x + halfWidth, y: position.y + halfHeight },
@@ -39,7 +39,7 @@ describe('getBoxAABB', () => {
 
   it('Should return an AABB for a rotated box', () => {
     rotation = Math.PI / 4; // 45 degrees
-    const aabb = getBoxAABB({ width, height, position, rotation });
+    const aabb = computeBoxAABB({ width, height, position, rotation });
 
     const cos = Math.cos(rotation);
     const sin = Math.sin(rotation);
@@ -74,7 +74,7 @@ describe('getBoxAABB', () => {
   it('Should return an AABB for a translated and rotated box', () => {
     position = { x: 100, y: 50 };
     rotation = Math.PI / 4; // 45 degrees
-    const aabb = getBoxAABB({ width, height, position, rotation });
+    const aabb = computeBoxAABB({ width, height, position, rotation });
 
     const cos = Math.cos(rotation);
     const sin = Math.sin(rotation);

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { computeAABB } from '#/systems/ColliderUpdate2dSystem/logic';
-import * as getBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getBoxAABB';
+import * as computeBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeBoxAABB';
 import * as getCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getCircleAABB';
 
 describe('computeAABB', () => {
@@ -28,15 +28,15 @@ describe('computeAABB', () => {
       entity.addComponent(collider);
     });
 
-    it('Should return the result of getBoxAABB', () => {
-      const getBoxAABBSpy = vi.spyOn(getBoxAABBModule, 'default');
+    it('Should return the result of computeBoxAABB', () => {
+      const computeBoxAABBSpy = vi.spyOn(computeBoxAABBModule, 'default');
       const expectedAABB = {
         min: { x: -16, y: -8 },
         max: { x: 16, y: 8 },
       };
-      getBoxAABBSpy.mockReturnValue(expectedAABB);
+      computeBoxAABBSpy.mockReturnValue(expectedAABB);
       const aabb = computeAABB(entity);
-      expect(getBoxAABBSpy).toHaveBeenCalledWith({
+      expect(computeBoxAABBSpy).toHaveBeenCalledWith({
         width: 32,
         height: 16,
         position: transform.position,

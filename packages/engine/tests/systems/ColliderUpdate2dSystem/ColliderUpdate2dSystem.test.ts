@@ -1,6 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
+import { Vector2d } from '#/maths';
 import { ColliderUpdate2dSystem } from '#/systems';
 import * as computeAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeAABB';
 import * as getWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
@@ -79,10 +80,10 @@ describe('ColliderUpdate2dSystem', () => {
 
       it('Should update the worldVertices of entities', () => {
         const expectedWorldVertices = [
-          { x: -0.5, y: -0.5 },
-          { x: 0.5, y: -0.5 },
-          { x: 0.5, y: 0.5 },
-          { x: -0.5, y: 0.5 },
+          new Vector2d({ x: -0.5, y: -0.5 }),
+          new Vector2d({ x: 0.5, y: -0.5 }),
+          new Vector2d({ x: 0.5, y: 0.5 }),
+          new Vector2d({ x: -0.5, y: 0.5 }),
         ];
         getWorldVerticesSpy.mockReturnValueOnce(expectedWorldVertices);
         system.update([entity]);

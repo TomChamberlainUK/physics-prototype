@@ -1,4 +1,4 @@
-import { Matrix2d } from '#/maths';
+import { Matrix2d, Vector2d } from '#/maths';
 
 /**
  * Parameters required to calculate the AABB for a box.
@@ -9,10 +9,7 @@ type Parameters = {
   /** The height of the box. */
   height: number;
   /** The position of the box's center. */
-  position: {
-    x: number;
-    y: number;
-  };
+  position: Vector2d;
   /** The rotation of the box in radians. */
   rotation: number;
 };
@@ -35,10 +32,10 @@ export default function getBoxAABB({ width, height, position, rotation }: Parame
 
   // Corners of the box in local space
   const localCorners = [
-    { x: -halfWidth, y: -halfHeight },
-    { x: halfWidth, y: -halfHeight },
-    { x: halfWidth, y: halfHeight },
-    { x: -halfWidth, y: halfHeight },
+    new Vector2d({ x: -halfWidth, y: -halfHeight }),
+    new Vector2d({ x: halfWidth, y: -halfHeight }),
+    new Vector2d({ x: halfWidth, y: halfHeight }),
+    new Vector2d({ x: -halfWidth, y: halfHeight }),
   ];
 
   // Corners of the box in world space after rotation and translation

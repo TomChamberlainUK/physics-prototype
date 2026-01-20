@@ -1,3 +1,5 @@
+import Vector2d from './Vector2d';
+
 /**
  * A class representing a 2D transformation matrix.
  * The matrix is represented in the form:
@@ -39,11 +41,10 @@ export default class Matrix2d {
 
   /**
    * Creates a translation matrix.
-   * @param x - Translation along the x-axis.
-   * @param y - Translation along the y-axis.
+   * @param position - The x and y translation values, see {@link Vector2d}.
    * @returns A new translation matrix.
    */
-  static translation({ x, y }: { x: number; y: number }) {
+  static translation({ x, y }: Vector2d) {
     return new Matrix2d(1, 0, 0, 1, x, y);
   }
 
@@ -60,11 +61,10 @@ export default class Matrix2d {
 
   /**
    * Creates a scaling matrix.
-   * @param x - Scaling factor along the x-axis.
-   * @param y - Scaling factor along the y-axis.
+   * @param scale - The x and y scaling factors, see {@link Vector2d}.
    * @returns A new scaling matrix.
    */
-  static scaling({ x, y }: { x: number; y: number }) {
+  static scaling({ x, y }: Vector2d) {
     return new Matrix2d(x, 0, 0, y, 0, 0);
   }
 
@@ -89,15 +89,14 @@ export default class Matrix2d {
 
   /**
    * Transforms a point using the matrix.
-   * @param x - The x coordinate of the point to transform.
-   * @param y - The y coordinate of the point to transform.
+   * @param point - The point to transform, see {@link Vector2d}.
    * @returns The transformed point.
    */
-  transformPoint({ x, y }: { x: number; y: number }) {
+  transformPoint({ x, y }: Vector2d) {
     const [a, b, c, d, e, f] = this.elements;
-    return {
+    return new Vector2d({
       x: (a * x) + (c * y) + e,
       y: (b * x) + (d * y) + f,
-    };
+    });
   }
 }

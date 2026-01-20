@@ -1,3 +1,4 @@
+import type { Vector2d } from '#/maths';
 import type { AABB } from '#/types';
 
 /**
@@ -7,10 +8,7 @@ type Parameters = {
   /** The radius of the circle. */
   radius: number;
   /** The position of the circle's center. */
-  position: {
-    x: number;
-    y: number;
-  };
+  position: Vector2d;
 };
 
 /**

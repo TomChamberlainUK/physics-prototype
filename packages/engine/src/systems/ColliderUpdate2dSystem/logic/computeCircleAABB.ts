@@ -1,3 +1,5 @@
+import type { AABB } from '#/types';
+
 /**
  * Parameters required to compute the AABB for a circle.
  */
@@ -13,11 +15,10 @@ type Parameters = {
 
 /**
  * Computes and returns the axis-aligned bounding box (AABB) for a circle.
- * @param radius - The radius of the circle.
- * @param position - The position of the circle's center.
- * @returns The computed AABB.
+ * @param parameters - The parameters required to compute the AABB, see {@link Parameters}.
+ * @returns The computed AABB, see {@link AABB}.
  */
-export default function computeCircleAABB({ radius, position }: Parameters) {
+export default function computeCircleAABB({ radius, position }: Parameters): AABB {
   return {
     min: {
       x: position.x - radius,

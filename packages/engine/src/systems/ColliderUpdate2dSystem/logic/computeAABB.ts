@@ -1,22 +1,29 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
 import type { AABB } from '#/types';
 import computeBoxAABB from './computeBoxAABB';
 import computeCircleAABB from './computeCircleAABB';
 
 /**
- * Computes and returns the axis-aligned bounding box (AABB) for a given entity.
- * @param entity - The entity for which to compute the AABB, see {@link Entity}.
- * @returns The computed AABB or null if the entity lacks required components, see {@link AABB}.
+ * The components required to compute the AABB.
  */
-export default function computeAABB(entity: Entity): AABB | null {
-  if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
-    return null;
-  }
+type Properties = {
+  /** The Collider2d component of the entity. */
+  collider: Collider2dComponent;
+  /** The Transform2d component of the entity. */
+  transform: Transform2dComponent;
+};
 
-  const collider = entity.getComponent<Collider2dComponent>('Collider2d');
-  const transform = entity.getComponent<Transform2dComponent>('Transform2d');
+/**
+ * The output of the computeAABB function.
+ */
+type Output = AABB | null;
 
+/**
+ * Computes and returns the axis-aligned bounding box (AABB) for a given entity.
+ * @param properties - An object containing the Collider2d and Transform2d components, see {@link Properties}.
+ * @returns The computed AABB, or null if the collider shape is not recognised, see {@link Output}.
+ */
+export default function computeAABB({ collider, transform }: Properties): Output {
   switch (collider.shape.type) {
     case 'box': {
       return computeBoxAABB({
@@ -31,6 +38,9 @@ export default function computeAABB(entity: Entity): AABB | null {
         radius: collider.shape.radius,
         position: transform.position,
       });
+    }
+    default: {
+      return null;
     }
   }
 }

@@ -23,7 +23,7 @@ export default class ColliderUpdate2dSystem extends System {
       const collider = entity.getComponent<Collider2dComponent>('Collider2d');
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
 
-      collider.aabb = computeAABB(entity);
+      collider.aabb = computeAABB({ collider, transform });
       collider.worldVertices = computeWorldVertices({ collider, transform });
     }
   }

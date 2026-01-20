@@ -1,22 +1,29 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
 import { computeAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import * as computeBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeBoxAABB';
 import * as computeCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeCircleAABB';
 
 describe('computeAABB', () => {
-  let entity: Entity;
-  let transform: Transform2dComponent;
   let collider: Collider2dComponent;
+  let transform: Transform2dComponent;
 
   beforeEach(() => {
-    entity = new Entity();
     transform = new Transform2dComponent();
-    entity.addComponent(transform);
   });
 
-  describe('When the entity has a box collider', () => {
+  describe('When passed a box collider', () => {
+    const expectedAABB = {
+      min: { x: -16, y: -8 },
+      max: { x: 16, y: 8 },
+    };
+
+    let computeBoxAABBSpy: MockInstance<typeof computeBoxAABBModule.default>;
+
+    beforeAll(() => {
+      computeBoxAABBSpy = vi.spyOn(computeBoxAABBModule, 'default');
+    });
+
     beforeEach(() => {
       collider = new Collider2dComponent({
         shape: {
@@ -25,28 +32,41 @@ describe('computeAABB', () => {
           height: 16,
         },
       });
-      entity.addComponent(collider);
+    });
+
+    afterEach(() => {
+      computeBoxAABBSpy.mockClear();
+    });
+
+    afterAll(() => {
+      computeBoxAABBSpy.mockRestore();
     });
 
     it('Should return the result of computeBoxAABB', () => {
-      const computeBoxAABBSpy = vi.spyOn(computeBoxAABBModule, 'default');
-      const expectedAABB = {
-        min: { x: -16, y: -8 },
-        max: { x: 16, y: 8 },
-      };
-      computeBoxAABBSpy.mockReturnValue(expectedAABB);
-      const aabb = computeAABB(entity);
+      const aabb = computeAABB({ collider, transform });
       expect(computeBoxAABBSpy).toHaveBeenCalledWith({
         width: 32,
         height: 16,
         position: transform.position,
         rotation: transform.rotation,
       });
-      expect(aabb).toBe(expectedAABB);
+      expect(aabb).toEqual(expectedAABB);
     });
   });
 
-  describe('When the entity has a circle collider', () => {
+  describe('When passed a circle collider', () => {
+    const expectedAABB = {
+      min: { x: -16, y: -16 },
+      max: { x: 16, y: 16 },
+    };
+
+    let computeCircleAABBSpy: MockInstance<typeof computeCircleAABBModule.default>;
+
+    beforeAll(() => {
+      computeCircleAABBSpy = vi.spyOn(computeCircleAABBModule, 'default');
+      computeCircleAABBSpy.mockReturnValue(expectedAABB);
+    });
+
     beforeEach(() => {
       collider = new Collider2dComponent({
         shape: {
@@ -54,22 +74,23 @@ describe('computeAABB', () => {
           radius: 16,
         },
       });
-      entity.addComponent(collider);
+    });
+
+    afterEach(() => {
+      computeCircleAABBSpy.mockClear();
+    });
+
+    afterAll(() => {
+      computeCircleAABBSpy.mockRestore();
     });
 
     it('Should return the result of computeCircleAABB', () => {
-      const computeCircleAABBSpy = vi.spyOn(computeCircleAABBModule, 'default');
-      const expectedAABB = {
-        min: { x: -16, y: -16 },
-        max: { x: 16, y: 16 },
-      };
-      computeCircleAABBSpy.mockReturnValue(expectedAABB);
-      const aabb = computeAABB(entity);
+      const aabb = computeAABB({ collider, transform });
       expect(computeCircleAABBSpy).toHaveBeenCalledWith({
         radius: 16,
         position: transform.position,
       });
-      expect(aabb).toBe(expectedAABB);
+      expect(aabb).toEqual(expectedAABB);
     });
   });
 });

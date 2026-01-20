@@ -1,12 +1,13 @@
-import { computeBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { Vector2d } from '#/maths';
+import { computeBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 
 describe('computeBoxAABB', () => {
   let width: number;
   let height: number;
   let halfWidth: number;
   let halfHeight: number;
-  let position: { x: number; y: number };
+  let position: Vector2d;
   let rotation: number;
 
   beforeEach(() => {
@@ -14,7 +15,7 @@ describe('computeBoxAABB', () => {
     height = 16;
     halfWidth = width / 2;
     halfHeight = height / 2;
-    position = { x: 0, y: 0 };
+    position = new Vector2d({ x: 0, y: 0 });
     rotation = 0;
   });
 
@@ -28,7 +29,7 @@ describe('computeBoxAABB', () => {
   });
 
   it('Should return an AABB for a translated box', () => {
-    position = { x: 100, y: 50 };
+    position = new Vector2d({ x: 100, y: 50 });
     const aabb = computeBoxAABB({ width, height, position, rotation });
     const expectedAABB = {
       min: { x: position.x - halfWidth, y: position.y - halfHeight },
@@ -72,7 +73,7 @@ describe('computeBoxAABB', () => {
   });
 
   it('Should return an AABB for a translated and rotated box', () => {
-    position = { x: 100, y: 50 };
+    position = new Vector2d({ x: 100, y: 50 });
     rotation = Math.PI / 4; // 45 degrees
     const aabb = computeBoxAABB({ width, height, position, rotation });
 

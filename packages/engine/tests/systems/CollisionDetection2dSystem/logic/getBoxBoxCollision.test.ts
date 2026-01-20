@@ -54,8 +54,8 @@ describe('getBoxBoxCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = computeWorldVertices(entityA);
-      colliderB.worldVertices = computeWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
+      colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -103,8 +103,8 @@ describe('getBoxBoxCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width + gap;
-      colliderA.worldVertices = computeWorldVertices(entityA);
-      colliderB.worldVertices = computeWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
+      colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -121,8 +121,8 @@ describe('getBoxBoxCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = computeWorldVertices(entityA);
-      colliderB.worldVertices = computeWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
+      colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
       result = getBoxBoxCollision(entityA, entityB);
     });
 
@@ -167,8 +167,8 @@ describe('getBoxBoxCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width + gap;
-      colliderA.worldVertices = computeWorldVertices(entityA);
-      colliderB.worldVertices = computeWorldVertices(entityB);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
+      colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
       result = getBoxBoxCollision(entityA, entityB);
     });
 

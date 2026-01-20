@@ -2,9 +2,9 @@ import { Matrix2d, Vector2d } from '#/maths';
 import type { AABB } from '#/types';
 
 /**
- * Parameters required to compute the AABB for a box.
+ * Properties required to compute the AABB for a box.
  */
-type Parameters = {
+type Properties = {
   /** The width of the box. */
   width: number;
   /** The height of the box. */
@@ -17,10 +17,10 @@ type Parameters = {
 
 /**
  * Computes and returns the axis-aligned bounding box (AABB) for a box.
- * @param parameters - The width, height, position, and rotation of the box, see {@link Parameters}.
+ * @param properties - The width, height, position, and rotation of the box, see {@link Properties}.
  * @returns The computed AABB, see {@link AABB}.
  */
-export default function computeBoxAABB({ width, height, position, rotation }: Parameters): AABB {
+export default function computeBoxAABB({ width, height, position, rotation }: Properties): AABB {
   const halfWidth = width / 2;
   const halfHeight = height / 2;
 

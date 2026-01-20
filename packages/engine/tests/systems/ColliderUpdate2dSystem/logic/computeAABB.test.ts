@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { getAABB } from '#/systems/ColliderUpdate2dSystem/logic';
+import { computeAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import * as getBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getBoxAABB';
 import * as getCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getCircleAABB';
 
-describe('getAABB', () => {
+describe('computeAABB', () => {
   let entity: Entity;
   let transform: Transform2dComponent;
   let collider: Collider2dComponent;
@@ -35,7 +35,7 @@ describe('getAABB', () => {
         max: { x: 16, y: 8 },
       };
       getBoxAABBSpy.mockReturnValue(expectedAABB);
-      const aabb = getAABB(entity);
+      const aabb = computeAABB(entity);
       expect(getBoxAABBSpy).toHaveBeenCalledWith({
         width: 32,
         height: 16,
@@ -64,7 +64,7 @@ describe('getAABB', () => {
         max: { x: 16, y: 16 },
       };
       getCircleAABBSpy.mockReturnValue(expectedAABB);
-      const aabb = getAABB(entity);
+      const aabb = computeAABB(entity);
       expect(getCircleAABBSpy).toHaveBeenCalledWith({
         radius: 16,
         position: transform.position,

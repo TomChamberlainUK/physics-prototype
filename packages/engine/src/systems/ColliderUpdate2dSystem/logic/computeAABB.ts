@@ -4,11 +4,11 @@ import getBoxAABB from './getBoxAABB';
 import getCircleAABB from './getCircleAABB';
 
 /**
- * Calculates and returns the axis-aligned bounding box (AABB) for the given entity.
- * @param entity - The entity for which to calculate the AABB.
- * @returns The calculated AABB or null if the entity lacks required components.
+ * Computes and returns the axis-aligned bounding box (AABB) for a given entity.
+ * @param entity - The entity for which to compute the AABB.
+ * @returns The computed AABB or null if the entity lacks required components.
  */
-export default function getAABB(entity: Entity) {
+export default function computeAABB(entity: Entity) {
   if (!entity.hasComponents(['Collider2d', 'Transform2d'])) {
     return null;
   }

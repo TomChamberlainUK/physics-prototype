@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, t
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { ColliderUpdate2dSystem } from '#/systems';
-import * as getAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getAABB';
+import * as computeAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeAABB';
 import * as getWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
 
 describe('ColliderUpdate2dSystem', () => {
@@ -19,11 +19,11 @@ describe('ColliderUpdate2dSystem', () => {
     let entity: Entity;
     let system: ColliderUpdate2dSystem;
 
-    let getAABBSpy: MockInstance<typeof getAABBModule.default>;
+    let computeAABBSpy: MockInstance<typeof computeAABBModule.default>;
     let getWorldVerticesSpy: MockInstance<typeof getWorldVerticesModule.default>;
 
     beforeAll(() => {
-      getAABBSpy = vi.spyOn(getAABBModule, 'default');
+      computeAABBSpy = vi.spyOn(computeAABBModule, 'default');
       getWorldVerticesSpy = vi.spyOn(getWorldVerticesModule, 'default');
     });
 
@@ -33,12 +33,12 @@ describe('ColliderUpdate2dSystem', () => {
     });
 
     afterEach(() => {
-      getAABBSpy.mockClear();
+      computeAABBSpy.mockClear();
       getWorldVerticesSpy.mockClear();
     });
 
     afterAll(() => {
-      getAABBSpy.mockRestore();
+      computeAABBSpy.mockRestore();
       getWorldVerticesSpy.mockRestore();
     });
 
@@ -72,7 +72,7 @@ describe('ColliderUpdate2dSystem', () => {
             y: 0.5,
           },
         };
-        getAABBSpy.mockReturnValueOnce(expectedAABB);
+        computeAABBSpy.mockReturnValueOnce(expectedAABB);
         system.update([entity]);
         expect(collider2dComponent.aabb).toEqual(expectedAABB);
       });
@@ -93,7 +93,7 @@ describe('ColliderUpdate2dSystem', () => {
     describe('When passed entities without required components', () => {
       it('Should not update the AABB of entities', () => {
         system.update([entity]);
-        expect(getAABBSpy).not.toHaveBeenCalled();
+        expect(computeAABBSpy).not.toHaveBeenCalled();
       });
 
       it('Should not update the worldVertices of entities', () => {

@@ -1,7 +1,7 @@
 /**
  * Parameters for creating a Vector2d instance.
  */
-type Params = {
+type ConstructorParameters = {
   /** The x component of the vector. */
   x: number;
   /** The y component of the vector. */
@@ -23,17 +23,16 @@ export default class Vector2d {
   constructor();
   /**
    * Creates an instance of the Vector2d class.
-   * @param x - The x component of the vector.
-   * @param y - The y component of the vector.
+   * @param point - The x and y components of the vector.
    */
-  constructor({ x, y }: Params);
+  constructor({ x, y }: ConstructorParameters);
   /**
    * Creates an instance of the Vector2d class.
    * @param x - The x component of the vector.
    * @param y - The y component of the vector.
    */
   constructor(x: number, y: number);
-  constructor(argA?: Params | number, argB?: number) {
+  constructor(argA?: ConstructorParameters | number, argB?: number) {
     if (typeof argA === 'object') {
       this.x = argA.x;
       this.y = argA.y;

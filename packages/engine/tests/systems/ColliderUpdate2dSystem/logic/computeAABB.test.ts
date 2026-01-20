@@ -3,7 +3,7 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { computeAABB } from '#/systems/ColliderUpdate2dSystem/logic';
 import * as computeBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeBoxAABB';
-import * as getCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/getCircleAABB';
+import * as computeCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeCircleAABB';
 
 describe('computeAABB', () => {
   let entity: Entity;
@@ -57,15 +57,15 @@ describe('computeAABB', () => {
       entity.addComponent(collider);
     });
 
-    it('Should return the result of getCircleAABB', () => {
-      const getCircleAABBSpy = vi.spyOn(getCircleAABBModule, 'default');
+    it('Should return the result of computeCircleAABB', () => {
+      const computeCircleAABBSpy = vi.spyOn(computeCircleAABBModule, 'default');
       const expectedAABB = {
         min: { x: -16, y: -16 },
         max: { x: 16, y: 16 },
       };
-      getCircleAABBSpy.mockReturnValue(expectedAABB);
+      computeCircleAABBSpy.mockReturnValue(expectedAABB);
       const aabb = computeAABB(entity);
-      expect(getCircleAABBSpy).toHaveBeenCalledWith({
+      expect(computeCircleAABBSpy).toHaveBeenCalledWith({
         radius: 16,
         position: transform.position,
       });

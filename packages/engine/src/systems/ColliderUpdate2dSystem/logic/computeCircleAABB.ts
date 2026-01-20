@@ -1,5 +1,5 @@
 /**
- * Parameters required to calculate the AABB for a circle.
+ * Parameters required to compute the AABB for a circle.
  */
 type Parameters = {
   /** The radius of the circle. */
@@ -12,12 +12,12 @@ type Parameters = {
 };
 
 /**
- * Calculates and returns the axis-aligned bounding box (AABB) for a circle.
+ * Computes and returns the axis-aligned bounding box (AABB) for a circle.
  * @param radius - The radius of the circle.
  * @param position - The position of the circle's center.
- * @returns The calculated AABB.
+ * @returns The computed AABB.
  */
-export default function getCircleAABB({ radius, position }: Parameters) {
+export default function computeCircleAABB({ radius, position }: Parameters) {
   return {
     min: {
       x: position.x - radius,

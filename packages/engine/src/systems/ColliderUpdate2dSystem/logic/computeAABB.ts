@@ -2,7 +2,7 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import type { AABB } from '#/types';
 import computeBoxAABB from './computeBoxAABB';
-import getCircleAABB from './getCircleAABB';
+import computeCircleAABB from './computeCircleAABB';
 
 /**
  * Computes and returns the axis-aligned bounding box (AABB) for a given entity.
@@ -27,7 +27,7 @@ export default function computeAABB(entity: Entity): AABB | null {
       });
     }
     case 'circle': {
-      return getCircleAABB({
+      return computeCircleAABB({
         radius: collider.shape.radius,
         position: transform.position,
       });

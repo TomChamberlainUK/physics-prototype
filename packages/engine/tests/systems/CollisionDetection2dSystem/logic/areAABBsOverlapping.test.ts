@@ -1,7 +1,7 @@
-import getAABBOverlap from '#/systems/CollisionDetection2dSystem/logic/getAABBOverlap';
+import areAABBsOverlapping from '#/systems/CollisionDetection2dSystem/logic/areAABBsOverlapping';
 import { describe, expect, it } from 'vitest';
 
-describe('getAABBOverlap', () => {
+describe('areAABBsOverlapping', () => {
   describe('When passed two AABBs that don\'t overlap', () => {
     it('Should return false', () => {
       const a = {
@@ -12,7 +12,7 @@ describe('getAABBOverlap', () => {
         min: { x: 2, y: 2 },
         max: { x: 3, y: 3 },
       };
-      const result = getAABBOverlap(a, b);
+      const result = areAABBsOverlapping(a, b);
       expect(result).toBe(false);
     });
   });
@@ -27,7 +27,7 @@ describe('getAABBOverlap', () => {
         min: { x: 0.5, y: 0.5 },
         max: { x: 1.5, y: 1.5 },
       };
-      const result = getAABBOverlap(a, b);
+      const result = areAABBsOverlapping(a, b);
       expect(result).toBe(true);
     });
   });

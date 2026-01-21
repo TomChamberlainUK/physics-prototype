@@ -6,7 +6,7 @@ import type { AABB } from '#/types';
  * @param b - The second AABB.
  * @returns True if the AABBs overlap, otherwise false.
  */
-export default function getAABBOverlap(a: AABB, b: AABB) {
+export default function areAABBsOverlapping(a: AABB, b: AABB) {
   return (
     a.max.x > b.min.x
     && a.min.x < b.max.x

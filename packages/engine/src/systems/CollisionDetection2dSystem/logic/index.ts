@@ -1,4 +1,4 @@
-export { default as getAABBOverlap } from './getAABBOverlap';
+export { default as areAABBsOverlapping } from './areAABBsOverlapping';
 export { default as getBoxAxes } from './getBoxAxes';
 export { default as getBoxBoxCollision } from './getBoxBoxCollision';
 export { default as getBoxCircleCollision } from './getBoxCircleCollision';

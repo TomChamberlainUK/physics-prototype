@@ -1,7 +1,7 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import * as getAABBOverlapModule from '#/systems/CollisionDetection2dSystem/logic/getAABBOverlap';
+import * as areAABBsOverlappingModule from '#/systems/CollisionDetection2dSystem/logic/areAABBsOverlapping';
 import getBroadPhasePairs from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
 
 describe('getBroadPhasePairs', () => {
@@ -12,18 +12,18 @@ describe('getBroadPhasePairs', () => {
   let colliderB: Collider2dComponent;
   let colliderC: Collider2dComponent;
 
-  let getAABBOverlapSpy: MockInstance<typeof getAABBOverlapModule.default>;
+  let areAABBsOverlappingSpy: MockInstance<typeof areAABBsOverlappingModule.default>;
 
   beforeAll(() => {
-    getAABBOverlapSpy = vi.spyOn(getAABBOverlapModule, 'default');
+    areAABBsOverlappingSpy = vi.spyOn(areAABBsOverlappingModule, 'default');
   });
 
   afterEach(() => {
-    getAABBOverlapSpy.mockClear();
+    areAABBsOverlappingSpy.mockClear();
   });
 
   afterAll(() => {
-    getAABBOverlapSpy.mockReset();
+    areAABBsOverlappingSpy.mockReset();
   });
 
   beforeEach(() => {
@@ -69,10 +69,10 @@ describe('getBroadPhasePairs', () => {
 
       it('Should test AABB overlap for each potential pair', () => {
         getBroadPhasePairs([entityA, entityB, entityC]);
-        expect(getAABBOverlapSpy).toHaveBeenCalledWith(colliderA.aabb, colliderB.aabb);
-        expect(getAABBOverlapSpy).toHaveBeenCalledWith(colliderA.aabb, colliderC.aabb);
-        expect(getAABBOverlapSpy).toHaveBeenCalledWith(colliderB.aabb, colliderC.aabb);
-        getAABBOverlapSpy.mockRestore();
+        expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderA.aabb, colliderB.aabb);
+        expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderA.aabb, colliderC.aabb);
+        expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderB.aabb, colliderC.aabb);
+        areAABBsOverlappingSpy.mockRestore();
       });
 
       describe('When entity AABBs are overlapping', () => {

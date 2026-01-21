@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
-import getWorldVertices from '#/systems/ColliderUpdate2dSystem/logic/getWorldVertices';
+import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
 import { getBoxCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { isPointNearConvexPolygon } from '../../../utils';
 
@@ -54,7 +54,7 @@ describe('getBoxCircleCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       result = getBoxCircleCollision(entityA, entityB);
     });
 
@@ -90,7 +90,7 @@ describe('getBoxCircleCollision', () => {
 
     beforeEach(() => {
       transformB.position.x = width + gap;
-      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       result = getBoxCircleCollision(entityA, entityB);
     });
 
@@ -107,7 +107,7 @@ describe('getBoxCircleCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width - overlap;
-      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       result = getBoxCircleCollision(entityA, entityB);
     });
 
@@ -151,7 +151,7 @@ describe('getBoxCircleCollision', () => {
     beforeEach(() => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width + gap;
-      colliderA.worldVertices = getWorldVertices(entityA);
+      colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       result = getBoxCircleCollision(entityA, entityB);
     });
 

@@ -1,5 +1,5 @@
 export { default as areAABBsOverlapping } from './areAABBsOverlapping';
-export { default as getBoxAxes } from './getBoxAxes';
+export { default as computeBoxAxes } from './computeBoxAxes';
 export { default as getBoxBoxCollision } from './getBoxBoxCollision';
 export { default as getBoxCircleCollision } from './getBoxCircleCollision';
 export { default as getBroadPhasePairs } from './getBroadPhasePairs';

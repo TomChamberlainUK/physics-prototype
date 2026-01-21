@@ -2,7 +2,7 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
-import getBoxAxes from './getBoxAxes';
+import computeBoxAxes from './computeBoxAxes';
 import getSegmentIntersection from './getSegmentIntersection';
 import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectVertices from './projectVertices';
@@ -32,8 +32,8 @@ export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Co
 
   // Get the axes to test (normals of all edges)
   const axes = [
-    ...getBoxAxes(verticesA),
-    ...getBoxAxes(verticesB),
+    ...computeBoxAxes(verticesA),
+    ...computeBoxAxes(verticesB),
   ];
 
   let minOverlap = Infinity;

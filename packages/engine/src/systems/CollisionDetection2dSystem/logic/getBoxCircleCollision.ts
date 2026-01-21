@@ -2,7 +2,7 @@ import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
-import getBoxAxes from './getBoxAxes';
+import computeBoxAxes from './computeBoxAxes';
 import getClosestBoxVertex from './getClosestBoxVertex';
 import getClosestPointOnEdgeOfBox from './getClosestPointOnEdgeOfBox';
 import isPointInConvexPolygon from './isPointInConvexPolygon';
@@ -48,7 +48,7 @@ export default function getBoxCircleCollision(entityA: Entity, entityB: Entity):
   const closestBoxVertex = getClosestBoxVertex({ vertices: boxVertices, point: circlePosition });
   const circleToBoxAxis = circlePosition.subtract(closestBoxVertex).getUnit();
   const axes = [
-    ...getBoxAxes(boxVertices),
+    ...computeBoxAxes(boxVertices),
     circleToBoxAxis,
   ];
 

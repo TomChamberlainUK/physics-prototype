@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getBoxAxes } from '#/systems/CollisionDetection2dSystem/logic';
+import { computeBoxAxes } from '#/systems/CollisionDetection2dSystem/logic';
 import { Vector2d } from '#/maths';
 
-describe('getBoxAxes', () => {
+describe('computeBoxAxes', () => {
   describe('When passed 4 valid box vertices', () => {
     it('Should return their 2 axes', () => {
       const vertexA = new Vector2d({ x: 0, y: 0 });
@@ -10,7 +10,7 @@ describe('getBoxAxes', () => {
       const vertexC = new Vector2d({ x: 2, y: 2 });
       const vertexD = new Vector2d({ x: 0, y: 2 });
 
-      const axes = getBoxAxes([
+      const axes = computeBoxAxes([
         vertexA,
         vertexB,
         vertexC,
@@ -42,12 +42,12 @@ describe('getBoxAxes', () => {
       const vertexC = new Vector2d({ x: 2, y: 2 });
 
       expect(() => {
-        getBoxAxes([
+        computeBoxAxes([
           vertexA,
           vertexB,
           vertexC,
         ]);
-      }).toThrow('getBoxAxes requires exactly 4 vertices.');
+      }).toThrow('computeBoxAxes requires exactly 4 vertices.');
     });
   });
 
@@ -59,7 +59,7 @@ describe('getBoxAxes', () => {
       const vertexD = new Vector2d({ x: 0, y: 2 });
 
       expect(() => {
-        getBoxAxes([
+        computeBoxAxes([
           vertexA,
           vertexB,
           vertexC,

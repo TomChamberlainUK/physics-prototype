@@ -1,10 +1,10 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
-import { getCircleCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
+import { detectCircleCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-describe('getCircleCircleCollision', () => {
+describe('detectCircleCircleCollision', () => {
   const radius = 16;
 
   let entityA: Entity;
@@ -12,7 +12,7 @@ describe('getCircleCircleCollision', () => {
   let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
 
-  let result: ReturnType<typeof getCircleCircleCollision>;
+  let result: ReturnType<typeof detectCircleCircleCollision>;
 
   beforeEach(() => {
     entityA = new Entity();
@@ -43,7 +43,7 @@ describe('getCircleCircleCollision', () => {
         x: (radius * 2) - overlap,
         y: 0,
       });
-      result = getCircleCircleCollision(entityA, entityB);
+      result = detectCircleCircleCollision(entityA, entityB);
     });
 
     it('Should detect a collision', () => {
@@ -83,7 +83,7 @@ describe('getCircleCircleCollision', () => {
         x: (radius * 2) + 10,
         y: 0,
       });
-      result = getCircleCircleCollision(entityA, entityB);
+      result = detectCircleCircleCollision(entityA, entityB);
     });
 
     it('Should return that the circles are not colliding', () => {

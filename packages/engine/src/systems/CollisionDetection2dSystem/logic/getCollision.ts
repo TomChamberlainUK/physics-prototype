@@ -3,7 +3,7 @@ import type Entity from '#/Entity';
 import type { Collision } from '#/types';
 import detectBoxBoxCollision from './detectBoxBoxCollision';
 import detectBoxCircleCollision from './detectBoxCircleCollision';
-import getCircleCircleCollision from './getCircleCircleCollision';
+import detectCircleCircleCollision from './detectCircleCircleCollision';
 
 /**
  * Determines the collision information between two entities based on their collider shapes.
@@ -30,7 +30,7 @@ export default function getCollision(entityA: Entity, entityB: Entity): Collisio
     case 'circle':
       switch (colliderB.shape.type) {
         case 'circle':
-          return getCircleCircleCollision(entityA, entityB);
+          return detectCircleCircleCollision(entityA, entityB);
         case 'box':
           return detectBoxCircleCollision(entityA, entityB);
         default:

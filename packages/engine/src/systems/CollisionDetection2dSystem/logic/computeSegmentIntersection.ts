@@ -15,14 +15,14 @@ type Parameters = {
 };
 
 /**
- * Calculates the intersection point of two line segments in 2D space, if it exists.
+ * Computes the intersection point of two line segments in 2D space, if it exists.
  * @param segmentAStart - The start point of the first line segment.
  * @param segmentAEnd - The end point of the first line segment.
  * @param segmentBStart - The start point of the second line segment.
  * @param segmentBEnd - The end point of the second line segment.
  * @returns The intersection point as a Vector2d if the segments intersect; otherwise, null.
  */
-export default function getSegmentIntersection({
+export default function computeSegmentIntersection({
   segmentAStart,
   segmentAEnd,
   segmentBStart,
@@ -40,7 +40,7 @@ export default function getSegmentIntersection({
     return null;
   }
 
-  // Calulate the intersection points along each segment
+  // Compute the intersection points along each segment
   const segmentAIntersectionPoint = ((segmentBStart.x - segmentAStart.x) * segmentBVector.y - (segmentBStart.y - segmentAStart.y) * segmentBVector.x) / denominator;
   const segmentBIntersectionPoint = ((segmentBStart.x - segmentAStart.x) * segmentAVector.y - (segmentBStart.y - segmentAStart.y) * segmentAVector.x) / denominator;
 

@@ -3,7 +3,7 @@ import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import computeBoxAxes from './computeBoxAxes';
-import getSegmentIntersection from './getSegmentIntersection';
+import computeSegmentIntersection from './computeSegmentIntersection';
 import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectVertices from './projectVertices';
 
@@ -114,7 +114,7 @@ export default function detectBoxBoxCollision(entityA: Entity, entityB: Entity):
       if (!segmentBStart || !segmentBEnd) {
         throw new Error('Undefined vertex in box collider');
       }
-      const intersection = getSegmentIntersection({ segmentAStart, segmentAEnd, segmentBStart, segmentBEnd });
+      const intersection = computeSegmentIntersection({ segmentAStart, segmentAEnd, segmentBStart, segmentBEnd });
       if (intersection) {
         overlappingPoints.set(`x: ${intersection.x}; y: ${intersection.y}`, intersection);
       }

@@ -8,7 +8,7 @@ export { default as findClosestBoxVertex } from './findClosestBoxVertex';
 export { default as findClosestPointOnEdgeOfBox } from './findClosestPointOnEdgeOfBox';
 export { default as detectCollision } from './detectCollision';
 export { default as findNarrowPhasePairs } from './findNarrowPhasePairs';
-export { default as getSegmentIntersection } from './getSegmentIntersection';
+export { default as computeSegmentIntersection } from './computeSegmentIntersection';
 export { default as isPointInConvexPolygon } from './isPointInConvexPolygon';
 export { default as projectCircle } from './projectCircle';
 export { default as projectVertices } from './projectVertices';

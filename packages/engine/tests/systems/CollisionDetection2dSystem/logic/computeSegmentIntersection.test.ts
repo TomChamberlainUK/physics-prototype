@@ -1,11 +1,11 @@
 import { Vector2d } from '#/maths';
-import { getSegmentIntersection } from '#/systems/CollisionDetection2dSystem/logic';
+import { computeSegmentIntersection } from '#/systems/CollisionDetection2dSystem/logic';
 import { describe, expect, it } from 'vitest';
 
-describe('getSegmentIntersection', () => {
+describe('computeSegmentIntersection', () => {
   describe('When passed two segments that intersect', () => {
     it('Should return the intersection point', () => {
-      const intersection = getSegmentIntersection({
+      const intersection = computeSegmentIntersection({
         segmentAStart: new Vector2d({ x: -2, y: 0 }),
         segmentAEnd: new Vector2d({ x: 2, y: 0 }),
         segmentBStart: new Vector2d({ x: 0, y: -2 }),
@@ -18,7 +18,7 @@ describe('getSegmentIntersection', () => {
 
   describe('When passed two segments that do not intersect', () => {
     it('Should return null', () => {
-      const intersection = getSegmentIntersection({
+      const intersection = computeSegmentIntersection({
         segmentAStart: new Vector2d({ x: -2, y: 0 }),
         segmentAEnd: new Vector2d({ x: 2, y: 0 }),
         segmentBStart: new Vector2d({ x: 4, y: -2 }),

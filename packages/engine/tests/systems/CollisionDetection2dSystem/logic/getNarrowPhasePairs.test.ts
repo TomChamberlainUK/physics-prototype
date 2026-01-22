@@ -2,7 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, t
 import Entity from '#/Entity';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import { Vector2d } from '#/maths';
-import * as getCollisionModule from '#/systems/CollisionDetection2dSystem/logic/getCollision';
+import * as detectCollisionModule from '#/systems/CollisionDetection2dSystem/logic/detectCollision';
 import getNarrowPhasePairs from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
 
 describe('getNarrowPhasePairs', () => {
@@ -10,10 +10,10 @@ describe('getNarrowPhasePairs', () => {
   let entityB: Entity;
   let entityC: Entity;
 
-  let getCollisionSpy: MockInstance<typeof getCollisionModule.default>;
+  let detectCollisionSpy: MockInstance<typeof detectCollisionModule.default>;
 
   beforeAll(() => {
-    getCollisionSpy = vi.spyOn(getCollisionModule, 'default');
+    detectCollisionSpy = vi.spyOn(detectCollisionModule, 'default');
   });
 
   beforeEach(() => {
@@ -35,23 +35,23 @@ describe('getNarrowPhasePairs', () => {
   });
 
   afterEach(() => {
-    getCollisionSpy.mockClear();
+    detectCollisionSpy.mockClear();
   });
 
   afterAll(() => {
-    getCollisionSpy.mockRestore();
+    detectCollisionSpy.mockRestore();
   });
 
   it('Should test collision for each candidate pair', () => {
     getNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
-    expect(getCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(getCollisionSpy).toHaveBeenCalledWith(entityA, entityC);
-    expect(getCollisionSpy).toHaveBeenCalledWith(entityB, entityC);
+    expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
+    expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityC);
+    expect(detectCollisionSpy).toHaveBeenCalledWith(entityB, entityC);
   });
 
   describe('When entities are colliding', () => {
     beforeEach(() => {
-      getCollisionSpy.mockReturnValue({
+      detectCollisionSpy.mockReturnValue({
         isColliding: true,
         contactManifold: {
           normal: new Vector2d({ x: 0, y: 1 }),
@@ -97,7 +97,7 @@ describe('getNarrowPhasePairs', () => {
 
   describe('When entities are not colliding', () => {
     beforeEach(() => {
-      getCollisionSpy.mockReturnValue({
+      detectCollisionSpy.mockReturnValue({
         isColliding: false,
       });
     });

@@ -1,6 +1,6 @@
 import type Entity from '#/Entity';
 import type { NarrowPhaseCollisionPair } from '#/types';
-import getCollision from './getCollision';
+import detectCollision from './detectCollision';
 
 /**
  * Identifies actual collision pairs from candidate pairs using narrow-phase collision detection.
@@ -10,7 +10,7 @@ import getCollision from './getCollision';
 export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]): NarrowPhaseCollisionPair[] {
   const collisionPairs: NarrowPhaseCollisionPair[] = [];
   for (const [entityA, entityB] of candidatePairs) {
-    const collision = getCollision(entityA, entityB);
+    const collision = detectCollision(entityA, entityB);
     if (!collision.isColliding) {
       continue;
     }

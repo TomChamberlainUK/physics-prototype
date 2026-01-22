@@ -6,12 +6,12 @@ import detectBoxCircleCollision from './detectBoxCircleCollision';
 import detectCircleCircleCollision from './detectCircleCircleCollision';
 
 /**
- * Determines the collision information between two entities based on their collider shapes.
+ * Detects a collision between two entities based on their collider shapes.
  * @param entityA - The first entity with a collider.
  * @param entityB - The second entity with a collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
  */
-export default function getCollision(entityA: Entity, entityB: Entity): Collision {
+export default function detectCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
 

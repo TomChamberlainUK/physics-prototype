@@ -2,9 +2,9 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import * as areAABBsOverlappingModule from '#/systems/CollisionDetection2dSystem/logic/areAABBsOverlapping';
-import getBroadPhasePairs from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
+import findBroadPhasePairs from '#/systems/CollisionDetection2dSystem/logic/findBroadPhasePairs';
 
-describe('getBroadPhasePairs', () => {
+describe('findBroadPhasePairs', () => {
   let entityA: Entity;
   let entityB: Entity;
   let entityC: Entity;
@@ -68,7 +68,7 @@ describe('getBroadPhasePairs', () => {
       });
 
       it('Should test AABB overlap for each potential pair', () => {
-        getBroadPhasePairs([entityA, entityB, entityC]);
+        findBroadPhasePairs([entityA, entityB, entityC]);
         expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderA.aabb, colliderB.aabb);
         expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderA.aabb, colliderC.aabb);
         expect(areAABBsOverlappingSpy).toHaveBeenCalledWith(colliderB.aabb, colliderC.aabb);
@@ -92,7 +92,7 @@ describe('getBroadPhasePairs', () => {
         });
 
         it('Should return them as candidate pairs', () => {
-          const candidatePairs = getBroadPhasePairs([entityA, entityB, entityC]);
+          const candidatePairs = findBroadPhasePairs([entityA, entityB, entityC]);
           expect(candidatePairs).toEqual([
             [entityA, entityB],
             [entityA, entityC],
@@ -136,7 +136,7 @@ describe('getBroadPhasePairs', () => {
         });
 
         it('Should not return them as candidate pairs', () => {
-          const candidatePairs = getBroadPhasePairs([entityA, entityB, entityC]);
+          const candidatePairs = findBroadPhasePairs([entityA, entityB, entityC]);
           expect(candidatePairs).toEqual([]);
         });
       });
@@ -144,7 +144,7 @@ describe('getBroadPhasePairs', () => {
 
     describe('When entities are missing AABBs', () => {
       it('Should return all potential pairs as candidate pairs', () => {
-        const candidatePairs = getBroadPhasePairs([entityA, entityB, entityC]);
+        const candidatePairs = findBroadPhasePairs([entityA, entityB, entityC]);
         expect(candidatePairs).toEqual([
           [entityA, entityB],
           [entityA, entityC],
@@ -156,7 +156,7 @@ describe('getBroadPhasePairs', () => {
 
   describe('When passed an array of entities with missing components', () => {
     it('Should not return them as candidate pairs', () => {
-      const candidatePairs = getBroadPhasePairs([entityA, entityB, entityC]);
+      const candidatePairs = findBroadPhasePairs([entityA, entityB, entityC]);
       expect(candidatePairs).toEqual([]);
     });
   });

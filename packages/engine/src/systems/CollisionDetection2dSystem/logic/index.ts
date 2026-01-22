@@ -2,7 +2,7 @@ export { default as areAABBsOverlapping } from './areAABBsOverlapping';
 export { default as computeBoxAxes } from './computeBoxAxes';
 export { default as detectBoxBoxCollision } from './detectBoxBoxCollision';
 export { default as detectBoxCircleCollision } from './detectBoxCircleCollision';
-export { default as getBroadPhasePairs } from './getBroadPhasePairs';
+export { default as findBroadPhasePairs } from './findBroadPhasePairs';
 export { default as getCircleCircleCollision } from './getCircleCircleCollision';
 export { default as getClosestBoxVertex } from './getClosestBoxVertex';
 export { default as getClosestPointOnEdgeOfBox } from './getClosestPointOnEdgeOfBox';

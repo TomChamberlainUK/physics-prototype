@@ -7,7 +7,7 @@ import areAABBsOverlapping from './areAABBsOverlapping';
  * @param entities - The entities to check for potential collisions.
  * @returns An array of entity pairs that are potential collision candidates.
  */
-export default function getBroadPhasePairs(entities: Entity[]) {
+export default function findBroadPhasePairs(entities: Entity[]) {
   const candidatePairs: [Entity, Entity][] = [];
   for (let i = 0; i < entities.length; i++) {
     const entityA = entities[i];

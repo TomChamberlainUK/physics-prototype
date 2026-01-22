@@ -3,7 +3,7 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { CollisionDetection2dSystem } from '#/systems';
-import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
+import * as findBroadPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/findBroadPhasePairs';
 import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
 import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
@@ -22,11 +22,11 @@ describe('CollisionDetection2dSystem', () => {
     let entityA: Entity;
     let entityB: Entity;
 
-    let getBroadPhasePairsSpy: MockInstance<typeof getBroadPhasePhasePairsModule.default>;
+    let findBroadPhasePairsSpy: MockInstance<typeof findBroadPhasePairsModule.default>;
     let getNarrowPhasePairsSpy: MockInstance<typeof getNarrowPhasePairsModule.default>;
 
     beforeAll(() => {
-      getBroadPhasePairsSpy = vi.spyOn(getBroadPhasePhasePairsModule, 'default');
+      findBroadPhasePairsSpy = vi.spyOn(findBroadPhasePairsModule, 'default');
       getNarrowPhasePairsSpy = vi.spyOn(getNarrowPhasePairsModule, 'default');
     });
 
@@ -37,12 +37,12 @@ describe('CollisionDetection2dSystem', () => {
     });
 
     afterEach(() => {
-      getBroadPhasePairsSpy.mockClear();
+      findBroadPhasePairsSpy.mockClear();
       getNarrowPhasePairsSpy.mockClear();
     });
 
     afterAll(() => {
-      getBroadPhasePairsSpy.mockRestore();
+      findBroadPhasePairsSpy.mockRestore();
       getNarrowPhasePairsSpy.mockRestore();
     });
 
@@ -64,18 +64,18 @@ describe('CollisionDetection2dSystem', () => {
 
       it('Should get candidate pairs via broad phase detection', () => {
         system.update([entityA, entityB], {});
-        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([entityA, entityB]);
+        expect(findBroadPhasePairsSpy).toHaveBeenCalledWith([entityA, entityB]);
       });
 
       it('Should get collision pairs from candidate pairs via broad phase detection', () => {
-        getBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
+        findBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
         system.update([entityA, entityB], {});
         expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
       });
 
       it('Should update context broadPhaseCollisionPairs', () => {
         const broadPhasePairs: BroadPhaseCollisionPair[] = [[entityA, entityB]];
-        getBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
+        findBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
         const context = {
           broadPhaseCollisionPairs: [],
         };
@@ -105,7 +105,7 @@ describe('CollisionDetection2dSystem', () => {
     describe('When passed entities without valid components', () => {
       it('Should not get candidate pairs via broad phase detection', () => {
         system.update([entityA, entityB], {});
-        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([]);
+        expect(findBroadPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
       it('Should not get collision pairs from candidate pairs via narrow phase detection', () => {

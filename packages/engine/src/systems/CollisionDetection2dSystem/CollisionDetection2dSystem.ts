@@ -1,6 +1,6 @@
 import type Entity from '#/Entity';
 import type { Context } from '#/types';
-import { getBroadPhasePairs, getNarrowPhasePairs } from './logic';
+import { findBroadPhasePairs, getNarrowPhasePairs } from './logic';
 
 /**
  * A system that performs collision detection for 2D entities.
@@ -18,7 +18,7 @@ export default class CollisionDetection2dSystem {
     const filteredEntities = entities.filter(entity => (
       entity.hasComponents(['Collider2d', 'Transform2d'])
     ));
-    const broadPhaseCollisionPairs = getBroadPhasePairs(filteredEntities);
+    const broadPhaseCollisionPairs = findBroadPhasePairs(filteredEntities);
     const narrowPhaseCollisionPairs = getNarrowPhasePairs(broadPhaseCollisionPairs);
     context.broadPhaseCollisionPairs = broadPhaseCollisionPairs;
     context.narrowPhaseCollisionPairs = narrowPhaseCollisionPairs;

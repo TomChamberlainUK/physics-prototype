@@ -1,7 +1,7 @@
 import { Vector2d } from '#/maths';
 
 /**
- * Parameters for getClosestPointOnEdgeOfBox function.
+ * Parameters for findClosestPointOnEdgeOfBox function.
  */
 type Parameters = {
   /** The vertices of the box. */
@@ -16,7 +16,7 @@ type Parameters = {
  * @param point - The point to find the closest point on the box edge to.
  * @returns The closest point on the edge of the box to the given point.
  */
-export default function getClosestPointOnEdgeOfBox({ boxVertices, point }: Parameters) {
+export default function findClosestPointOnEdgeOfBox({ boxVertices, point }: Parameters) {
   let closestPoint: Vector2d | null = null;
   let minDistanceSquared = Infinity;
 

@@ -5,7 +5,7 @@ export { default as detectBoxCircleCollision } from './detectBoxCircleCollision'
 export { default as findBroadPhasePairs } from './findBroadPhasePairs';
 export { default as detectCircleCircleCollision } from './detectCircleCircleCollision';
 export { default as findClosestBoxVertex } from './findClosestBoxVertex';
-export { default as getClosestPointOnEdgeOfBox } from './getClosestPointOnEdgeOfBox';
+export { default as findClosestPointOnEdgeOfBox } from './findClosestPointOnEdgeOfBox';
 export { default as getCollision } from './getCollision';
 export { default as getNarrowPhasePairs } from './getNarrowPhasePairs';
 export { default as getSegmentIntersection } from './getSegmentIntersection';

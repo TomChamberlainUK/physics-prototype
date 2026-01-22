@@ -4,7 +4,7 @@ import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import computeBoxAxes from './computeBoxAxes';
 import findClosestBoxVertex from './findClosestBoxVertex';
-import getClosestPointOnEdgeOfBox from './getClosestPointOnEdgeOfBox';
+import findClosestPointOnEdgeOfBox from './findClosestPointOnEdgeOfBox';
 import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectCircle from './projectCircle';
 import projectVertices from './projectVertices';
@@ -89,7 +89,7 @@ export default function detectBoxCircleCollision(entityA: Entity, entityB: Entit
   const contactPoints: Vector2d[] = [];
 
   // Add the closest point on the box as a contact point, clamped to the circle's edge if needed
-  let closestPointOnBox = getClosestPointOnEdgeOfBox({ boxVertices, point: circlePosition });
+  let closestPointOnBox = findClosestPointOnEdgeOfBox({ boxVertices, point: circlePosition });
   const closestPointOnBoxToCircle = closestPointOnBox.subtract(circlePosition);
   if (closestPointOnBoxToCircle.getLengthSquared() > circleRadius * circleRadius) {
     // Clamp to circle's edge

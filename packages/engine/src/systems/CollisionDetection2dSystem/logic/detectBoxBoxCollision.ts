@@ -8,12 +8,12 @@ import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectVertices from './projectVertices';
 
 /**
- * Determines the collision information between two box-shaped colliders using Separating Axis Theorem (SAT).
+ * Detects a collision between two box-shaped colliders using Separating Axis Theorem (SAT).
  * @param entityA - The first entity with a box collider.
  * @param entityB - The second entity with a box collider.
  * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
  */
-export default function getBoxBoxCollision(entityA: Entity, entityB: Entity): Collision {
+export default function detectBoxBoxCollision(entityA: Entity, entityB: Entity): Collision {
   const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
   const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
   const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');

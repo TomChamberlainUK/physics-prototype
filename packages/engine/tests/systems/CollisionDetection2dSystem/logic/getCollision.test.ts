@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockIns
 import { Collider2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { getCollision } from '#/systems/CollisionDetection2dSystem/logic';
-import * as getBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/getBoxBoxCollision';
+import * as detectBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxBoxCollision';
 import * as getBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getBoxCircleCollision';
 import * as getCircleCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getCircleCircleCollision';
 import { Vector2d } from '#/maths';
@@ -11,7 +11,7 @@ import type { Collision } from '#/types';
 describe('getCollision', () => {
   let entityA: Entity;
   let entityB: Entity;
-  let getBoxBoxCollisionSpy: MockInstance<typeof getBoxBoxCollision.default>;
+  let detectBoxBoxCollisionSpy: MockInstance<typeof detectBoxBoxCollision.default>;
   let getBoxCircleCollisionSpy: MockInstance<typeof getBoxCircleCollision.default>;
   let getCircleCircleCollisionSpy: MockInstance<typeof getCircleCircleCollision.default>;
 
@@ -28,7 +28,7 @@ describe('getCollision', () => {
   ];
 
   beforeAll(() => {
-    getBoxBoxCollisionSpy = vi.spyOn(getBoxBoxCollision, 'default');
+    detectBoxBoxCollisionSpy = vi.spyOn(detectBoxBoxCollision, 'default');
     getBoxCircleCollisionSpy = vi.spyOn(getBoxCircleCollision, 'default');
     getCircleCircleCollisionSpy = vi.spyOn(getCircleCircleCollision, 'default');
   });
@@ -39,7 +39,7 @@ describe('getCollision', () => {
   });
 
   afterAll(() => {
-    getBoxBoxCollisionSpy.mockRestore();
+    detectBoxBoxCollisionSpy.mockRestore();
     getBoxCircleCollisionSpy.mockRestore();
     getCircleCircleCollisionSpy.mockRestore();
   });
@@ -80,11 +80,11 @@ describe('getCollision', () => {
         }),
       ]);
     });
-    getBoxBoxCollisionSpy.mockImplementation(() => (collision));
+    detectBoxBoxCollisionSpy.mockImplementation(() => (collision));
 
     const result = getCollision(entityA, entityB);
 
-    expect(getBoxBoxCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
+    expect(detectBoxBoxCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
     expect(result).toEqual(collision);
   });
 

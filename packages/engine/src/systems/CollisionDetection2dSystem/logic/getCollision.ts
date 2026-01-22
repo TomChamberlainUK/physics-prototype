@@ -1,7 +1,7 @@
 import type { Collider2dComponent } from '#/components';
 import type Entity from '#/Entity';
 import type { Collision } from '#/types';
-import getBoxBoxCollision from './getBoxBoxCollision';
+import detectBoxBoxCollision from './detectBoxBoxCollision';
 import getBoxCircleCollision from './getBoxCircleCollision';
 import getCircleCircleCollision from './getCircleCircleCollision';
 
@@ -19,7 +19,7 @@ export default function getCollision(entityA: Entity, entityB: Entity): Collisio
     case 'box':
       switch (colliderB.shape.type) {
         case 'box':
-          return getBoxBoxCollision(entityA, entityB);
+          return detectBoxBoxCollision(entityA, entityB);
         case 'circle':
           return getBoxCircleCollision(entityA, entityB);
         default:

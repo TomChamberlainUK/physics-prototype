@@ -1,7 +1,7 @@
 import type { Vector2d } from '#/maths';
 
 /**
- * Parameters for getClosestBoxVertex function.
+ * Parameters for findClosestBoxVertex function.
  */
 type Parameters = {
   /** The vertices of the box. */
@@ -16,7 +16,7 @@ type Parameters = {
  * @param point - The point to find the closest vertex to.
  * @returns The closest vertex to the given point.
  */
-export default function getClosestBoxVertex({ vertices, point }: Parameters): Vector2d {
+export default function findClosestBoxVertex({ vertices, point }: Parameters): Vector2d {
   let closest: Vector2d | null = null;
   let minDistanceSquared = Infinity;
 

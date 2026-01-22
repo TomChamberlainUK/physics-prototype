@@ -1,8 +1,8 @@
 import { Vector2d } from '#/maths';
-import { getClosestBoxVertex } from '#/systems/CollisionDetection2dSystem/logic';
+import { findClosestBoxVertex } from '#/systems/CollisionDetection2dSystem/logic';
 import { describe, expect, it } from 'vitest';
 
-describe('getClosestBoxVertex', () => {
+describe('findClosestBoxVertex', () => {
   it('Should find the closest vertex of a box to a given point', () => {
     const vectorA = new Vector2d({ x: 0, y: 0 });
     const vectorB = new Vector2d({ x: 2, y: 0 });
@@ -16,7 +16,7 @@ describe('getClosestBoxVertex', () => {
     ];
     const point = new Vector2d({ x: 3, y: 3 });
 
-    const closestVertex = getClosestBoxVertex({ vertices: boxVertices, point });
+    const closestVertex = findClosestBoxVertex({ vertices: boxVertices, point });
 
     const expectedClosestVertex = vectorC;
 

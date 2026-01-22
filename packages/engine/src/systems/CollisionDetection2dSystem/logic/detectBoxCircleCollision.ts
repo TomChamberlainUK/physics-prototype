@@ -3,7 +3,7 @@ import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import computeBoxAxes from './computeBoxAxes';
-import getClosestBoxVertex from './getClosestBoxVertex';
+import findClosestBoxVertex from './findClosestBoxVertex';
 import getClosestPointOnEdgeOfBox from './getClosestPointOnEdgeOfBox';
 import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectCircle from './projectCircle';
@@ -45,7 +45,7 @@ export default function detectBoxCircleCollision(entityA: Entity, entityB: Entit
   }
 
   // Get the axes to test (normals of box edges and circle-to-box axis)
-  const closestBoxVertex = getClosestBoxVertex({ vertices: boxVertices, point: circlePosition });
+  const closestBoxVertex = findClosestBoxVertex({ vertices: boxVertices, point: circlePosition });
   const circleToBoxAxis = circlePosition.subtract(closestBoxVertex).getUnit();
   const axes = [
     ...computeBoxAxes(boxVertices),

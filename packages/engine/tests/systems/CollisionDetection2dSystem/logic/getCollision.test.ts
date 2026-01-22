@@ -3,7 +3,7 @@ import { Collider2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { getCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import * as detectBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxBoxCollision';
-import * as getBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getBoxCircleCollision';
+import * as detectBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxCircleCollision';
 import * as getCircleCircleCollision from '#/systems/CollisionDetection2dSystem/logic/getCircleCircleCollision';
 import { Vector2d } from '#/maths';
 import type { Collision } from '#/types';
@@ -12,7 +12,7 @@ describe('getCollision', () => {
   let entityA: Entity;
   let entityB: Entity;
   let detectBoxBoxCollisionSpy: MockInstance<typeof detectBoxBoxCollision.default>;
-  let getBoxCircleCollisionSpy: MockInstance<typeof getBoxCircleCollision.default>;
+  let detectBoxCircleCollisionSpy: MockInstance<typeof detectBoxCircleCollision.default>;
   let getCircleCircleCollisionSpy: MockInstance<typeof getCircleCircleCollision.default>;
 
   const collisions: Collision[] = [
@@ -29,7 +29,7 @@ describe('getCollision', () => {
 
   beforeAll(() => {
     detectBoxBoxCollisionSpy = vi.spyOn(detectBoxBoxCollision, 'default');
-    getBoxCircleCollisionSpy = vi.spyOn(getBoxCircleCollision, 'default');
+    detectBoxCircleCollisionSpy = vi.spyOn(detectBoxCircleCollision, 'default');
     getCircleCircleCollisionSpy = vi.spyOn(getCircleCircleCollision, 'default');
   });
 
@@ -40,7 +40,7 @@ describe('getCollision', () => {
 
   afterAll(() => {
     detectBoxBoxCollisionSpy.mockRestore();
-    getBoxCircleCollisionSpy.mockRestore();
+    detectBoxCircleCollisionSpy.mockRestore();
     getCircleCircleCollisionSpy.mockRestore();
   });
 
@@ -111,10 +111,10 @@ describe('getCollision', () => {
       }),
     ]);
 
-    getBoxCircleCollisionSpy.mockImplementation(() => (collision));
+    detectBoxCircleCollisionSpy.mockImplementation(() => (collision));
     const result = getCollision(entityA, entityB);
 
-    expect(getBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
+    expect(detectBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
     expect(result).toEqual(collision);
   });
 
@@ -141,10 +141,10 @@ describe('getCollision', () => {
       }),
     ]);
 
-    getBoxCircleCollisionSpy.mockImplementation(() => (collision));
+    detectBoxCircleCollisionSpy.mockImplementation(() => (collision));
     const result = getCollision(entityA, entityB);
 
-    expect(getBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
+    expect(detectBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
     expect(result).toEqual(collision);
   });
 });

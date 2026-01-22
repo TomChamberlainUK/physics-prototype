@@ -3,10 +3,10 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
-import { getBoxCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
+import { detectBoxCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { isPointNearConvexPolygon } from '../../../utils';
 
-describe('getBoxCircleCollision', () => {
+describe('detectBoxCircleCollision', () => {
   const width = 50;
   const height = 50;
   const halfWidth = width / 2;
@@ -19,7 +19,7 @@ describe('getBoxCircleCollision', () => {
   let colliderA: Collider2dComponent;
   let colliderB: Collider2dComponent;
 
-  let result: ReturnType<typeof getBoxCircleCollision>;
+  let result: ReturnType<typeof detectBoxCircleCollision>;
 
   beforeEach(() => {
     entityA = new Entity();
@@ -55,7 +55,7 @@ describe('getBoxCircleCollision', () => {
     beforeEach(() => {
       transformB.position.x = width - overlap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
-      result = getBoxCircleCollision(entityA, entityB);
+      result = detectBoxCircleCollision(entityA, entityB);
     });
 
     it('Should detect a collision', () => {
@@ -91,7 +91,7 @@ describe('getBoxCircleCollision', () => {
     beforeEach(() => {
       transformB.position.x = width + gap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
-      result = getBoxCircleCollision(entityA, entityB);
+      result = detectBoxCircleCollision(entityA, entityB);
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {
@@ -108,7 +108,7 @@ describe('getBoxCircleCollision', () => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width - overlap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
-      result = getBoxCircleCollision(entityA, entityB);
+      result = detectBoxCircleCollision(entityA, entityB);
     });
 
     it('Should detect a collision', () => {
@@ -152,7 +152,7 @@ describe('getBoxCircleCollision', () => {
       transformA.rotation = Math.PI / 4; // 45 degrees
       transformB.position.x = width + gap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
-      result = getBoxCircleCollision(entityA, entityB);
+      result = detectBoxCircleCollision(entityA, entityB);
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {

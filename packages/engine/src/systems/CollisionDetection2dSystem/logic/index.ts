@@ -1,14 +1,14 @@
 export { default as areAABBsOverlapping } from './areAABBsOverlapping';
 export { default as computeBoxAxes } from './computeBoxAxes';
+export { default as computeSegmentIntersection } from './computeSegmentIntersection';
 export { default as detectBoxBoxCollision } from './detectBoxBoxCollision';
 export { default as detectBoxCircleCollision } from './detectBoxCircleCollision';
-export { default as findBroadPhasePairs } from './findBroadPhasePairs';
 export { default as detectCircleCircleCollision } from './detectCircleCircleCollision';
+export { default as detectCollision } from './detectCollision';
+export { default as findBroadPhasePairs } from './findBroadPhasePairs';
 export { default as findClosestBoxVertex } from './findClosestBoxVertex';
 export { default as findClosestPointOnEdgeOfBox } from './findClosestPointOnEdgeOfBox';
-export { default as detectCollision } from './detectCollision';
 export { default as findNarrowPhasePairs } from './findNarrowPhasePairs';
-export { default as computeSegmentIntersection } from './computeSegmentIntersection';
 export { default as isPointInConvexPolygon } from './isPointInConvexPolygon';
 export { default as projectCircle } from './projectCircle';
 export { default as projectVertices } from './projectVertices';

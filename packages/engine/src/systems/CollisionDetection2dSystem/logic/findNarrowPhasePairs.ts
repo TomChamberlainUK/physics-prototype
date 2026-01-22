@@ -7,7 +7,7 @@ import detectCollision from './detectCollision';
  * @param candidatePairs - The candidate entity pairs to check for collisions.
  * @returns An array of narrow-phase collision pairs with detailed collision information.
  */
-export default function getNarrowPhasePairs(candidatePairs: [Entity, Entity][]): NarrowPhaseCollisionPair[] {
+export default function findNarrowPhasePairs(candidatePairs: [Entity, Entity][]): NarrowPhaseCollisionPair[] {
   const collisionPairs: NarrowPhaseCollisionPair[] = [];
   for (const [entityA, entityB] of candidatePairs) {
     const collision = detectCollision(entityA, entityB);

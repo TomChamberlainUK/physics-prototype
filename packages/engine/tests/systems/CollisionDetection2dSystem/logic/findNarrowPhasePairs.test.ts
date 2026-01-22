@@ -3,9 +3,9 @@ import Entity from '#/Entity';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
 import { Vector2d } from '#/maths';
 import * as detectCollisionModule from '#/systems/CollisionDetection2dSystem/logic/detectCollision';
-import getNarrowPhasePairs from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
+import findNarrowPhasePairs from '#/systems/CollisionDetection2dSystem/logic/findNarrowPhasePairs';
 
-describe('getNarrowPhasePairs', () => {
+describe('findNarrowPhasePairs', () => {
   let entityA: Entity;
   let entityB: Entity;
   let entityC: Entity;
@@ -43,7 +43,7 @@ describe('getNarrowPhasePairs', () => {
   });
 
   it('Should test collision for each candidate pair', () => {
-    getNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
+    findNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
     expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
     expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityC);
     expect(detectCollisionSpy).toHaveBeenCalledWith(entityB, entityC);
@@ -62,7 +62,7 @@ describe('getNarrowPhasePairs', () => {
     });
 
     it('Should return them as collision pairs with contact manifolds', () => {
-      const collisionPairs = getNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
+      const collisionPairs = findNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
       expect(collisionPairs).toEqual([
         {
           entityA,
@@ -103,7 +103,7 @@ describe('getNarrowPhasePairs', () => {
     });
 
     it('Should not return them as collision pairs', () => {
-      const collisionPairs = getNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
+      const collisionPairs = findNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
       expect(collisionPairs).toEqual([]);
     });
   });

@@ -1,7 +1,7 @@
 /**
- * Parameters required to compute the normal impulse magnitude.
+ * Properties required to compute the normal impulse magnitude.
  */
-type Parameters = {
+type Properties = {
   /** The effective mass at the contact point. */
   effectiveMass: number;
   /** The restitution coefficient (bounciness) of the collision. */
@@ -12,15 +12,13 @@ type Parameters = {
 
 /**
  * Computes the normal impulse magnitude to be applied during collision resolution.
- * @param effectiveMass - The effective mass at the contact point.
- * @param restitution - The restitution coefficient (bounciness) of the collision.
- * @param velocity - The relative velocity along the normal between the two bodies at the contact point.
+ * @param properties - An object containing the effective mass, restitution, and relative velocity, see {@link Properties}.
  * @returns The normal impulse magnitude.
  */
 export default function computeNormalImpulseMagnitude({
   effectiveMass,
   restitution,
   velocity,
-}: Parameters): number {
+}: Properties): number {
   return -(1 + restitution) * velocity / effectiveMass;
 }

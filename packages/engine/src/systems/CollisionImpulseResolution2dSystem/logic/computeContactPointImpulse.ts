@@ -8,9 +8,9 @@ import {
 } from '.';
 
 /**
- * Parameter types for computeContactImpulse function.
+ * Properties required to compute the contact impulse.
  */
-type Parameters = {
+type Properties = {
   /** The contact point between the two rigid bodies. */
   contactPoint: Vector2d;
   /** The contact normal vector at the contact point. */
@@ -41,12 +41,12 @@ type Output = {
   tangentAngularImpulseA: number;
   /** The angular impulse for entity B along the contact tangent. */
   tangentAngularImpulseB: number;
-};
+} | null;
 
 /**
  * Computes the contact impulse between two rigid bodies at a single contact point.
- * @param parameters - The components and conditions for the contact impulse computation, see {@link Parameters}.
- * @returns The computed contact impulse, see {@link Output}, or `null` if no impulse is applied.
+ * @param properties - An object containing the components and conditions for the contact impulse computation, see {@link Properties}.
+ * @returns The computed contact impulse, or `null` if no impulse is applied, see {@link Output}.
  */
 export default function computeContactPointImpulse({
   contactPoint,
@@ -55,7 +55,7 @@ export default function computeContactPointImpulse({
   rigidBodyB,
   transformA,
   transformB,
-}: Parameters): Output | null {
+}: Properties): Output {
   const {
     angularVelocity: angularVelocityA,
     friction: frictionA,

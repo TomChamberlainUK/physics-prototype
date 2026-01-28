@@ -3,9 +3,9 @@ import { Vector2d } from '#/maths';
 import computeContactPointImpulse from './computeContactPointImpulse';
 
 /**
- * Parameter types for computeContactManifoldImpulse.
+ * Properties required to compute the contact manifold impulse.
  */
-type Parameters = {
+type Properties = {
   /** The contact manifold between the two rigid bodies. */
   contactManifold: ContactManifold;
   /** The transform component for entity A. */
@@ -38,7 +38,7 @@ type Output = {
 
 /**
  * Computes the contact manifold impulse by averaging the impulses computed at each contact point.
- * @param parameters - The conditions for the contact manifold impulse computation, see {@link Parameters}.
+ * @param properties - An object containing the transform and rigid body components for both entities and the contact manifold, see {@link Properties}.
  * @returns The computed contact manifold impulse, see {@link Output}.
  */
 export default function computeContactManifoldImpulse({
@@ -47,7 +47,7 @@ export default function computeContactManifoldImpulse({
   rigidBodyB,
   transformA,
   transformB,
-}: Parameters): Output {
+}: Properties): Output {
   const { contactPoints, normal } = contactManifold;
 
   let normalLinearImpulse = new Vector2d({ x: 0, y: 0 });

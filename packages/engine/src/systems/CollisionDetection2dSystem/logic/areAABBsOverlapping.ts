@@ -2,8 +2,8 @@ import type { AABB } from '#/types';
 
 /**
  * Determines whether two axis-aligned bounding boxes (AABBs) overlap.
- * @param a - The first AABB.
- * @param b - The second AABB.
+ * @param a - The first AABB, see {@link AABB}.
+ * @param b - The second AABB, see {@link AABB}.
  * @returns True if the AABBs overlap, otherwise false.
  */
 export default function areAABBsOverlapping(a: AABB, b: AABB) {

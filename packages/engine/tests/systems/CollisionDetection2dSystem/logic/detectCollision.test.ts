@@ -1,31 +1,32 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent } from '#/components';
-import Entity from '#/Entity';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { Collider2dComponent, Transform2dComponent } from '#/components';
+import { Vector2d } from '#/maths';
 import { detectCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import * as detectBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxBoxCollision';
 import * as detectBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxCircleCollision';
 import * as detectCircleCircleCollision from '#/systems/CollisionDetection2dSystem/logic/detectCircleCircleCollision';
-import { Vector2d } from '#/maths';
-import type { Collision } from '#/types';
 
 describe('detectCollision', () => {
-  let entityA: Entity;
-  let entityB: Entity;
+  let colliderA: Collider2dComponent;
+  let colliderB: Collider2dComponent;
+  let transformA: Transform2dComponent;
+  let transformB: Transform2dComponent;
+
   let detectBoxBoxCollisionSpy: MockInstance<typeof detectBoxBoxCollision.default>;
   let detectBoxCircleCollisionSpy: MockInstance<typeof detectBoxCircleCollision.default>;
   let detectCircleCircleCollisionSpy: MockInstance<typeof detectCircleCircleCollision.default>;
 
-  const collisions: Collision[] = [
-    {
-      isColliding: true,
+  const expectedCollision = {
+    isColliding: true,
+    contactManifold: {
       normal: new Vector2d({ x: 1, y: 0 }),
       overlap: 5,
-      contactPoints: [new Vector2d({ x: 0, y: 0 }), new Vector2d({ x: 1, y: 1 })],
+      contactPoints: [
+        new Vector2d({ x: 0, y: 0 }),
+        new Vector2d({ x: 1, y: 1 }),
+      ],
     },
-    {
-      isColliding: false,
-    },
-  ];
+  };
 
   beforeAll(() => {
     detectBoxBoxCollisionSpy = vi.spyOn(detectBoxBoxCollision, 'default');
@@ -34,8 +35,14 @@ describe('detectCollision', () => {
   });
 
   beforeEach(() => {
-    entityA = new Entity();
-    entityB = new Entity();
+    transformA = new Transform2dComponent();
+    transformB = new Transform2dComponent();
+  });
+
+  afterEach(() => {
+    detectBoxBoxCollisionSpy.mockClear();
+    detectBoxCircleCollisionSpy.mockClear();
+    detectCircleCircleCollisionSpy.mockClear();
   });
 
   afterAll(() => {
@@ -44,107 +51,108 @@ describe('detectCollision', () => {
     detectCircleCircleCollisionSpy.mockRestore();
   });
 
-  it.each(collisions)('Should return collision data for two circles when isColliding is $isColliding', (collision) => {
-    const radius = 16;
-
-    [entityA, entityB].forEach((entity) => {
-      entity.addComponents([
-        new Collider2dComponent({
-          shape: {
-            type: 'circle',
-            radius,
-          },
-        }),
-      ]);
-    });
-    detectCircleCircleCollisionSpy.mockImplementation(() => collision);
-
-    const result = detectCollision(entityA, entityB);
-
-    expect(detectCircleCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result).toEqual(collision);
-  });
-
-  it.each(collisions)('Should return collision data for two boxes when isColliding is $isColliding', (collision) => {
-    const width = 32;
-    const height = 32;
-
-    [entityA, entityB].forEach((entity) => {
-      entity.addComponents([
-        new Collider2dComponent({
-          shape: {
-            type: 'box',
-            width,
-            height,
-          },
-        }),
-      ]);
-    });
-    detectBoxBoxCollisionSpy.mockImplementation(() => (collision));
-
-    const result = detectCollision(entityA, entityB);
-
-    expect(detectBoxBoxCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result).toEqual(collision);
-  });
-
-  it.each(collisions)('Should return collision data for a box and a circle when isColliding is $isColliding', (collision) => {
-    const boxWidth = 32;
-    const boxHeight = 32;
-    const circleRadius = 16;
-
-    entityA.addComponents([
-      new Collider2dComponent({
+  describe('When passed two entities with box colliders', () => {
+    beforeEach(() => {
+      colliderA = new Collider2dComponent({
         shape: {
           type: 'box',
-          width: boxWidth,
-          height: boxHeight,
+          width: 32,
+          height: 32,
         },
-      }),
-    ]);
-    entityB.addComponents([
-      new Collider2dComponent({
-        shape: {
-          type: 'circle',
-          radius: circleRadius,
-        },
-      }),
-    ]);
-
-    detectBoxCircleCollisionSpy.mockImplementation(() => (collision));
-    const result = detectCollision(entityA, entityB);
-
-    expect(detectBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result).toEqual(collision);
-  });
-
-  it.each(collisions)('Should return collision data for a circle and a box when isColliding is $isColliding', (collision) => {
-    const boxWidth = 32;
-    const boxHeight = 32;
-    const circleRadius = 16;
-
-    entityA.addComponents([
-      new Collider2dComponent({
-        shape: {
-          type: 'circle',
-          radius: circleRadius,
-        },
-      }),
-    ]);
-    entityB.addComponents([
-      new Collider2dComponent({
+      });
+      colliderB = new Collider2dComponent({
         shape: {
           type: 'box',
-          width: boxWidth,
-          height: boxHeight,
+          width: 32,
+          height: 32,
         },
-      }),
-    ]);
+      });
+    });
 
-    detectBoxCircleCollisionSpy.mockImplementation(() => (collision));
-    const result = detectCollision(entityA, entityB);
+    it('Should detect a box-box collision', () => {
+      detectBoxBoxCollisionSpy.mockImplementation(() => expectedCollision);
+      const collision = detectCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+      expect(collision).toEqual(expectedCollision);
+      expect(detectBoxBoxCollisionSpy).toHaveBeenCalledWith({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+    });
+  });
 
-    expect(detectBoxCircleCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(result).toEqual(collision);
+  describe('When passed two entities with circle colliders', () => {
+    beforeEach(() => {
+      colliderA = new Collider2dComponent({
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      });
+      colliderB = new Collider2dComponent({
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      });
+    });
+
+    it('Should detect a circle-circle collision', () => {
+      detectCircleCircleCollisionSpy.mockImplementation(() => expectedCollision);
+      const collision = detectCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+      expect(collision).toEqual(expectedCollision);
+      expect(detectCircleCircleCollisionSpy).toHaveBeenCalledWith({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+    });
+  });
+
+  describe('When passed one entity with a box collider and one with a circle collider', () => {
+    beforeEach(() => {
+      colliderA = new Collider2dComponent({
+        shape: {
+          type: 'box',
+          width: 32,
+          height: 32,
+        },
+      });
+      colliderB = new Collider2dComponent({
+        shape: {
+          type: 'circle',
+          radius: 16,
+        },
+      });
+    });
+
+    it('Should detect a box-circle collision', () => {
+      detectBoxCircleCollisionSpy.mockImplementation(() => expectedCollision);
+      const collision = detectCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+      expect(collision).toEqual(expectedCollision);
+      expect(detectBoxCircleCollisionSpy).toHaveBeenCalledWith({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
+    });
   });
 });

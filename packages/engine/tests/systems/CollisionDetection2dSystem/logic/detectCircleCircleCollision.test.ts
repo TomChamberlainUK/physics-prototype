@@ -1,5 +1,4 @@
 import { Collider2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { detectCircleCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -7,23 +6,21 @@ import { beforeEach, describe, expect, it } from 'vitest';
 describe('detectCircleCircleCollision', () => {
   const radius = 16;
 
-  let entityA: Entity;
-  let entityB: Entity;
+  let colliderA: Collider2dComponent;
+  let colliderB: Collider2dComponent;
   let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
 
   let result: ReturnType<typeof detectCircleCircleCollision>;
 
   beforeEach(() => {
-    entityA = new Entity();
-    entityB = new Entity();
-    const colliderA = new Collider2dComponent({
+    colliderA = new Collider2dComponent({
       shape: {
         type: 'circle',
         radius,
       },
     });
-    const colliderB = new Collider2dComponent({
+    colliderB = new Collider2dComponent({
       shape: {
         type: 'circle',
         radius,
@@ -31,8 +28,6 @@ describe('detectCircleCircleCollision', () => {
     });
     transformA = new Transform2dComponent();
     transformB = new Transform2dComponent();
-    entityA.addComponents([colliderA, transformA]);
-    entityB.addComponents([colliderB, transformB]);
   });
 
   describe('When passed two colliding circles', () => {
@@ -43,7 +38,12 @@ describe('detectCircleCircleCollision', () => {
         x: (radius * 2) - overlap,
         y: 0,
       });
-      result = detectCircleCircleCollision(entityA, entityB);
+      result = detectCircleCircleCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should detect a collision', () => {
@@ -83,7 +83,12 @@ describe('detectCircleCircleCollision', () => {
         x: (radius * 2) + 10,
         y: 0,
       });
-      result = detectCircleCircleCollision(entityA, entityB);
+      result = detectCircleCircleCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should return that the circles are not colliding', () => {

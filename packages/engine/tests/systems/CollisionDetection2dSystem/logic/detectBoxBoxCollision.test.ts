@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Collider2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { detectBoxBoxCollision, isPointInConvexPolygon } from '#/systems/CollisionDetection2dSystem/logic';
 import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
@@ -11,8 +10,6 @@ describe('detectBoxBoxCollision', () => {
   const halfWidth = width / 2;
   const halfHeight = height / 2;
 
-  let entityA: Entity;
-  let entityB: Entity;
   let transformA: Transform2dComponent;
   let transformB: Transform2dComponent;
   let colliderA: Collider2dComponent;
@@ -21,8 +18,6 @@ describe('detectBoxBoxCollision', () => {
   let result: ReturnType<typeof detectBoxBoxCollision>;
 
   beforeEach(() => {
-    entityA = new Entity();
-    entityB = new Entity();
     transformA = new Transform2dComponent();
     transformB = new Transform2dComponent();
     colliderA = new Collider2dComponent({
@@ -39,14 +34,6 @@ describe('detectBoxBoxCollision', () => {
         height,
       },
     });
-    entityA.addComponents([
-      transformA,
-      colliderA,
-    ]);
-    entityB.addComponents([
-      transformB,
-      colliderB,
-    ]);
   });
 
   describe('When passed axis-aligned entities with colliding world vertices', () => {
@@ -56,7 +43,12 @@ describe('detectBoxBoxCollision', () => {
       transformB.position.x = width - overlap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
-      result = detectBoxBoxCollision(entityA, entityB);
+      result = detectBoxBoxCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should detect a collision', () => {
@@ -105,7 +97,12 @@ describe('detectBoxBoxCollision', () => {
       transformB.position.x = width + gap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
-      result = detectBoxBoxCollision(entityA, entityB);
+      result = detectBoxBoxCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {
@@ -123,7 +120,12 @@ describe('detectBoxBoxCollision', () => {
       transformB.position.x = width - overlap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
-      result = detectBoxBoxCollision(entityA, entityB);
+      result = detectBoxBoxCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should detect a collision', () => {
@@ -169,7 +171,12 @@ describe('detectBoxBoxCollision', () => {
       transformB.position.x = width + gap;
       colliderA.worldVertices = computeWorldVertices({ collider: colliderA, transform: transformA });
       colliderB.worldVertices = computeWorldVertices({ collider: colliderB, transform: transformB });
-      result = detectBoxBoxCollision(entityA, entityB);
+      result = detectBoxBoxCollision({
+        colliderA,
+        colliderB,
+        transformA,
+        transformB,
+      });
     });
 
     it('Should return no collision data when passed two non-colliding boxes', () => {

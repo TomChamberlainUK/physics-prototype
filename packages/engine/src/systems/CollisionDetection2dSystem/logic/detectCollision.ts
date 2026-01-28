@@ -1,27 +1,51 @@
-import type { Collider2dComponent } from '#/components';
-import type Entity from '#/Entity';
+import type { Collider2dComponent, Transform2dComponent } from '#/components';
 import type { Collision } from '#/types';
 import detectBoxBoxCollision from './detectBoxBoxCollision';
 import detectBoxCircleCollision from './detectBoxCircleCollision';
 import detectCircleCircleCollision from './detectCircleCircleCollision';
 
 /**
- * Detects a collision between two entities based on their collider shapes.
- * @param entityA - The first entity with a collider.
- * @param entityB - The second entity with a collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
+ * Properties required to detect a collision.
  */
-export default function detectCollision(entityA: Entity, entityB: Entity): Collision {
-  const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
-  const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
+type Properties = {
+  /** Collider component of circle A */
+  colliderA: Collider2dComponent;
+  /** Collider component of circle B */
+  colliderB: Collider2dComponent;
+  /** Transform component of circle A */
+  transformA: Transform2dComponent;
+  /** Transform component of circle B */
+  transformB: Transform2dComponent;
+};
 
+/**
+ * Detects a collision between two entities based on their collider shapes.
+ * @param properties - An object containing the collider and transform components of the two entities, see {@link Properties}.
+ * @returns An object containing whether a collision occurred, its normal, the overlap distance, and contact points, see {@link Collision}.
+ */
+export default function detectCollision({
+  colliderA,
+  colliderB,
+  transformA,
+  transformB,
+}: Properties): Collision {
   switch (colliderA.shape.type) {
     case 'box':
       switch (colliderB.shape.type) {
         case 'box':
-          return detectBoxBoxCollision(entityA, entityB);
+          return detectBoxBoxCollision({
+            colliderA,
+            colliderB,
+            transformA,
+            transformB,
+          });
         case 'circle':
-          return detectBoxCircleCollision(entityA, entityB);
+          return detectBoxCircleCollision({
+            colliderA,
+            colliderB,
+            transformA,
+            transformB,
+          });
         default:
           return {
             isColliding: false,
@@ -30,9 +54,19 @@ export default function detectCollision(entityA: Entity, entityB: Entity): Colli
     case 'circle':
       switch (colliderB.shape.type) {
         case 'circle':
-          return detectCircleCircleCollision(entityA, entityB);
+          return detectCircleCircleCollision({
+            colliderA,
+            colliderB,
+            transformA,
+            transformB,
+          });
         case 'box':
-          return detectBoxCircleCollision(entityA, entityB);
+          return detectBoxCircleCollision({
+            colliderA,
+            colliderB,
+            transformA,
+            transformB,
+          });
         default:
           return {
             isColliding: false,

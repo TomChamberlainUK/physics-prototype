@@ -9,6 +9,12 @@ describe('findNarrowPhasePairs', () => {
   let entityA: Entity;
   let entityB: Entity;
   let entityC: Entity;
+  let colliderA: Collider2dComponent;
+  let colliderB: Collider2dComponent;
+  let colliderC: Collider2dComponent;
+  let transformA: Transform2dComponent;
+  let transformB: Transform2dComponent;
+  let transformC: Transform2dComponent;
 
   let detectCollisionSpy: MockInstance<typeof detectCollisionModule.default>;
 
@@ -20,18 +26,30 @@ describe('findNarrowPhasePairs', () => {
     entityA = new Entity();
     entityB = new Entity();
     entityC = new Entity();
-    for (const entity of [entityA, entityB, entityC]) {
-      entity.addComponents([
-        new Collider2dComponent({
-          shape: {
-            type: 'box',
-            width: 32,
-            height: 32,
-          },
-        }),
-        new Transform2dComponent(),
-      ]);
-    }
+    colliderA = new Collider2dComponent({
+      shape: {
+        type: 'circle',
+        radius: 16,
+      },
+    });
+    colliderB = new Collider2dComponent({
+      shape: {
+        type: 'circle',
+        radius: 16,
+      },
+    });
+    colliderC = new Collider2dComponent({
+      shape: {
+        type: 'circle',
+        radius: 16,
+      },
+    });
+    transformA = new Transform2dComponent();
+    transformB = new Transform2dComponent();
+    transformC = new Transform2dComponent();
+    entityA.addComponents([colliderA, transformA]);
+    entityB.addComponents([colliderB, transformB]);
+    entityC.addComponents([colliderC, transformC]);
   });
 
   afterEach(() => {
@@ -44,9 +62,24 @@ describe('findNarrowPhasePairs', () => {
 
   it('Should test collision for each candidate pair', () => {
     findNarrowPhasePairs([[entityA, entityB], [entityA, entityC], [entityB, entityC]]);
-    expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityB);
-    expect(detectCollisionSpy).toHaveBeenCalledWith(entityA, entityC);
-    expect(detectCollisionSpy).toHaveBeenCalledWith(entityB, entityC);
+    expect(detectCollisionSpy).toHaveBeenCalledWith({
+      colliderA,
+      colliderB,
+      transformA,
+      transformB,
+    });
+    expect(detectCollisionSpy).toHaveBeenCalledWith({
+      colliderA,
+      colliderB: colliderC,
+      transformA,
+      transformB: transformC,
+    });
+    expect(detectCollisionSpy).toHaveBeenCalledWith({
+      colliderA: colliderB,
+      colliderB: colliderC,
+      transformA: transformB,
+      transformB: transformC,
+    });
   });
 
   describe('When entities are colliding', () => {

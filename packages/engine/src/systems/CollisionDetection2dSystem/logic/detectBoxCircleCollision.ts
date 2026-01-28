@@ -1,5 +1,4 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import computeBoxAxes from './computeBoxAxes';
@@ -10,17 +9,30 @@ import projectCircle from './projectCircle';
 import projectVertices from './projectVertices';
 
 /**
- * Detects a collision between a box-shaped collider and a circle-shaped collider using Separating Axis Theorem (SAT).
- * @param entityA - The first entity with a box or circle collider.
- * @param entityB - The second entity with a box or circle collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
+ * Properties required to detect a box-circle collision.
  */
-export default function detectBoxCircleCollision(entityA: Entity, entityB: Entity): Collision {
-  const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
-  const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
-  const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
-  const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
+type Properties = {
+  /** Collider component of entity A */
+  colliderA: Collider2dComponent;
+  /** Collider component of entity B */
+  colliderB: Collider2dComponent;
+  /** Transform component of entity A */
+  transformA: Transform2dComponent;
+  /** Transform component of entity B */
+  transformB: Transform2dComponent;
+};
 
+/**
+ * Detects a collision between a box-shaped collider and a circle-shaped collider using Separating Axis Theorem (SAT).
+ * @param properties - An object containing the collider and transform components of the two entities, see {@link Properties}.
+ * @returns An object containing whether a collision occurred, its normal, the overlap distance, and contact points, see {@link Collision}.
+ */
+export default function detectBoxCircleCollision({
+  colliderA,
+  colliderB,
+  transformA,
+  transformB,
+}: Properties): Collision {
   // Identify which is box and which is circle
   let boxVertices: Vector2d[] | null;
   let circlePosition: Vector2d;

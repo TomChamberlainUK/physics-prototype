@@ -1,20 +1,32 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 
 /**
- * Detects a collision between two circle-shaped colliders using pythagorean theorem.
- * @param entityA - The first entity with a circle collider.
- * @param entityB - The second entity with a circle collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
+ * Properties required to detect a circle-circle collision.
  */
-export default function detectCircleCircleCollision(entityA: Entity, entityB: Entity): Collision {
-  const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
-  const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
-  const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
-  const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
+type Properties = {
+  /** Collider component of circle A */
+  colliderA: Collider2dComponent;
+  /** Collider component of circle B */
+  colliderB: Collider2dComponent;
+  /** Transform component of circle A */
+  transformA: Transform2dComponent;
+  /** Transform component of circle B */
+  transformB: Transform2dComponent;
+};
 
+/**
+ * Detects a collision between two circle-shaped colliders using pythagorean theorem.
+ * @param properties - An object containing the collider and transform components of the two circles, see {@link Properties}.
+ * @returns An object containing whether a collision occurred, its normal, the overlap distance, and contact points, see {@link Collision}.
+ */
+export default function detectCircleCircleCollision({
+  colliderA,
+  colliderB,
+  transformA,
+  transformB,
+}: Properties): Collision {
   if (colliderA.shape.type === 'circle' && colliderB.shape.type === 'circle') {
     const delta = transformA.position.subtract(transformB.position);
     const totalRadius = colliderA.shape.radius + colliderB.shape.radius;

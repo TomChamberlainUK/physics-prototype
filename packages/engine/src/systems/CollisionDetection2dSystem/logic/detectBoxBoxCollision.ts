@@ -1,5 +1,4 @@
 import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
 import Vector2d from '#/maths/Vector2d';
 import type { Collision } from '#/types';
 import computeBoxAxes from './computeBoxAxes';
@@ -8,17 +7,30 @@ import isPointInConvexPolygon from './isPointInConvexPolygon';
 import projectVertices from './projectVertices';
 
 /**
- * Detects a collision between two box-shaped colliders using Separating Axis Theorem (SAT).
- * @param entityA - The first entity with a box collider.
- * @param entityB - The second entity with a box collider.
- * @returns An object containing collision information, including whether a collision occurred, the collision normal, the overlap distance, and contact points.
+ * Properties required to detect a box-box collision.
  */
-export default function detectBoxBoxCollision(entityA: Entity, entityB: Entity): Collision {
-  const colliderA = entityA.getComponent<Collider2dComponent>('Collider2d');
-  const colliderB = entityB.getComponent<Collider2dComponent>('Collider2d');
-  const transformA = entityA.getComponent<Transform2dComponent>('Transform2d');
-  const transformB = entityB.getComponent<Transform2dComponent>('Transform2d');
+type Properties = {
+  /** Collider component of box A */
+  colliderA: Collider2dComponent;
+  /** Collider component of box B */
+  colliderB: Collider2dComponent;
+  /** Transform component of box A */
+  transformA: Transform2dComponent;
+  /** Transform component of box B */
+  transformB: Transform2dComponent;
+};
 
+/**
+ * Detects a collision between two box-shaped colliders using Separating Axis Theorem (SAT).
+ * @param properties - An object containing the collider and transform components of the two boxes, see {@link Properties}.
+ * @returns An object containing whether a collision occurred, its normal, the overlap distance, and contact points, see {@link Collision}.
+ */
+export default function detectBoxBoxCollision({
+  colliderA,
+  colliderB,
+  transformA,
+  transformB,
+}: Properties): Collision {
   if (colliderA.shape.type !== 'box' || colliderB.shape.type !== 'box') {
     return { isColliding: false };
   }
@@ -141,8 +153,7 @@ export default function detectBoxBoxCollision(entityA: Entity, entityB: Entity):
   // Fallback: If no contact points found, use the center of the overlap region projected onto the collision normal
   if (contactPoints.length === 0) {
     // Project the center of box A onto the collision normal, then move by half the overlap
-    const centerA = transformA.position;
-    const fallbackPoint = centerA.add(normal.multiply(overlap / 2));
+    const fallbackPoint = transformA.position.add(normal.multiply(overlap / 2));
     contactPoints = [fallbackPoint];
   }
 

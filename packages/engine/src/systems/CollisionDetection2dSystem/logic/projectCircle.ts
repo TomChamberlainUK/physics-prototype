@@ -1,9 +1,9 @@
 import { Vector2d } from '#/maths';
 
 /**
- * Parameters for projecting a circle onto an axis.
+ * Properties for projecting a circle onto an axis.
  */
-type Parameters = {
+type Properties = {
   /** The position of the center of the circle to project. */
   position: Vector2d;
   /** The radius of the circle to project. */
@@ -13,13 +13,21 @@ type Parameters = {
 };
 
 /**
- * Projects a circle onto a given axis and returns the minimum and maximum scalar projections.
- * @param position - The position of the center of the circle to project.
- * @param radius - The radius of the circle to project.
- * @param axis - The axis to project onto.
- * @returns An object containing the min and max projections of the circle onto the axis.
+ * The output of the projectCircle function.
  */
-export default function projectCircle({ position, radius, axis }: Parameters) {
+type Output = {
+  /** The minimum projection value on the axis. */
+  min: number;
+  /** The maximum projection value on the axis. */
+  max: number;
+};
+
+/**
+ * Projects a circle onto a given axis and returns the minimum and maximum scalar projections.
+ * @param properties - An object containing the position, radius, and axis to project onto, see {@link Properties}.
+ * @returns An object containing the min and max projections of the circle onto the axis, see {@link Output}.
+ */
+export default function projectCircle({ position, radius, axis }: Properties): Output {
   const centerProjection = Vector2d.dotProduct(position, axis);
   return {
     min: centerProjection - radius,

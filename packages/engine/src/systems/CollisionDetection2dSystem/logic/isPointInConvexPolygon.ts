@@ -1,9 +1,9 @@
 import type { Vector2d } from '#/maths';
 
 /**
- * Parameters for the isPointInConvexPolygon function.
+ * Properties for the isPointInConvexPolygon function.
  */
-type Parameters = {
+type Properties = {
   /** The point to test. */
   point: Vector2d;
   /** The vertices of the convex polygon in order. */
@@ -12,11 +12,10 @@ type Parameters = {
 
 /**
  * Determines if a point is inside a convex polygon using the cross product method.
- * @param point - The point to test.
- * @param polygonVertices - The vertices of the convex polygon in order.
+ * @param properties - An object containing the point to test and the vertices of the convex polygon, see {@link Properties}.
  * @returns True if the point is inside the polygon, false otherwise.
  */
-export default function isPointInConvexPolygon({ point, polygonVertices }: Parameters) {
+export default function isPointInConvexPolygon({ point, polygonVertices }: Properties) {
   let sign: number | null = null; // Represents what side of the edge the point is on, +1 or -1
   const vertexCount = polygonVertices.length;
 

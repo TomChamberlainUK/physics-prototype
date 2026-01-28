@@ -1,7 +1,7 @@
 /**
- * Parameters required to compute the tangent impulse magnitude.
+ * Properties required to compute the tangent impulse magnitude.
  */
-type Parameters = {
+type Properties = {
   /** The effective mass at the contact point. */
   effectiveMass: number;
   /** The relative velocity along the tangent between the two bodies at the contact point. */
@@ -10,13 +10,12 @@ type Parameters = {
 
 /**
  * Computes the tangent impulse magnitude to be applied during collision resolution.
- * @param effectiveMass - The effective mass at the contact point.
- * @param velocity - The relative velocity along the tangent between the two bodies at the contact point.
+ * @param properties - An object containing the effective mass and relative velocity, see {@link Properties}.
  * @returns The tangent impulse magnitude.
  */
 export default function computeTangentImpulseMagnitude({
   effectiveMass,
   velocity,
-}: Parameters) {
+}: Properties): number {
   return -velocity / effectiveMass;
 }

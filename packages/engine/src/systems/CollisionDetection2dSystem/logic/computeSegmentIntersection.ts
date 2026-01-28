@@ -1,9 +1,9 @@
 import { Vector2d } from '#/maths';
 
 /**
- * Parameters for calculating the intersection of two line segments.
+ * Properties for calculating the intersection of two line segments.
  */
-type Parameters = {
+type Properties = {
   /** The start point of the first line segment. */
   segmentAStart: Vector2d;
   /** The end point of the first line segment. */
@@ -15,19 +15,21 @@ type Parameters = {
 };
 
 /**
+ * The output of the computeSegmentIntersection function.
+ */
+type Output = Vector2d | null;
+
+/**
  * Computes the intersection point of two line segments in 2D space, if it exists.
- * @param segmentAStart - The start point of the first line segment.
- * @param segmentAEnd - The end point of the first line segment.
- * @param segmentBStart - The start point of the second line segment.
- * @param segmentBEnd - The end point of the second line segment.
- * @returns The intersection point as a Vector2d if the segments intersect; otherwise, null.
+ * @param properties - An object containing the start and end points of both line segments, see {@link Properties}.
+ * @returns The intersection point as a Vector2d, or null if the segments don't intersect, see {@link Output}.
  */
 export default function computeSegmentIntersection({
   segmentAStart,
   segmentAEnd,
   segmentBStart,
   segmentBEnd,
-}: Parameters): Vector2d | null {
+}: Properties): Output {
   // Compute the direction vectors of the segments
   const segmentAVector = segmentAEnd.subtract(segmentAStart);
   const segmentBVector = segmentBEnd.subtract(segmentBStart);

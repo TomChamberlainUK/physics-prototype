@@ -4,8 +4,8 @@ import areAABBsOverlapping from './areAABBsOverlapping';
 
 /**
  * Identifies potential collision pairs among the given entities using broad-phase collision detection.
- * @param entities - The entities to check for potential collisions.
- * @returns An array of entity pairs that are potential collision candidates.
+ * @param entities - The entities to check for potential collisions, see {@link Entity}.
+ * @returns An array of entity pairs that are potential collision candidates, see {@link Entity}.
  */
 export default function findBroadPhasePairs(entities: Entity[]) {
   const candidatePairs: [Entity, Entity][] = [];

@@ -1,7 +1,7 @@
 /**
- * Parameter types for computeEffectiveMass function.
+ * Properties required to compute the effective mass.
  */
-type Parameters = {
+type Properties = {
   /** The inverse moment of inertia of body A. */
   inverseMomentOfInertiaA: number;
   /** The inverse moment of inertia of body B. */
@@ -16,11 +16,7 @@ type Parameters = {
 
 /**
  * Computes the effective mass at a contact point between two rigid bodies.
- * @param inverseMomentOfInertiaA - The inverse moment of inertia of body A.
- * @param inverseMomentOfInertiaB - The inverse moment of inertia of body B.
- * @param torqueArmA - The torque arm for body A (distance from center of mass to contact point along normal).
- * @param torqueArmB - The torque arm for body B (distance from center of mass to contact point along normal).
- * @param totalInverseMass - The total inverse mass of both bodies.
+ * @param properties - An object containing the inverse moment of inertia, torque arms, and total inverse mass, see {@link Properties}.
  * @returns The effective mass at the contact point.
  */
 export default function computeEffectiveMass({
@@ -29,7 +25,7 @@ export default function computeEffectiveMass({
   torqueArmA,
   torqueArmB,
   totalInverseMass,
-}: Parameters): number {
+}: Properties): number {
   const rotationalResistanceA = (torqueArmA ** 2) * inverseMomentOfInertiaA;
   const rotationalResistanceB = (torqueArmB ** 2) * inverseMomentOfInertiaB;
   return totalInverseMass + rotationalResistanceA + rotationalResistanceB;

@@ -1,6 +1,9 @@
 import { Vector2d } from '#/maths';
 
-type Parameters = {
+/**
+ * Properties for projecting vertices onto an axis.
+ */
+type Properties = {
   /** The vertices to project. */
   vertices: Vector2d[];
   /** The axis to project onto. */
@@ -8,12 +11,21 @@ type Parameters = {
 };
 
 /**
- * Projects the given vertices onto the specified axis and returns the minimum and maximum scalar values.
- * @param vertices - An array of Vector2d objects representing the vertices to project.
- * @param axis - The axis (as a Vector2d) onto which to project the vertices.
- * @returns An object containing the minimum and maximum projection scalars.
+ * The output of the projectVertices function.
  */
-export default function projectVertices({ vertices, axis }: Parameters) {
+type Output = {
+  /** The minimum projection value on the axis. */
+  min: number;
+  /** The maximum projection value on the axis. */
+  max: number;
+};
+
+/**
+ * Projects the given vertices onto the specified axis and returns the minimum and maximum scalar values.
+ * @param properties - An object containing the vertices and the axis to project onto, see {@link Properties}.
+ * @returns An object containing the minimum and maximum projection scalars, see {@link Output}.
+ */
+export default function projectVertices({ vertices, axis }: Properties): Output {
   let min: number = Infinity;
   let max: number = -Infinity;
 

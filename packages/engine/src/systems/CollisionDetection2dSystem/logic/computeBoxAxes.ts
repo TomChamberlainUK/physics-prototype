@@ -2,8 +2,8 @@ import type { Vector2d } from '#/maths';
 
 /**
  * Computes the two unique axes (normals) of a box given its four vertices.
- * @param vertices - An array of four Vector2d objects representing the box vertices in order.
- * @returns An array containing the two unique axes as Vector2d objects.
+ * @param vertices - An array of four Vector2d objects representing the box vertices in order, see {@link Vector2d}.
+ * @returns An array containing the two unique axes as Vector2d instances, see {@link Vector2d}.
  */
 export default function computeBoxAxes(vertices: Vector2d[]): Vector2d[] {
   const vertexA = vertices[0];
@@ -15,7 +15,7 @@ export default function computeBoxAxes(vertices: Vector2d[]): Vector2d[] {
   }
 
   if (!vertexA || !vertexB || !vertexC) {
-    throw new Error('Vertices must be defined Vector2d objects.');
+    throw new Error('Vertices must be defined Vector2d instances.');
   }
 
   const edgeAB = vertexB.subtract(vertexA);

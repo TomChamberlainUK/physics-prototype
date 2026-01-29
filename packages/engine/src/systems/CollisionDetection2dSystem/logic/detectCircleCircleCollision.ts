@@ -1,0 +1,72 @@
+import type { Collider2dComponent, Transform2dComponent } from '#/components';
+import Vector2d from '#/maths/Vector2d';
+import type { Collision } from '#/types';
+
+/**
+ * Properties required to detect a circle-circle collision.
+ */
+type Properties = {
+  /** Collider component of circle A */
+  colliderA: Collider2dComponent;
+  /** Collider component of circle B */
+  colliderB: Collider2dComponent;
+  /** Transform component of circle A */
+  transformA: Transform2dComponent;
+  /** Transform component of circle B */
+  transformB: Transform2dComponent;
+};
+
+/**
+ * Detects a collision between two circle-shaped colliders using pythagorean theorem.
+ * @param properties - An object containing the collider and transform components of the two circles, see {@link Properties}.
+ * @returns An object containing whether a collision occurred, its normal, the overlap distance, and contact points, see {@link Collision}.
+ */
+export default function detectCircleCircleCollision({
+  colliderA,
+  colliderB,
+  transformA,
+  transformB,
+}: Properties): Collision {
+  if (colliderA.shape.type === 'circle' && colliderB.shape.type === 'circle') {
+    const delta = transformA.position.subtract(transformB.position);
+    const totalRadius = colliderA.shape.radius + colliderB.shape.radius;
+
+    const distanceSquared = delta.getLengthSquared();
+    const totalRadiusSquared = totalRadius * totalRadius;
+
+    if (distanceSquared < totalRadiusSquared) {
+      const distance = Math.sqrt(distanceSquared);
+      const overlap = totalRadius - distance;
+      const normal = distance === 0
+        ? new Vector2d({ x: 1, y: 0 })
+        : delta.getUnit();
+
+      // Calculate contact points on the surface of each circle
+      let contactPointA = transformA.position.subtract(normal.multiply(colliderA.shape.radius));
+      let contactPointB = transformB.position.add(normal.multiply(colliderB.shape.radius));
+
+      // Clamp the contact points to the edges of the circles in case of deep overlap
+      const contactPointAToCircleB = contactPointA.subtract(transformB.position);
+      if (contactPointAToCircleB.getLengthSquared() > colliderB.shape.radius * colliderB.shape.radius) {
+        contactPointA = transformB.position.add(contactPointAToCircleB.getUnit().multiply(colliderB.shape.radius));
+      }
+      const contactPointBToCircleA = contactPointB.subtract(transformA.position);
+      if (contactPointBToCircleA.getLengthSquared() > colliderA.shape.radius * colliderA.shape.radius) {
+        contactPointB = transformA.position.add(contactPointBToCircleA.getUnit().multiply(colliderA.shape.radius));
+      }
+
+      return {
+        isColliding: true,
+        contactManifold: {
+          normal,
+          overlap,
+          contactPoints: [contactPointA, contactPointB],
+        },
+      };
+    }
+  }
+
+  return {
+    isColliding: false,
+  };
+}

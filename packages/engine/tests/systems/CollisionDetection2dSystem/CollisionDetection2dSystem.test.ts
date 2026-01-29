@@ -3,8 +3,8 @@ import { Collider2dComponent, Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { CollisionDetection2dSystem } from '#/systems';
-import * as getBroadPhasePhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getBroadPhasePairs';
-import * as getNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/getNarrowPhasePairs';
+import * as findBroadPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/findBroadPhasePairs';
+import * as findNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/findNarrowPhasePairs';
 import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
 describe('CollisionDetection2dSystem', () => {
@@ -22,12 +22,12 @@ describe('CollisionDetection2dSystem', () => {
     let entityA: Entity;
     let entityB: Entity;
 
-    let getBroadPhasePairsSpy: MockInstance<typeof getBroadPhasePhasePairsModule.default>;
-    let getNarrowPhasePairsSpy: MockInstance<typeof getNarrowPhasePairsModule.default>;
+    let findBroadPhasePairsSpy: MockInstance<typeof findBroadPhasePairsModule.default>;
+    let findNarrowPhasePairsSpy: MockInstance<typeof findNarrowPhasePairsModule.default>;
 
     beforeAll(() => {
-      getBroadPhasePairsSpy = vi.spyOn(getBroadPhasePhasePairsModule, 'default');
-      getNarrowPhasePairsSpy = vi.spyOn(getNarrowPhasePairsModule, 'default');
+      findBroadPhasePairsSpy = vi.spyOn(findBroadPhasePairsModule, 'default');
+      findNarrowPhasePairsSpy = vi.spyOn(findNarrowPhasePairsModule, 'default');
     });
 
     beforeEach(() => {
@@ -37,13 +37,13 @@ describe('CollisionDetection2dSystem', () => {
     });
 
     afterEach(() => {
-      getBroadPhasePairsSpy.mockClear();
-      getNarrowPhasePairsSpy.mockClear();
+      findBroadPhasePairsSpy.mockClear();
+      findNarrowPhasePairsSpy.mockClear();
     });
 
     afterAll(() => {
-      getBroadPhasePairsSpy.mockRestore();
-      getNarrowPhasePairsSpy.mockRestore();
+      findBroadPhasePairsSpy.mockRestore();
+      findNarrowPhasePairsSpy.mockRestore();
     });
 
     describe('When passed entities with valid components', () => {
@@ -64,18 +64,18 @@ describe('CollisionDetection2dSystem', () => {
 
       it('Should get candidate pairs via broad phase detection', () => {
         system.update([entityA, entityB], {});
-        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([entityA, entityB]);
+        expect(findBroadPhasePairsSpy).toHaveBeenCalledWith([entityA, entityB]);
       });
 
       it('Should get collision pairs from candidate pairs via broad phase detection', () => {
-        getBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
+        findBroadPhasePairsSpy.mockReturnValueOnce([[entityA, entityB]]);
         system.update([entityA, entityB], {});
-        expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
+        expect(findNarrowPhasePairsSpy).toHaveBeenCalledWith([[entityA, entityB]]);
       });
 
       it('Should update context broadPhaseCollisionPairs', () => {
         const broadPhasePairs: BroadPhaseCollisionPair[] = [[entityA, entityB]];
-        getBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
+        findBroadPhasePairsSpy.mockReturnValueOnce(broadPhasePairs);
         const context = {
           broadPhaseCollisionPairs: [],
         };
@@ -87,13 +87,16 @@ describe('CollisionDetection2dSystem', () => {
         const narrowPhaseCollisionPairs: NarrowPhaseCollisionPair[] = [{
           entityA,
           entityB,
-          normal: new Vector2d({ x: 0, y: 1 }),
-          overlap: 1,
+          contactManifold: {
+            normal: new Vector2d({ x: 0, y: 1 }),
+            overlap: 1,
+            contactPoints: [],
+          },
         }];
         const context = {
           narrowPhaseCollisionPairs: [],
         };
-        getNarrowPhasePairsSpy.mockReturnValueOnce(narrowPhaseCollisionPairs);
+        findNarrowPhasePairsSpy.mockReturnValueOnce(narrowPhaseCollisionPairs);
         system.update([entityA, entityB], context);
         expect(context.narrowPhaseCollisionPairs).toEqual(narrowPhaseCollisionPairs);
       });
@@ -102,12 +105,12 @@ describe('CollisionDetection2dSystem', () => {
     describe('When passed entities without valid components', () => {
       it('Should not get candidate pairs via broad phase detection', () => {
         system.update([entityA, entityB], {});
-        expect(getBroadPhasePairsSpy).toHaveBeenCalledWith([]);
+        expect(findBroadPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
       it('Should not get collision pairs from candidate pairs via narrow phase detection', () => {
         system.update([entityA, entityB], {});
-        expect(getNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
+        expect(findNarrowPhasePairsSpy).toHaveBeenCalledWith([]);
       });
 
       it('Should not update context broadPhaseCollisionPairs', () => {

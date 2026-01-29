@@ -1,10 +1,8 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { InputImpulseComponent, RigidBody2dComponent } from '#/components';
 import Entity from '#/Entity';
-import { KeyboardInput } from '#/input';
 import Vector2d from '#/maths/Vector2d';
 import { InputImpulseSystem } from '#/systems';
-
-import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('InputImpulseSystem', () => {
   describe('constructor()', () => {
@@ -17,7 +15,7 @@ describe('InputImpulseSystem', () => {
   });
 
   describe('update()', () => {
-    const force = 3600;
+    const force = 150000;
     const deltaTime = 1 / 60;
 
     let inputImpulseSystem: InputImpulseSystem;
@@ -143,27 +141,6 @@ describe('InputImpulseSystem', () => {
 
       // The actual impulse applied to the rigid body should match the single direction impulse
       expect(magnitude).toBeCloseTo(singleDirectionImpulseMagnitude);
-    });
-
-    it('Should apply impulse scaled by inverse mass', () => {
-      const direction = new Vector2d({ x: 0, y: -1 });
-
-      for (const mass of [1, 2, 4]) {
-        const entity = new Entity();
-        const rigidBody2dComponent = new RigidBody2dComponent({
-          mass,
-        });
-        const inputImpulseComponent = new InputImpulseComponent();
-        entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-        const actions = new Set(['moveUp']);
-
-        inputImpulseSystem.update([entity], { actions, deltaTime });
-
-        const expectedImpulse = getExpectedImpulse(direction, mass);
-
-        expect(rigidBody2dComponent.impulse.y).toBeCloseTo(expectedImpulse.y);
-        expect(rigidBody2dComponent.impulse.x).toBeCloseTo(expectedImpulse.x);
-      }
     });
 
     it('Should not apply impulse to entities without the InputImpulse component', () => {

@@ -1,7 +1,7 @@
 /**
  * Parameters for creating a Vector2d instance.
  */
-type Params = {
+type ConstructorParameters = {
   /** The x component of the vector. */
   x: number;
   /** The y component of the vector. */
@@ -23,27 +23,26 @@ export default class Vector2d {
   constructor();
   /**
    * Creates an instance of the Vector2d class.
-   * @param x - The x component of the vector.
-   * @param y - The y component of the vector.
+   * @param point - The x and y components of the vector.
    */
-  constructor({ x, y }: Params);
+  constructor({ x, y }: ConstructorParameters);
   /**
    * Creates an instance of the Vector2d class.
    * @param x - The x component of the vector.
    * @param y - The y component of the vector.
    */
   constructor(x: number, y: number);
-  constructor(arg1?: Params | number, arg2?: number) {
-    if (typeof arg1 === 'object') {
-      this.x = arg1.x;
-      this.y = arg1.y;
+  constructor(argA?: ConstructorParameters | number, argB?: number) {
+    if (typeof argA === 'object') {
+      this.x = argA.x;
+      this.y = argA.y;
     }
     else if (
-      typeof arg1 === 'number'
-      && typeof arg2 === 'number'
+      typeof argA === 'number'
+      && typeof argB === 'number'
     ) {
-      this.x = arg1;
-      this.y = arg2;
+      this.x = argA;
+      this.y = argB;
     }
   }
 
@@ -151,27 +150,55 @@ export default class Vector2d {
 
   /**
    * Calculates the dot product of two vectors.
-   * @param vector1 - The first vector.
-   * @param vector2 - The second vector.
+   * @param vectorA - The first vector.
+   * @param vectorB - The second vector.
    * @returns The dot product of the two vectors.
    */
   static dotProduct(
-    vector1: Vector2d,
-    vector2: Vector2d,
+    vectorA: Vector2d,
+    vectorB: Vector2d,
   ): number {
-    return (vector1.x * vector2.x) + (vector1.y * vector2.y);
+    return (vectorA.x * vectorB.x) + (vectorA.y * vectorB.y);
   }
 
   /**
    * Calculates the cross product of two vectors.
-   * @param vector1 - The first vector.
-   * @param vector2 - The second vector.
+   * @param vectorA - The first vector.
+   * @param vectorB - The second vector.
    * @returns The cross product of the two vectors.
+   * @remarks
+   * The order of vectors matters: crossProduct(A, B) = -crossProduct(B, A)
    */
   static crossProduct(
-    vector1: Vector2d,
-    vector2: Vector2d,
-  ): number {
-    return (vector1.x * vector2.y) - (vector1.y * vector2.x);
+    vectorA: Vector2d,
+    vectorB: Vector2d,
+  ): number;
+  /**
+   * Calculates the cross product of a vector and a scalar.
+   * @param scalar - The scalar.
+   * @param vector - The vector.
+   * @returns A new Vector2d instance representing the cross product.
+   */
+  static crossProduct(
+    scalar: number,
+    vector: Vector2d,
+  ): Vector2d;
+  static crossProduct(
+    argA: Vector2d | number,
+    argB: Vector2d,
+  ): number | Vector2d {
+    if (typeof argA === 'number') {
+      const scalar = argA;
+      const vector = argB;
+      return new Vector2d({
+        x: -scalar * vector.y,
+        y: scalar * vector.x,
+      });
+    }
+    else {
+      const vectorA = argA;
+      const vectorB = argB;
+      return (vectorA.x * vectorB.y) - (vectorA.y * vectorB.x);
+    }
   }
 }

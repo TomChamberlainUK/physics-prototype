@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  AABBUpdate2dSystem,
   Actions,
+  ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -12,6 +12,7 @@ import {
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
+  RigidBodyUpdate2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
 
@@ -25,7 +26,7 @@ describe('SandboxScene', () => {
   const sceneAddSystemSpy = vi.spyOn(SandboxScene.prototype, 'addSystem');
   const sceneSetContextSpy = vi.spyOn(SandboxScene.prototype, 'setContext');
 
-  const BoxEntityConstructorMock = vi.hoisted(() => (
+  const PhysicsEntityConstructorMock = vi.hoisted(() => (
     vi.fn()
       .mockImplementation(({ name }) => ({ name }))
   ));
@@ -33,20 +34,13 @@ describe('SandboxScene', () => {
     vi.fn()
       .mockImplementation(() => ({ name: 'player-entity' }))
   ));
-  const CircleEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(({ name }) => ({ name }))
-  ));
 
   beforeAll(() => {
-    vi.mock('#/entities/BoxEntity', () => ({
-      default: BoxEntityConstructorMock,
+    vi.mock('#/entities/PhysicsEntity', () => ({
+      default: PhysicsEntityConstructorMock,
     }));
     vi.mock('#/entities/PlayerEntity', () => ({
       default: PlayerEntityConstructorMock,
-    }));
-    vi.mock('#/entities/CircleEntity', () => ({
-      default: CircleEntityConstructorMock,
     }));
   });
 
@@ -70,7 +64,13 @@ describe('SandboxScene', () => {
   });
 
   it('Should add a player entity', () => {
-    expect(PlayerEntityConstructorMock).toHaveBeenCalled();
+    expect(PlayerEntityConstructorMock).toHaveBeenCalledWith({
+      shape: {
+        type: 'box',
+        width: 32,
+        height: 32,
+      },
+    });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
   });
 
@@ -110,9 +110,12 @@ describe('SandboxScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(BoxEntityConstructorMock).toHaveBeenCalledWith({
-      width: wallWidth,
-      height: wallHeight,
+    expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith({
+      shape: {
+        type: 'box',
+        width: wallWidth,
+        height: wallHeight,
+      },
       mass: 0,
       position: {
         x,
@@ -120,19 +123,43 @@ describe('SandboxScene', () => {
       },
       fillColor: 'grey',
       name,
+      restitution: 0.1,
     });
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
   });
 
-  it('Should add 500 circle entities to the scene', () => {
-    for (let i = 0; i < 500; i++) {
+  it('Should add 250 circle entities to the scene', () => {
+    for (let i = 0; i < 250; i++) {
       const name = `circle-${i}`;
-      expect(CircleEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
         position: {
           x: expect.any(Number),
           y: expect.any(Number),
         },
-        radius: expect.any(Number),
+        shape: {
+          type: 'circle',
+          radius: expect.any(Number),
+        },
+        fillColor: expect.any(String),
+        name,
+      }));
+      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+    }
+  });
+
+  it('Should add 250 box entities to the scene', () => {
+    for (let i = 0; i < 250; i++) {
+      const name = `box-${i}`;
+      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+        position: {
+          x: expect.any(Number),
+          y: expect.any(Number),
+        },
+        shape: {
+          type: 'box',
+          width: expect.any(Number),
+          height: expect.any(Number),
+        },
         fillColor: expect.any(String),
         name,
       }));
@@ -150,8 +177,12 @@ describe('SandboxScene', () => {
       System: InputImpulseSystem,
     },
     {
-      name: 'aabbUpdate2d',
-      System: AABBUpdate2dSystem,
+      name: 'colliderUpdate2d',
+      System: ColliderUpdate2dSystem,
+    },
+    {
+      name: 'rigidBodyUpdate2d',
+      System: RigidBodyUpdate2dSystem,
     },
     {
       name: 'collisionDetection2d',

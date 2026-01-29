@@ -8,6 +8,7 @@ import * as getBroadPhaseCollisionPairsSetModule from '#/systems/RenderDebug2dSy
 import * as getNarrowPhaseCollisionPairsMapModule from '#/systems/RenderDebug2dSystem/logic/getNarrowPhaseCollisionPairsMap';
 import * as renderAABBModule from '#/systems/RenderDebug2dSystem/logic/renderAABB';
 import * as renderColliderModule from '#/systems/RenderDebug2dSystem/logic/renderCollider';
+import * as renderContactPointsModule from '#/systems/RenderDebug2dSystem/logic/renderContactPoints';
 import * as renderPotentialCollisionLineModule from '#/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine';
 import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
 
@@ -61,6 +62,7 @@ describe('RenderDebug2dSystem', () => {
       let getNarrowPhaseCollisionPairsMapSpy: MockInstance<typeof getNarrowPhaseCollisionPairsMapModule.default>;
       let renderAABBSpy: MockInstance<typeof renderAABBModule.default>;
       let renderColliderSpy: MockInstance<typeof renderColliderModule.default>;
+      let renderContactPointsSpy: MockInstance<typeof renderContactPointsModule.default>;
       let renderPotentialCollisionLineSpy: MockInstance<typeof renderPotentialCollisionLineModule.default>;
 
       beforeAll(() => {
@@ -68,6 +70,7 @@ describe('RenderDebug2dSystem', () => {
         getNarrowPhaseCollisionPairsMapSpy = vi.spyOn(getNarrowPhaseCollisionPairsMapModule, 'default');
         renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
         renderColliderSpy = vi.spyOn(renderColliderModule, 'default');
+        renderContactPointsSpy = vi.spyOn(renderContactPointsModule, 'default');
         renderPotentialCollisionLineSpy = vi.spyOn(renderPotentialCollisionLineModule, 'default');
       });
 
@@ -80,6 +83,7 @@ describe('RenderDebug2dSystem', () => {
         getNarrowPhaseCollisionPairsMapSpy.mockClear();
         renderAABBSpy.mockClear();
         renderColliderSpy.mockClear();
+        renderContactPointsSpy.mockClear();
         renderPotentialCollisionLineSpy.mockClear();
       });
 
@@ -88,6 +92,7 @@ describe('RenderDebug2dSystem', () => {
         getNarrowPhaseCollisionPairsMapSpy.mockRestore();
         renderAABBSpy.mockRestore();
         renderColliderSpy.mockRestore();
+        renderContactPointsSpy.mockRestore();
         renderPotentialCollisionLineSpy.mockRestore();
       });
 
@@ -104,8 +109,11 @@ describe('RenderDebug2dSystem', () => {
           {
             entityA: new Entity(),
             entityB: new Entity(),
-            normal: new Vector2d(),
-            overlap: 0,
+            contactManifold: {
+              normal: new Vector2d(),
+              overlap: 0,
+              contactPoints: [],
+            },
           },
         ];
         system.update([], { renderer, narrowPhaseCollisionPairs });
@@ -161,6 +169,27 @@ describe('RenderDebug2dSystem', () => {
             renderer,
           });
         }
+      });
+
+      it('Should render contact points for each narrow phase collision pair', () => {
+        const alpha = 1;
+        const narrowPhaseCollisionPair: NarrowPhaseCollisionPair = {
+          entityA: new Entity(),
+          entityB: new Entity(),
+          contactManifold: {
+            normal: new Vector2d(),
+            overlap: 0,
+            contactPoints: [new Vector2d(), new Vector2d()],
+          },
+        };
+        system.update([], { renderer, narrowPhaseCollisionPairs: [narrowPhaseCollisionPair] });
+        expect(renderContactPointsSpy).toHaveBeenCalledWith(
+          narrowPhaseCollisionPair.contactManifold.contactPoints,
+          {
+            alpha,
+            renderer,
+          },
+        );
       });
     });
   });

@@ -1,4 +1,4 @@
-export { default as AABBUpdate2dSystem } from './AABBUpdate2dSystem';
+export { default as ColliderUpdate2dSystem } from './ColliderUpdate2dSystem';
 export { default as CollisionDetection2dSystem } from './CollisionDetection2dSystem';
 export { default as CollisionImpulseResolution2dSystem } from './CollisionImpulseResolution2dSystem';
 export { default as CollisionPositionCorrection2dSystem } from './CollisionPositionCorrection2dSystem';
@@ -8,3 +8,4 @@ export { default as Kinetic2dSystem } from './Kinetic2dSystem';
 export { default as Render2dSystem } from './Render2dSystem';
 export { default as RenderClear2dSystem } from './RenderClear2dSystem';
 export { default as RenderDebug2dSystem } from './RenderDebug2dSystem';
+export { default as RigidBodyUpdate2dSystem } from './RigidBodyUpdate2dSystem';

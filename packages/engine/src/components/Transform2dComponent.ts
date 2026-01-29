@@ -4,10 +4,10 @@ import Component from './Component';
 /**
  * Parameters for constructing a Transform2dComponent.
  */
-type ConstructorParams = {
+type ConstructorParameters = {
   /** The position of the transform. */
   position?: Vector2d;
-  /** The rotation of the transform. */
+  /** The rotation of the transform, measured in radians. */
   rotation?: number;
   /** The scale of the transform. */
   scale?: Vector2d;
@@ -21,26 +21,27 @@ export default class Transform2dComponent extends Component {
   position: Vector2d;
   /** The previous position of the transform. */
   previousPosition: Vector2d;
-  /** The rotation of the transform. */
+  /** The rotation of the transform, measured in radians. */
   rotation: number;
+  /** The previous rotation of the transform, measured in radians. */
+  previousRotation: number;
   /** The scale of the transform. */
   scale: Vector2d;
 
   /**
    * Creates an instance of the Transform2dComponent.
-   * @param position - The position of the transform.
-   * @param rotation - The rotation of the transform.
-   * @param scale - The scale of the transform.
+   * @param parameters - The parameters for constructing the component, see {@link ConstructorParameters}.
    */
   constructor({
     position = new Vector2d(),
     rotation = 0,
     scale = new Vector2d(1, 1),
-  }: ConstructorParams = {}) {
+  }: ConstructorParameters = {}) {
     super('Transform2d');
     this.position = position;
     this.previousPosition = new Vector2d(position);
     this.rotation = rotation;
+    this.previousRotation = rotation;
     this.scale = scale;
   }
 }

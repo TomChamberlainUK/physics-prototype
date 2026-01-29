@@ -2,7 +2,7 @@ import { Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
 import { InterpolationSync2dSystem } from '#/systems';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('InterpolationSync2dSystem', () => {
   describe('constructor()', () => {
@@ -15,13 +15,19 @@ describe('InterpolationSync2dSystem', () => {
   });
 
   describe('update()', () => {
+    let entity: Entity;
+    let transform2dComponent: Transform2dComponent;
+
+    beforeEach(() => {
+      entity = new Entity();
+      transform2dComponent = new Transform2dComponent();
+      entity.addComponent(transform2dComponent);
+    });
+
     it('Should update entities Transform2d previousPosition to match position', () => {
       const originalPosition = new Vector2d({ x: 0, y: 0 });
       const currentPosition = new Vector2d({ x: 5, y: 10 });
 
-      const entity = new Entity();
-      const transform2dComponent = new Transform2dComponent();
-      entity.addComponent(transform2dComponent);
       transform2dComponent.previousPosition = originalPosition;
       transform2dComponent.position = currentPosition;
 
@@ -31,6 +37,21 @@ describe('InterpolationSync2dSystem', () => {
       system.update([entity]);
 
       expect(transform2dComponent.previousPosition).toEqual(currentPosition);
+    });
+
+    it('Should update entities Transform2d previousRotation to match rotation', () => {
+      const originalRotation = 0;
+      const currentRotation = Math.PI / 4; // 45 degrees in radians
+
+      transform2dComponent.previousRotation = originalRotation;
+      transform2dComponent.rotation = currentRotation;
+
+      expect(transform2dComponent.previousRotation).toBe(originalRotation);
+
+      const system = new InterpolationSync2dSystem();
+      system.update([entity]);
+
+      expect(transform2dComponent.previousRotation).toBe(currentRotation);
     });
   });
 });

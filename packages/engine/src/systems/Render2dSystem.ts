@@ -26,14 +26,29 @@ export default class Render2dSystem extends System {
       const transform = entity.getComponent<Transform2dComponent>('Transform2d');
       const geometry = entity.getComponent<Geometry2dComponent>('Geometry2d');
 
-      const x = lerp(transform.previousPosition.x, transform.position.x, alpha);
-      const y = lerp(transform.previousPosition.y, transform.position.y, alpha);
+      const x = lerp(
+        transform.previousPosition.x,
+        transform.position.x,
+        alpha,
+      );
+      const y = lerp(
+        transform.previousPosition.y,
+        transform.position.y,
+        alpha,
+      );
+      const rotation = lerp(
+        transform.previousRotation,
+        transform.rotation,
+        alpha,
+      );
+
+      renderer.save();
+      renderer.translate({ x, y });
+      renderer.rotate(rotation);
 
       switch (geometry.shape.type) {
         case 'circle':
           renderer.drawCircle({
-            x,
-            y,
             radius: geometry.shape.radius,
             fillColor: geometry.fillColor,
             strokeColor: geometry.strokeColor,
@@ -41,8 +56,6 @@ export default class Render2dSystem extends System {
           break;
         case 'box':
           renderer.drawBox({
-            x,
-            y,
             width: geometry.shape.width,
             height: geometry.shape.height,
             fillColor: geometry.fillColor,
@@ -50,6 +63,8 @@ export default class Render2dSystem extends System {
           });
           break;
       }
+
+      renderer.restore();
     }
   }
 }

@@ -7,6 +7,7 @@ import {
   getNarrowPhaseCollisionPairsMap,
   renderAABB,
   renderCollider,
+  renderContactPoints,
   renderPotentialCollisionLine,
 } from './logic';
 
@@ -67,6 +68,14 @@ export default class RenderDebug2dSystem extends System {
       renderPotentialCollisionLine(entityA, entityB, {
         alpha,
         narrowPhaseCollisionPairsMap,
+        renderer,
+      });
+    }
+
+    for (const { contactManifold } of narrowPhaseCollisionPairs) {
+      const { contactPoints } = contactManifold;
+      renderContactPoints(contactPoints, {
+        alpha,
         renderer,
       });
     }

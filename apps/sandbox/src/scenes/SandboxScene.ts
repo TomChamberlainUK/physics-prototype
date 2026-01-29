@@ -1,6 +1,6 @@
 import {
-  AABBUpdate2dSystem,
   Actions,
+  ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
@@ -12,11 +12,12 @@ import {
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
+  RigidBodyUpdate2dSystem,
   Scene,
   Vector2d,
   type ControlScheme,
 } from 'engine';
-import { BoxEntity, CircleEntity, PlayerEntity } from '#/entities';
+import { PlayerEntity, PhysicsEntity } from '#/entities';
 
 type Props = {
   height: number;
@@ -47,7 +48,13 @@ export default class SandboxScene extends Scene {
     });
     input.enable();
 
-    const playerEntity = new PlayerEntity();
+    const playerEntity = new PlayerEntity({
+      shape: {
+        type: 'box',
+        width: 32,
+        height: 32,
+      },
+    });
     this.addEntity(playerEntity);
 
     const wallThickness = 10;
@@ -81,35 +88,56 @@ export default class SandboxScene extends Scene {
         wallHeight: height,
       },
     ]) {
-      const wallEntity = new BoxEntity({
-        width: wallWidth,
-        height: wallHeight,
+      const wallEntity = new PhysicsEntity({
+        shape: {
+          type: 'box',
+          width: wallWidth,
+          height: wallHeight,
+        },
         mass: 0,
         position: new Vector2d({ x, y }),
         fillColor: 'grey',
         name,
+        restitution: 0.1,
       });
       this.addEntity(wallEntity);
     }
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 250; i++) {
       const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
       const size = Math.random() * 16;
-      const circleEntity = new CircleEntity({
+      const circleEntity = new PhysicsEntity({
         position: new Vector2d({
           x: (Math.random() * width) - (width / 2),
           y: (Math.random() * height) - (height / 2),
         }),
-        radius: size,
+        shape: { type: 'circle', radius: size },
         fillColor,
         name: `circle-${i}`,
       });
       this.addEntity(circleEntity);
     }
 
+    for (let i = 0; i < 250; i++) {
+      const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      const boxSize = Math.random() * 32;
+      const boxEntity = new PhysicsEntity({
+        position: new Vector2d({
+          x: (Math.random() * width) - (width / 2),
+          y: (Math.random() * height) - (height / 2),
+        }),
+        rotation: Math.random() * 2 * Math.PI,
+        shape: { type: 'box', width: boxSize, height: boxSize },
+        fillColor,
+        name: `box-${i}`,
+      });
+      this.addEntity(boxEntity);
+    }
+
     const interpolationSync2dSystem = new InterpolationSync2dSystem();
     const inputImpulseSystem = new InputImpulseSystem();
-    const aabbUpdate2dSystem = new AABBUpdate2dSystem();
+    const colliderUpdate2dSystem = new ColliderUpdate2dSystem();
+    const rigidBodyUpdate2dSystem = new RigidBodyUpdate2dSystem();
     const collisionDetection2dSystem = new CollisionDetection2dSystem();
     const collisionImpulseResolution2dSystem = new CollisionImpulseResolution2dSystem();
     const collisionPositionCorrection2dSystem = new CollisionPositionCorrection2dSystem();
@@ -122,7 +150,8 @@ export default class SandboxScene extends Scene {
 
     this.addSystem(interpolationSync2dSystem);
     this.addSystem(inputImpulseSystem);
-    this.addSystem(aabbUpdate2dSystem);
+    this.addSystem(colliderUpdate2dSystem);
+    this.addSystem(rigidBodyUpdate2dSystem);
     this.addSystem(collisionDetection2dSystem);
     this.addSystem(collisionImpulseResolution2dSystem);
     this.addSystem(collisionPositionCorrection2dSystem);

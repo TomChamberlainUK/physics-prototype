@@ -3,14 +3,57 @@ import Renderer from '#/Renderer';
 import { expectCallOrder } from './utils';
 
 describe('Renderer', () => {
-  const fillColor = '#000000';
+  const fillColor = '#ffffff';
   const strokeColor = '#ffffff';
 
   let renderer: Renderer;
   let canvas: HTMLCanvasElement;
 
+  let ctxSaveSpy: MockInstance<typeof renderer.ctx.save>;
+  let ctxMoveToSpy: MockInstance<typeof renderer.ctx.moveTo>;
+  let ctxLineToSpy: MockInstance<typeof renderer.ctx.lineTo>;
+  let ctxBeginPathSpy: MockInstance<typeof renderer.ctx.beginPath>;
+  let ctxClosePathSpy: MockInstance<typeof renderer.ctx.closePath>;
+  let ctxFillSpy: MockInstance<typeof renderer.ctx.fill>;
+  let ctxStrokeSpy: MockInstance<typeof renderer.ctx.stroke>;
+  let ctxRestoreSpy: MockInstance<typeof renderer.ctx.restore>;
+
   beforeAll(() => {
     canvas = document.createElement('canvas');
+  });
+
+  beforeEach(() => {
+    renderer = new Renderer(canvas);
+    ctxSaveSpy = vi.spyOn(renderer.ctx, 'save');
+    ctxMoveToSpy = vi.spyOn(renderer.ctx, 'moveTo');
+    ctxLineToSpy = vi.spyOn(renderer.ctx, 'lineTo');
+    ctxBeginPathSpy = vi.spyOn(renderer.ctx, 'beginPath');
+    ctxClosePathSpy = vi.spyOn(renderer.ctx, 'closePath');
+    ctxFillSpy = vi.spyOn(renderer.ctx, 'fill');
+    ctxStrokeSpy = vi.spyOn(renderer.ctx, 'stroke');
+    ctxRestoreSpy = vi.spyOn(renderer.ctx, 'restore');
+  });
+
+  afterEach(() => {
+    ctxSaveSpy.mockClear();
+    ctxMoveToSpy.mockClear();
+    ctxLineToSpy.mockClear();
+    ctxBeginPathSpy.mockClear();
+    ctxClosePathSpy.mockClear();
+    ctxFillSpy.mockClear();
+    ctxStrokeSpy.mockClear();
+    ctxRestoreSpy.mockClear();
+  });
+
+  afterAll(() => {
+    ctxSaveSpy.mockRestore();
+    ctxMoveToSpy.mockRestore();
+    ctxLineToSpy.mockRestore();
+    ctxBeginPathSpy.mockRestore();
+    ctxClosePathSpy.mockRestore();
+    ctxFillSpy.mockRestore();
+    ctxStrokeSpy.mockRestore();
+    ctxRestoreSpy.mockRestore();
   });
 
   describe('constructor()', () => {
@@ -22,16 +65,14 @@ describe('Renderer', () => {
       resetOriginSpy = vi.spyOn(Renderer.prototype, 'resetOrigin');
     });
 
-    beforeEach(() => {
-      renderer = new Renderer(canvas);
-    });
-
     afterEach(() => {
       canvasGetContextSpy.mockClear();
+      resetOriginSpy.mockClear();
     });
 
     afterAll(() => {
       canvasGetContextSpy.mockRestore();
+      resetOriginSpy.mockRestore();
     });
 
     it('Should instantiate', () => {
@@ -61,71 +102,50 @@ describe('Renderer', () => {
   });
 
   describe('clear()', () => {
-    let mockCtxClearRect: MockInstance<typeof renderer.ctx.clearRect>;
-    let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
+    let ctxClearRectSpy: MockInstance<typeof renderer.ctx.clearRect>;
+    let ctxSetTransformSpy: MockInstance<typeof renderer.ctx.setTransform>;
 
     beforeAll(() => {
-      mockCtxClearRect = vi.spyOn(renderer.ctx, 'clearRect');
-      mockCtxSetTransform = vi.spyOn(renderer.ctx, 'setTransform');
+      ctxClearRectSpy = vi.spyOn(renderer.ctx, 'clearRect');
+      ctxSetTransformSpy = vi.spyOn(renderer.ctx, 'setTransform');
     });
 
     beforeEach(() => {
-      renderer = new Renderer(canvas);
       renderer.clear();
     });
 
     afterEach(() => {
-      mockCtxClearRect.mockClear();
-      mockCtxSetTransform.mockClear();
+      ctxClearRectSpy.mockClear();
+      ctxSetTransformSpy.mockClear();
     });
 
     afterAll(() => {
-      mockCtxClearRect.mockRestore();
-      mockCtxSetTransform.mockRestore();
+      ctxClearRectSpy.mockRestore();
+      ctxSetTransformSpy.mockRestore();
     });
 
     it('Should reset the canvas transform to top-left-origin', () => {
-      expect(mockCtxSetTransform).toHaveBeenCalledWith(1, 0, 0, 1, 0, 0);
+      expect(ctxSetTransformSpy).toHaveBeenCalledWith(1, 0, 0, 1, 0, 0);
     });
 
     it('Should clear the canvas', () => {
-      expect(mockCtxClearRect).toHaveBeenCalledWith(0, 0, canvas.width, canvas.height);
+      expect(ctxClearRectSpy).toHaveBeenCalledWith(0, 0, canvas.width, canvas.height);
     });
   });
 
   describe('drawCircle()', () => {
-    let mockCtxArc: MockInstance<typeof renderer.ctx.arc>;
-    let mockCtxBeginPath: MockInstance<typeof renderer.ctx.beginPath>;
-    let mockCtxClosePath: MockInstance<typeof renderer.ctx.closePath>;
-    let mockCtxFill: MockInstance<typeof renderer.ctx.fill>;
-    let mockCtxStroke: MockInstance<typeof renderer.ctx.stroke>;
+    let ctxArcSpy: MockInstance<typeof renderer.ctx.arc>;
 
     beforeAll(() => {
-      mockCtxArc = vi.spyOn(renderer.ctx, 'arc');
-      mockCtxBeginPath = vi.spyOn(renderer.ctx, 'beginPath');
-      mockCtxClosePath = vi.spyOn(renderer.ctx, 'closePath');
-      mockCtxFill = vi.spyOn(renderer.ctx, 'fill');
-      mockCtxStroke = vi.spyOn(renderer.ctx, 'stroke');
-    });
-
-    beforeEach(() => {
-      renderer = new Renderer(canvas);
-    });
-
-    afterEach(() => {
-      mockCtxArc.mockClear();
-      mockCtxBeginPath.mockClear();
-      mockCtxClosePath.mockClear();
-      mockCtxFill.mockClear();
-      mockCtxStroke.mockClear();
+      ctxArcSpy = vi.spyOn(renderer.ctx, 'arc');
     });
 
     afterAll(() => {
-      mockCtxArc.mockRestore();
-      mockCtxBeginPath.mockRestore();
-      mockCtxClosePath.mockRestore();
-      mockCtxFill.mockRestore();
-      mockCtxStroke.mockRestore();
+      ctxArcSpy.mockRestore();
+    });
+
+    afterEach(() => {
+      ctxArcSpy.mockClear();
     });
 
     it('Should draw a circle on the canvas', () => {
@@ -134,19 +154,23 @@ describe('Renderer', () => {
         y: canvas.height / 2,
         radius: 64,
       });
-      expect(mockCtxBeginPath).toHaveBeenCalled();
-      expect(mockCtxArc).toHaveBeenCalledWith(
+      expect(ctxSaveSpy).toHaveBeenCalled();
+      expect(ctxBeginPathSpy).toHaveBeenCalled();
+      expect(ctxArcSpy).toHaveBeenCalledWith(
         canvas.width / 2,
         canvas.height / 2,
         64,
         0,
         2 * Math.PI,
       );
-      expect(mockCtxClosePath).toHaveBeenCalled();
+      expect(ctxClosePathSpy).toHaveBeenCalled();
+      expect(ctxRestoreSpy).toHaveBeenCalled();
       expectCallOrder([
-        mockCtxBeginPath,
-        mockCtxArc,
-        mockCtxClosePath,
+        ctxSaveSpy,
+        ctxBeginPathSpy,
+        ctxArcSpy,
+        ctxClosePathSpy,
+        ctxRestoreSpy,
       ]);
     });
 
@@ -158,14 +182,26 @@ describe('Renderer', () => {
           radius: 64,
           fillColor,
         });
-        expect(renderer.ctx.fillStyle).toBe(fillColor);
-        expect(mockCtxFill).toHaveBeenCalled();
+        expect(ctxFillSpy).toHaveBeenCalled();
         expectCallOrder([
-          mockCtxBeginPath,
-          mockCtxArc,
-          mockCtxClosePath,
-          mockCtxFill,
+          ctxSaveSpy,
+          ctxBeginPathSpy,
+          ctxArcSpy,
+          ctxClosePathSpy,
+          ctxFillSpy,
+          ctxRestoreSpy,
         ]);
+      });
+    });
+
+    describe('When fillColor is not provided', () => {
+      it('Should not draw a fill on the circle', () => {
+        renderer.drawCircle({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          radius: 64,
+        });
+        expect(ctxFillSpy).not.toHaveBeenCalled();
       });
     });
 
@@ -177,13 +213,14 @@ describe('Renderer', () => {
           radius: 64,
           strokeColor,
         });
-        expect(renderer.ctx.strokeStyle).toBe(strokeColor);
-        expect(mockCtxStroke).toHaveBeenCalled();
+        expect(ctxStrokeSpy).toHaveBeenCalled();
         expectCallOrder([
-          mockCtxBeginPath,
-          mockCtxArc,
-          mockCtxClosePath,
-          mockCtxStroke,
+          ctxSaveSpy,
+          ctxBeginPathSpy,
+          ctxArcSpy,
+          ctxClosePathSpy,
+          ctxStrokeSpy,
+          ctxRestoreSpy,
         ]);
       });
     });
@@ -195,7 +232,7 @@ describe('Renderer', () => {
           y: canvas.height / 2,
           radius: 64,
         });
-        expect(mockCtxStroke).not.toHaveBeenCalled();
+        expect(ctxStrokeSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -206,26 +243,22 @@ describe('Renderer', () => {
     const width = 200;
     const height = 100;
 
-    let mockCtxFillRect: MockInstance<typeof renderer.ctx.fillRect>;
-    let mockCtxStrokeRect: MockInstance<typeof renderer.ctx.strokeRect>;
+    let ctxFillRectSpy: MockInstance<typeof renderer.ctx.fillRect>;
+    let ctxStrokeRectSpy: MockInstance<typeof renderer.ctx.strokeRect>;
 
     beforeAll(() => {
-      mockCtxFillRect = vi.spyOn(renderer.ctx, 'fillRect');
-      mockCtxStrokeRect = vi.spyOn(renderer.ctx, 'strokeRect');
-    });
-
-    beforeEach(() => {
-      renderer = new Renderer(canvas);
+      ctxFillRectSpy = vi.spyOn(renderer.ctx, 'fillRect');
+      ctxStrokeRectSpy = vi.spyOn(renderer.ctx, 'strokeRect');
     });
 
     afterEach(() => {
-      mockCtxFillRect.mockClear();
-      mockCtxStrokeRect.mockClear();
+      ctxFillRectSpy.mockClear();
+      ctxStrokeRectSpy.mockClear();
     });
 
     afterAll(() => {
-      mockCtxFillRect.mockRestore();
-      mockCtxStrokeRect.mockRestore();
+      ctxFillRectSpy.mockRestore();
+      ctxStrokeRectSpy.mockRestore();
     });
 
     describe('When fillColor is provided', () => {
@@ -237,13 +270,19 @@ describe('Renderer', () => {
           height,
           fillColor,
         });
-        expect(renderer.ctx.fillStyle).toBe(fillColor);
-        expect(mockCtxFillRect).toHaveBeenCalledWith(
+        expect(ctxSaveSpy).toHaveBeenCalled();
+        expect(ctxFillRectSpy).toHaveBeenCalledWith(
           centerX - width / 2,
           centerY - height / 2,
           width,
           height,
         );
+        expect(ctxRestoreSpy).toHaveBeenCalled();
+        expectCallOrder([
+          ctxSaveSpy,
+          ctxFillRectSpy,
+          ctxRestoreSpy,
+        ]);
       });
     });
 
@@ -255,7 +294,7 @@ describe('Renderer', () => {
           width,
           height,
         });
-        expect(mockCtxFillRect).not.toHaveBeenCalled();
+        expect(ctxFillRectSpy).not.toHaveBeenCalled();
       });
     });
 
@@ -268,13 +307,19 @@ describe('Renderer', () => {
           height,
           strokeColor,
         });
-        expect(renderer.ctx.strokeStyle).toBe(strokeColor);
-        expect(mockCtxStrokeRect).toHaveBeenCalledWith(
+        expect(ctxSaveSpy).toHaveBeenCalled();
+        expect(ctxStrokeRectSpy).toHaveBeenCalledWith(
           centerX - width / 2,
           centerY - height / 2,
           width,
           height,
         );
+        expect(ctxRestoreSpy).toHaveBeenCalled();
+        expectCallOrder([
+          ctxSaveSpy,
+          ctxStrokeRectSpy,
+          ctxRestoreSpy,
+        ]);
       });
     });
 
@@ -286,34 +331,23 @@ describe('Renderer', () => {
           width,
           height,
         });
-        expect(mockCtxStrokeRect).not.toHaveBeenCalled();
+        expect(ctxStrokeRectSpy).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('drawLine()', () => {
+    const start = { x: 100, y: 100 };
+    const end = { x: 200, y: 200 };
+    const lineWidth = 2;
+
     it('Should draw a line on the canvas', () => {
-      const start = { x: 100, y: 100 };
-      const end = { x: 200, y: 200 };
-      const lineWidth = 2;
-
-      const ctxSaveSpy = vi.spyOn(renderer.ctx, 'save');
-      const ctxBeginPathSpy = vi.spyOn(renderer.ctx, 'beginPath');
-      const ctxMoveToSpy = vi.spyOn(renderer.ctx, 'moveTo');
-      const ctxLineToSpy = vi.spyOn(renderer.ctx, 'lineTo');
-      const ctxStrokeSpy = vi.spyOn(renderer.ctx, 'stroke');
-      const ctxRestoreSpy = vi.spyOn(renderer.ctx, 'restore');
-
-      ctxRestoreSpy.mockImplementation(vi.fn);
-
       renderer.drawLine({
         start,
         end,
         strokeColor,
         lineWidth,
       });
-      expect(renderer.ctx.strokeStyle).toBe(strokeColor);
-      expect(renderer.ctx.lineWidth).toBe(lineWidth);
       expect(ctxMoveToSpy).toHaveBeenCalledWith(start.x, start.y);
       expect(ctxLineToSpy).toHaveBeenCalledWith(end.x, end.y);
       expect(ctxStrokeSpy).toHaveBeenCalled();
@@ -329,28 +363,136 @@ describe('Renderer', () => {
     });
   });
 
+  describe('drawShape()', () => {
+    describe('When provided valid vertices', () => {
+      const vertices = [
+        { x: 100, y: 100 },
+        { x: 200, y: 100 },
+        { x: 200, y: 200 },
+        { x: 100, y: 200 },
+      ];
+
+      it('Should draw a shape on the canvas', () => {
+        renderer.drawShape({ vertices });
+        expect(ctxSaveSpy).toHaveBeenCalled();
+        expect(ctxBeginPathSpy).toHaveBeenCalled();
+        expect(ctxMoveToSpy).toHaveBeenCalledWith(vertices[0]!.x, vertices[0]!.y);
+        for (const vertex of vertices.slice(1)) {
+          expect(ctxLineToSpy).toHaveBeenCalledWith(vertex.x, vertex.y);
+        }
+        expect(ctxClosePathSpy).toHaveBeenCalled();
+        expect(ctxRestoreSpy).toHaveBeenCalled();
+        expectCallOrder([
+          ctxSaveSpy,
+          ctxBeginPathSpy,
+          ctxLineToSpy,
+          ctxClosePathSpy,
+          ctxRestoreSpy,
+        ]);
+      });
+
+      describe('When fillColor is provided', () => {
+        it('Should draw a shape on the canvas with a fill', () => {
+          renderer.drawShape({
+            vertices,
+            fillColor,
+          });
+          expect(ctxFillSpy).toHaveBeenCalled();
+          expectCallOrder([
+            ctxSaveSpy,
+            ctxBeginPathSpy,
+            ctxLineToSpy,
+            ctxClosePathSpy,
+            ctxFillSpy,
+            ctxRestoreSpy,
+          ]);
+        });
+      });
+
+      describe('When strokeColor is provided', () => {
+        it('Should draw a shape on the canvas with a stroke', () => {
+          renderer.drawShape({
+            vertices,
+            strokeColor,
+          });
+
+          expect(ctxStrokeSpy).toHaveBeenCalled();
+          expectCallOrder([
+            ctxSaveSpy,
+            ctxBeginPathSpy,
+            ctxLineToSpy,
+            ctxClosePathSpy,
+            ctxStrokeSpy,
+            ctxRestoreSpy,
+          ]);
+        });
+      });
+    });
+
+    describe('When the first vertex is undefined', () => {
+      it('Should throw an error', () => {
+        const vertices = [
+          undefined,
+          { x: 200, y: 100 },
+          { x: 200, y: 200 },
+          { x: 100, y: 200 },
+        ];
+        expect(() => {
+          renderer.drawShape({ vertices: vertices as { x: number; y: number }[] });
+        }).toThrowError('Vertex 0 is undefined');
+      });
+    });
+
+    describe('When a vertex other than the first is undefined', () => {
+      it('Should throw an error', () => {
+        const vertices = [
+          { x: 100, y: 100 },
+          undefined,
+          { x: 200, y: 200 },
+          { x: 100, y: 200 },
+        ];
+        expect(() => {
+          renderer.drawShape({ vertices: vertices as { x: number; y: number }[] });
+        }).toThrowError('Vertex 1 is undefined');
+      });
+    });
+
+    describe('When not provided vertices', () => {
+      it('Should not attempt to draw anything', () => {
+        renderer.drawShape({ vertices: [] });
+        expect(ctxSaveSpy).not.toHaveBeenCalled();
+        expect(ctxBeginPathSpy).not.toHaveBeenCalled();
+        expect(ctxMoveToSpy).not.toHaveBeenCalled();
+        expect(ctxLineToSpy).not.toHaveBeenCalled();
+        expect(ctxClosePathSpy).not.toHaveBeenCalled();
+        expect(ctxFillSpy).not.toHaveBeenCalled();
+        expect(ctxStrokeSpy).not.toHaveBeenCalled();
+        expect(ctxRestoreSpy).not.toHaveBeenCalled();
+      });
+    });
+  });
+
   describe('resetOrigin()', () => {
-    let mockCtxSetTransform: MockInstance<typeof renderer.ctx.setTransform>;
-    let mockCtxTranslate: MockInstance<typeof renderer.ctx.translate>;
+    let ctxSetTransformSpy: MockInstance<typeof renderer.ctx.setTransform>;
+    let ctxTranslateSpy: MockInstance<typeof renderer.ctx.translate>;
 
     beforeAll(() => {
-      mockCtxSetTransform = vi.spyOn(renderer.ctx, 'setTransform');
-      mockCtxTranslate = vi.spyOn(renderer.ctx, 'translate');
+      ctxSetTransformSpy = vi.spyOn(renderer.ctx, 'setTransform');
+      ctxTranslateSpy = vi.spyOn(renderer.ctx, 'translate');
     });
 
     beforeEach(() => {
-      renderer = new Renderer(canvas);
       renderer.resetOrigin();
     });
 
     afterEach(() => {
-      mockCtxSetTransform.mockClear();
-      mockCtxTranslate.mockClear();
+      ctxSetTransformSpy.mockClear();
+      ctxTranslateSpy.mockClear();
     });
 
     afterAll(() => {
-      mockCtxSetTransform.mockRestore();
-      mockCtxTranslate.mockRestore();
+      ctxSetTransformSpy.mockRestore();
+      ctxTranslateSpy.mockRestore();
     });
 
     it('Should reset the canvas origin to the center corner', () => {
@@ -359,6 +501,41 @@ describe('Renderer', () => {
         renderer.canvas.width / 2,
         renderer.canvas.height / 2,
       );
+    });
+  });
+
+  describe('save()', () => {
+    it('Should save the current canvas state', () => {
+      const ctxSaveSpy = vi.spyOn(renderer.ctx, 'save');
+      renderer.save();
+      expect(ctxSaveSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('restore()', () => {
+    it('Should restore the previous canvas state', () => {
+      const ctxRestoreSpy = vi.spyOn(renderer.ctx, 'restore');
+      renderer.restore();
+      expect(ctxRestoreSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('translate()', () => {
+    it('Should translate the canvas origin', () => {
+      const ctxTranslateSpy = vi.spyOn(renderer.ctx, 'translate');
+      const x = 50;
+      const y = 100;
+      renderer.translate({ x, y });
+      expect(ctxTranslateSpy).toHaveBeenCalledWith(x, y);
+    });
+  });
+
+  describe('rotate()', () => {
+    it('Should rotate the canvas context', () => {
+      const ctxRotateSpy = vi.spyOn(renderer.ctx, 'rotate');
+      const angle = Math.PI / 4;
+      renderer.rotate(angle);
+      expect(ctxRotateSpy).toHaveBeenCalledWith(angle);
     });
   });
 });

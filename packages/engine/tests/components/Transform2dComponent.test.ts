@@ -14,6 +14,7 @@ describe('Transform2dComponent', () => {
     expect(transform2dComponent.previousPosition.x).toBe(0);
     expect(transform2dComponent.previousPosition.y).toBe(0);
     expect(transform2dComponent.rotation).toBe(0);
+    expect(transform2dComponent.previousRotation).toBe(0);
     expect(transform2dComponent.scale).toBeInstanceOf(Vector2d);
     expect(transform2dComponent.scale.x).toBe(1);
     expect(transform2dComponent.scale.y).toBe(1);

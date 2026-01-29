@@ -146,11 +146,24 @@ describe('Vector2d', () => {
   });
 
   describe('static crossProduct()', () => {
-    it('Should return the cross product of two vectors', () => {
-      const vector1 = new Vector2d(1, 2);
-      const vector2 = new Vector2d(3, 4);
-      const crossProduct = Vector2d.crossProduct(vector1, vector2);
-      expect(crossProduct).toBe(-2); // 1*4 - 2*3
+    describe('When passed two vectors', () => {
+      it('Should return the cross product of two vectors', () => {
+        const vector1 = new Vector2d(1, 2);
+        const vector2 = new Vector2d(3, 4);
+        const crossProduct = Vector2d.crossProduct(vector1, vector2);
+        expect(crossProduct).toBe(-2); // 1 * 4 - 2 * 3
+      });
+    });
+
+    describe('When passed a vector and a scalar', () => {
+      it('Should return the cross product as a vector', () => {
+        const scalar = 3;
+        const vector = new Vector2d(1, 2);
+        const crossProduct = Vector2d.crossProduct(scalar, vector);
+        expect(crossProduct).toBeInstanceOf(Vector2d);
+        expect(crossProduct.x).toBe(-6); // -3 * 2
+        expect(crossProduct.y).toBe(3); // 3 * 1
+      });
     });
   });
 });

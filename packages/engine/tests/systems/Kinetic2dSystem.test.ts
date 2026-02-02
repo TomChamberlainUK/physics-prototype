@@ -65,6 +65,14 @@ describe('Kinetic2dSystem', () => {
       expect(rigidBody2dComponent.velocity.y).toBe(expectedVelocity.y);
     });
 
+    it('Should reduce an entity\'s acceleration to zero after applying it to velocity', () => {
+      rigidBody2dComponent.acceleration = new Vector2d({ x: 0.5, y: 1 });
+      kinetic2dSystem.update([entity], { deltaTime });
+      expect(rigidBody2dComponent.acceleration).toBeInstanceOf(Vector2d);
+      expect(rigidBody2dComponent.acceleration.x).toBe(0);
+      expect(rigidBody2dComponent.acceleration.y).toBe(0);
+    });
+
     it('Should increase an entity\'s position by its velocity multiplied by deltaTime', () => {
       const initialPosition = new Vector2d({ x: 0, y: 0 });
       const initialVelocity = new Vector2d({ x: 1, y: 2 });

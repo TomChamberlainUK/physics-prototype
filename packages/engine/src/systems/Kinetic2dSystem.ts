@@ -30,6 +30,7 @@ export default class Kinetic2dSystem extends System {
       rigidBody.velocity = rigidBody.velocity.add(rigidBody.impulse.multiply(rigidBody.inverseMass));
       rigidBody.impulse = new Vector2d();
       rigidBody.velocity = rigidBody.velocity.add(rigidBody.acceleration.multiply(deltaTime));
+      rigidBody.acceleration = new Vector2d();
       transform.position = transform.position.add(rigidBody.velocity.multiply(deltaTime));
 
       // Update angular motion

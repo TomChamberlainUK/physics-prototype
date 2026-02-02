@@ -65,7 +65,7 @@ describe('computeBoxAxes', () => {
           vertexC,
           vertexD,
         ] as unknown as Vector2d[]);
-      }).toThrow('Vertices must be defined Vector2d objects.');
+      }).toThrow('Vertices must be defined Vector2d instances.');
     });
   });
 });

@@ -2,6 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, t
 import Game from '#/Game';
 import Renderer from '#/Renderer';
 import Scene from '#/Scene';
+import { expectCallOrder } from './utils';
 
 describe('Game', () => {
   let canvas: HTMLCanvasElement;
@@ -118,20 +119,34 @@ describe('Game', () => {
   });
 
   describe('step()', () => {
+    let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
+    let sceneExecuteCommandsSpy: MockInstance<typeof scene.executeCommands>;
     let sceneUpdateSyncSpy: MockInstance<typeof scene.updateSync>;
     let sceneUpdatePhysicsSpy: MockInstance<typeof scene.updatePhysics>;
     let sceneUpdateRenderSpy: MockInstance<typeof scene.updateRender>;
-    let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
 
     beforeAll(() => {
       requestAnimationFrameSpy = vi.spyOn(window, 'requestAnimationFrame');
+      sceneExecuteCommandsSpy = vi.spyOn(scene, 'executeCommands');
       sceneUpdateSyncSpy = vi.spyOn(scene, 'updateSync');
       sceneUpdatePhysicsSpy = vi.spyOn(scene, 'updatePhysics');
       sceneUpdateRenderSpy = vi.spyOn(scene, 'updateRender');
     });
 
+    afterEach(() => {
+      requestAnimationFrameSpy.mockClear();
+      sceneExecuteCommandsSpy.mockClear();
+      sceneUpdateSyncSpy.mockClear();
+      sceneUpdatePhysicsSpy.mockClear();
+      sceneUpdateRenderSpy.mockClear();
+    });
+
     afterAll(() => {
-      vi.restoreAllMocks();
+      requestAnimationFrameSpy.mockRestore();
+      sceneExecuteCommandsSpy.mockRestore();
+      sceneUpdateSyncSpy.mockRestore();
+      sceneUpdatePhysicsSpy.mockRestore();
+      sceneUpdateRenderSpy.mockRestore();
     });
 
     describe('When the game is running', () => {
@@ -174,6 +189,21 @@ describe('Game', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
         game.step();
         expect(sceneUpdatePhysicsSpy).toHaveBeenCalledTimes(3);
+      });
+
+      it('Should execute the scene commands after each sync and physics update', () => {
+        performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
+        game.step();
+        expectCallOrder([
+          sceneUpdateSyncSpy,
+          sceneExecuteCommandsSpy,
+          sceneUpdatePhysicsSpy,
+          sceneExecuteCommandsSpy,
+          sceneUpdatePhysicsSpy,
+          sceneExecuteCommandsSpy,
+          sceneUpdatePhysicsSpy,
+          sceneExecuteCommandsSpy,
+        ]);
       });
 
       it('Should not update the scene physics systems when not enough time has passed', () => {

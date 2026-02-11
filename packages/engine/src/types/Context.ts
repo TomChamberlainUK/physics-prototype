@@ -3,6 +3,7 @@ import type { KeyboardInput } from '#/input';
 import type Renderer from '#/Renderer';
 import type { BroadPhaseCollisionPair } from './BroadPhaseCollisionPair';
 import type { NarrowPhaseCollisionPair } from './NarrowPhaseCollisionPair';
+import type { SceneCommand } from './SceneCommand';
 
 /**
  * The context object passed to systems during updates.
@@ -22,4 +23,6 @@ export type Context = {
   narrowPhaseCollisionPairs?: NarrowPhaseCollisionPair[];
   /** The renderer used for rendering. */
   renderer?: Renderer;
+  /** Scene commands to be processed. */
+  sceneCommands?: SceneCommand[];
 };

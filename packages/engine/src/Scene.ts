@@ -1,25 +1,20 @@
 import type Entity from './Entity';
 import type Renderer from './Renderer';
 import type System from './systems/System';
-import type { Context } from './types';
+import type { Context, SceneCommand } from './types';
 
 /**
  * The Scene class manages entities and systems within the game.
  */
 export default class Scene {
+  /** The list of commands in the scene. */
+  commands: SceneCommand[] = [];
   /** The list of entities in the scene. */
-  entities: Entity[];
+  entities: Entity[] = [];
   /** The list of systems in the scene. */
   systems: System[] = [];
   /** The context shared across systems. */
   context: Context = {};
-
-  /**
-   * Creates an instance of the Scene class.
-   */
-  constructor() {
-    this.entities = [];
-  }
 
   /**
    * Sets the context for the scene.
@@ -38,11 +33,38 @@ export default class Scene {
   }
 
   /**
+   * Removes an entity from the scene.
+   * @param entityId - The ID of the entity to remove.
+   */
+  removeEntity(entityId: string) {
+    this.entities = this.entities.filter(
+      entity => entity.id !== entityId,
+    );
+  }
+
+  /**
    * Adds a system to the scene.
    * @param system - The system to add.
    */
   addSystem(system: System) {
     this.systems.push(system);
+  }
+
+  /**
+   * Executes all scene commands and clears the command list.
+   */
+  executeCommands() {
+    for (const command of this.commands) {
+      switch (command.type) {
+        case 'spawnEntity':
+          this.addEntity(command.entity);
+          break;
+        case 'despawnEntity':
+          this.removeEntity(command.entityId);
+          break;
+      }
+    }
+    this.commands = [];
   }
 
   /**
@@ -65,7 +87,10 @@ export default class Scene {
   updateSync() {
     for (const system of this.systems) {
       if (system.type !== 'sync') continue;
-      system.update(this.entities, this.context);
+      system.update(this.entities, {
+        ...this.context,
+        sceneCommands: this.commands,
+      });
     }
   }
 

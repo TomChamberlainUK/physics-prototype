@@ -46,6 +46,22 @@ describe('Scene', () => {
     });
   });
 
+  describe('removeEntity()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should remove an entity from the scene', () => {
+      const entityA = new Entity();
+      const entityB = new Entity();
+      scene.addEntity(entityA);
+      scene.addEntity(entityB);
+      scene.removeEntity(entityA.id);
+      expect(scene.entities).not.toContain(entityA);
+      expect(scene.entities).toContain(entityB);
+    });
+  });
+
   describe('addSystem()', () => {
     beforeEach(() => {
       scene = new Scene();
@@ -55,6 +71,40 @@ describe('Scene', () => {
       const system = { update: vi.fn(), type: 'physics', name: 'System' };
       scene.addSystem(system);
       expect(scene.systems).toContain(system);
+    });
+  });
+
+  describe('executeCommands()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should execute spawnEntity commands and add the entity to the scene', () => {
+      const entity = new Entity();
+      scene.addEntity = vi.fn();
+      scene.commands.push({
+        type: 'spawnEntity',
+        entity,
+      });
+      scene.executeCommands();
+      expect(scene.addEntity).toHaveBeenCalledWith(entity);
+    });
+
+    it('Should execute despawnEntity commands and remove the entity from the scene', () => {
+      const entityId = 'test-entity';
+      scene.removeEntity = vi.fn();
+      scene.commands.push({
+        type: 'despawnEntity',
+        entityId,
+      });
+      scene.executeCommands();
+      expect(scene.removeEntity).toHaveBeenCalledWith(entityId);
+    });
+
+    it('Should clear the commands after executing', () => {
+      scene.commands.push({ type: 'spawnEntity', entity: new Entity() });
+      scene.executeCommands();
+      expect(scene.commands).toEqual([]);
     });
   });
 
@@ -102,9 +152,18 @@ describe('Scene', () => {
       scene.addSystem(system2);
       scene.addSystem(system3);
       scene.updateSync();
-      expect(system1.update).toHaveBeenCalledWith([entity], context);
-      expect(system2.update).toHaveBeenCalledWith([entity], context);
-      expect(system3.update).toHaveBeenCalledWith([entity], context);
+      expect(system1.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
+      expect(system2.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
+      expect(system3.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
     });
   });
 

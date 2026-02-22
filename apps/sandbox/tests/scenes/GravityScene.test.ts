@@ -136,58 +136,45 @@ describe('GravityScene', () => {
 
   it.each([
     {
-      name: 'ColliderUpdate2dSystem',
       System: ColliderUpdate2dSystem,
     },
     {
-      name: 'CollisionDetection2dSystem',
       System: CollisionDetection2dSystem,
     },
     {
-      name: 'CollisionImpulseResolution2dSystem',
       System: CollisionImpulseResolution2dSystem,
     },
     {
-      name: 'CollisionPositionCorrection2dSystem',
       System: CollisionPositionCorrection2dSystem,
     },
     {
-      name: 'InputImpulseSystem',
       System: InputImpulseSystem,
     },
     {
-      name: 'InterpolationSync2dSystem',
       System: InterpolationSync2dSystem,
     },
     {
-      name: 'IntervalSpawnSystem',
       System: IntervalSpawnSystem,
     },
     {
-      name: 'Gravity2dSystem',
       System: Gravity2dSystem,
     },
     {
-      name: 'Kinetic2dSystem',
       System: Kinetic2dSystem,
     },
     {
-      name: 'RenderClear2dSystem',
       System: RenderClear2dSystem,
     },
     {
-      name: 'Render2dSystem',
       System: Render2dSystem,
     },
     {
-      name: 'RenderDebug2dSystem',
       System: RenderDebug2dSystem,
     },
     {
-      name: 'RigidBodyUpdate2dSystem',
       System: RigidBodyUpdate2dSystem,
     },
-  ])('Should add $name to the scene', ({ System }) => {
+  ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
   });
 

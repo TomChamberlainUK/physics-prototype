@@ -169,50 +169,39 @@ describe('SandboxScene', () => {
 
   it.each([
     {
-      name: 'interpolationSync2d',
       System: InterpolationSync2dSystem,
     },
     {
-      name: 'inputImpulse',
       System: InputImpulseSystem,
     },
     {
-      name: 'colliderUpdate2d',
       System: ColliderUpdate2dSystem,
     },
     {
-      name: 'rigidBodyUpdate2d',
       System: RigidBodyUpdate2dSystem,
     },
     {
-      name: 'collisionDetection2d',
       System: CollisionDetection2dSystem,
     },
     {
-      name: 'collisionImpulseResolution2d',
       System: CollisionImpulseResolution2dSystem,
     },
     {
-      name: 'collisionPositionCorrection2d',
       System: CollisionPositionCorrection2dSystem,
     },
     {
-      name: 'kinetic2d',
       System: Kinetic2dSystem,
     },
     {
-      name: 'renderClear2dSystem',
       System: RenderClear2dSystem,
     },
     {
-      name: 'render2d',
       System: Render2dSystem,
     },
     {
-      name: 'renderDebug2d',
       System: RenderDebug2dSystem,
     },
-  ])('Should add a $name system to the scene', ({ System }) => {
+  ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
   });
 

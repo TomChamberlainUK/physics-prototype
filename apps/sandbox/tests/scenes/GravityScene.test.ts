@@ -1,53 +1,59 @@
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { GravityScene } from '#/scenes';
 import {
   Actions,
+  KeyboardInput,
   ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
   InputImpulseSystem,
   InterpolationSync2dSystem,
-  KeyboardInput,
   Kinetic2dSystem,
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
+  Gravity2dSystem,
+  IntervalSpawnSystem,
 } from 'engine';
-import SandboxScene from '#/scenes/SandboxScene';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
-describe('SandboxScene', () => {
+const PlayerEntityMock = vi.hoisted(vi.fn);
+const PhysicsEntityMock = vi.hoisted(vi.fn);
+
+vi.mock('#/entities/PlayerEntity', () => ({
+  default: PlayerEntityMock,
+}));
+
+vi.mock('#/entities/PhysicsEntity', () => ({
+  default: PhysicsEntityMock,
+}));
+
+describe('GravityScene', () => {
   const height = 600;
   const width = 800;
 
-  let scene: SandboxScene;
-
-  const sceneAddEntitySpy = vi.spyOn(SandboxScene.prototype, 'addEntity');
-  const sceneAddSystemSpy = vi.spyOn(SandboxScene.prototype, 'addSystem');
-  const sceneSetContextSpy = vi.spyOn(SandboxScene.prototype, 'setContext');
-
-  const PhysicsEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(({ name }) => ({ name }))
-  ));
-  const PlayerEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(() => ({ name: 'player-entity' }))
-  ));
+  let scene: GravityScene;
+  let sceneAddEntitySpy: MockInstance<typeof GravityScene.prototype.addEntity>;
+  let sceneAddSystemSpy: MockInstance<typeof GravityScene.prototype.addSystem>;
+  let sceneSetContextSpy: MockInstance<typeof GravityScene.prototype.setContext>;
 
   beforeAll(() => {
-    vi.mock('#/entities/PhysicsEntity', () => ({
-      default: PhysicsEntityConstructorMock,
-    }));
-    vi.mock('#/entities/PlayerEntity', () => ({
-      default: PlayerEntityConstructorMock,
-    }));
+    PlayerEntityMock.mockImplementation(() => (
+      { name: 'player-entity' }
+    ));
+    PhysicsEntityMock.mockImplementation(({ name }) => (
+      { name }
+    ));
+    sceneAddEntitySpy = vi.spyOn(GravityScene.prototype, 'addEntity');
+    sceneAddSystemSpy = vi.spyOn(GravityScene.prototype, 'addSystem');
+    sceneSetContextSpy = vi.spyOn(GravityScene.prototype, 'setContext');
   });
 
   beforeEach(() => {
-    scene = new SandboxScene({
-      width,
+    scene = new GravityScene({
       height,
+      width,
     });
   });
 
@@ -60,11 +66,11 @@ describe('SandboxScene', () => {
   });
 
   it('Should instantiate', () => {
-    expect(scene).toBeInstanceOf(SandboxScene);
+    expect(scene).toBeInstanceOf(GravityScene);
   });
 
   it('Should add a player entity', () => {
-    expect(PlayerEntityConstructorMock).toHaveBeenCalledWith({
+    expect(PlayerEntityMock).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: 32,
@@ -110,7 +116,7 @@ describe('SandboxScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith({
+    expect(PhysicsEntityMock).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: wallWidth,
@@ -128,57 +134,9 @@ describe('SandboxScene', () => {
     expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
   });
 
-  it('Should add 250 circle entities to the scene', () => {
-    for (let i = 0; i < 250; i++) {
-      const name = `circle-${i}`;
-      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
-        position: {
-          x: expect.any(Number),
-          y: expect.any(Number),
-        },
-        shape: {
-          type: 'circle',
-          radius: expect.any(Number),
-        },
-        fillColor: expect.any(String),
-        name,
-      }));
-      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
-    }
-  });
-
-  it('Should add 250 box entities to the scene', () => {
-    for (let i = 0; i < 250; i++) {
-      const name = `box-${i}`;
-      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
-        position: {
-          x: expect.any(Number),
-          y: expect.any(Number),
-        },
-        shape: {
-          type: 'box',
-          width: expect.any(Number),
-          height: expect.any(Number),
-        },
-        fillColor: expect.any(String),
-        name,
-      }));
-      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
-    }
-  });
-
   it.each([
     {
-      System: InterpolationSync2dSystem,
-    },
-    {
-      System: InputImpulseSystem,
-    },
-    {
       System: ColliderUpdate2dSystem,
-    },
-    {
-      System: RigidBodyUpdate2dSystem,
     },
     {
       System: CollisionDetection2dSystem,
@@ -188,6 +146,18 @@ describe('SandboxScene', () => {
     },
     {
       System: CollisionPositionCorrection2dSystem,
+    },
+    {
+      System: InputImpulseSystem,
+    },
+    {
+      System: InterpolationSync2dSystem,
+    },
+    {
+      System: IntervalSpawnSystem,
+    },
+    {
+      System: Gravity2dSystem,
     },
     {
       System: Kinetic2dSystem,
@@ -200,6 +170,9 @@ describe('SandboxScene', () => {
     },
     {
       System: RenderDebug2dSystem,
+    },
+    {
+      System: RigidBodyUpdate2dSystem,
     },
   ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));

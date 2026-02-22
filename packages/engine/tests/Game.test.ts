@@ -195,12 +195,14 @@ describe('Game', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
         game.step();
         expectCallOrder([
+          sceneExecuteCommandsSpy,
           sceneUpdateSyncSpy,
-          sceneExecuteCommandsSpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
+          sceneUpdateSyncSpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
+          sceneUpdateSyncSpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
         ]);

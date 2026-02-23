@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Collider2dComponent } from '#/components';
 import * as getVerticesModule from '#/components/Collider2dComponent/logic/getVertices';
+import { Vector2d } from '#/maths';
 
 describe('Collider2dComponent', () => {
   it('Should instantiate with a circle shape', () => {
@@ -28,10 +29,10 @@ describe('Collider2dComponent', () => {
     const halfWidth = width / 2;
     const halfHeight = height / 2;
     const expectedVertices = [
-      { x: -halfWidth, y: -halfHeight },
-      { x: halfWidth, y: -halfHeight },
-      { x: halfWidth, y: halfHeight },
-      { x: -halfWidth, y: halfHeight },
+      new Vector2d({ x: -halfWidth, y: -halfHeight }),
+      new Vector2d({ x: halfWidth, y: -halfHeight }),
+      new Vector2d({ x: halfWidth, y: halfHeight }),
+      new Vector2d({ x: -halfWidth, y: halfHeight }),
     ];
     const getVerticesSpy = vi.spyOn(getVerticesModule, 'default');
     getVerticesSpy.mockReturnValue(expectedVertices);

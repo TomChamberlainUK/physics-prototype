@@ -110,10 +110,10 @@ describe('renderCollider', () => {
           height: 32,
         };
         collider.worldVertices = [
-          { x: 0, y: 0 },
-          { x: 32, y: 0 },
-          { x: 32, y: 32 },
-          { x: 0, y: 32 },
+          new Vector2d({ x: 0, y: 0 }),
+          new Vector2d({ x: 32, y: 0 }),
+          new Vector2d({ x: 32, y: 32 }),
+          new Vector2d({ x: 0, y: 32 }),
         ];
       });
 

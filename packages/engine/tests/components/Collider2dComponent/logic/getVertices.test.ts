@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { getVertices } from '#/components/Collider2dComponent/logic';
-import type { Shape } from '#/types';
 import * as getBoxVerticesModule from '#/components/Collider2dComponent/logic/getBoxVertices';
+import { Vector2d } from '#/maths';
+import type { Shape } from '#/types';
 
 describe('getVertices', () => {
   let shape: Shape;
@@ -25,10 +26,10 @@ describe('getVertices', () => {
 
     it('Should return its vertices', () => {
       const expectedVertices = [
-        { x: -halfWidth, y: -halfHeight },
-        { x: halfWidth, y: -halfHeight },
-        { x: halfWidth, y: halfHeight },
-        { x: -halfWidth, y: halfHeight },
+        new Vector2d({ x: -halfWidth, y: -halfHeight }),
+        new Vector2d({ x: halfWidth, y: -halfHeight }),
+        new Vector2d({ x: halfWidth, y: halfHeight }),
+        new Vector2d({ x: -halfWidth, y: halfHeight }),
       ];
       getBoxVerticesSpy.mockReturnValue(expectedVertices);
       const vertices = getVertices(shape);

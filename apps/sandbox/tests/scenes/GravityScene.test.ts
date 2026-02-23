@@ -1,20 +1,20 @@
 import { GravityScene } from '#/scenes';
 import {
   Actions,
-  KeyboardInput,
   ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
+  Gravity2dSystem,
   InputImpulseSystem,
-  InterpolationSync2dSystem,
+  IntervalSpawnSystem,
+  KeyboardInput,
   Kinetic2dSystem,
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
-  Gravity2dSystem,
-  IntervalSpawnSystem,
+  TransformSnapshot2dSystem,
 } from 'engine';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
@@ -151,9 +151,6 @@ describe('GravityScene', () => {
       System: InputImpulseSystem,
     },
     {
-      System: InterpolationSync2dSystem,
-    },
-    {
       System: IntervalSpawnSystem,
     },
     {
@@ -173,6 +170,9 @@ describe('GravityScene', () => {
     },
     {
       System: RigidBodyUpdate2dSystem,
+    },
+    {
+      System: TransformSnapshot2dSystem,
     },
   ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));

@@ -1,16 +1,16 @@
 import { Transform2dComponent } from '#/components';
 import Entity from '#/Entity';
 import { Vector2d } from '#/maths';
-import { InterpolationSync2dSystem } from '#/systems';
+import { TransformSnapshot2dSystem } from '#/systems';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-describe('InterpolationSync2dSystem', () => {
+describe('TransformSnapshot2dSystem', () => {
   describe('constructor()', () => {
     it('Should instantiate', () => {
-      const system = new InterpolationSync2dSystem();
-      expect(system).toBeInstanceOf(InterpolationSync2dSystem);
-      expect(system.name).toBe('InterpolationSync2dSystem');
-      expect(system.type).toBe('sync');
+      const system = new TransformSnapshot2dSystem();
+      expect(system).toBeInstanceOf(TransformSnapshot2dSystem);
+      expect(system.name).toBe('TransformSnapshot2dSystem');
+      expect(system.type).toBe('history');
     });
   });
 
@@ -33,7 +33,7 @@ describe('InterpolationSync2dSystem', () => {
 
       expect(transform2dComponent.previousPosition).toEqual(originalPosition);
 
-      const system = new InterpolationSync2dSystem();
+      const system = new TransformSnapshot2dSystem();
       system.update([entity]);
 
       expect(transform2dComponent.previousPosition).toEqual(currentPosition);
@@ -48,7 +48,7 @@ describe('InterpolationSync2dSystem', () => {
 
       expect(transform2dComponent.previousRotation).toBe(originalRotation);
 
-      const system = new InterpolationSync2dSystem();
+      const system = new TransformSnapshot2dSystem();
       system.update([entity]);
 
       expect(transform2dComponent.previousRotation).toBe(currentRotation);

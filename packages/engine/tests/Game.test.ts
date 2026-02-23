@@ -121,14 +121,14 @@ describe('Game', () => {
   describe('step()', () => {
     let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
     let sceneExecuteCommandsSpy: MockInstance<typeof scene.executeCommands>;
-    let sceneUpdateSyncSpy: MockInstance<typeof scene.updateSync>;
+    let sceneUpdateHistorySpy: MockInstance<typeof scene.updateHistory>;
     let sceneUpdatePhysicsSpy: MockInstance<typeof scene.updatePhysics>;
     let sceneUpdateRenderSpy: MockInstance<typeof scene.updateRender>;
 
     beforeAll(() => {
       requestAnimationFrameSpy = vi.spyOn(window, 'requestAnimationFrame');
       sceneExecuteCommandsSpy = vi.spyOn(scene, 'executeCommands');
-      sceneUpdateSyncSpy = vi.spyOn(scene, 'updateSync');
+      sceneUpdateHistorySpy = vi.spyOn(scene, 'updateHistory');
       sceneUpdatePhysicsSpy = vi.spyOn(scene, 'updatePhysics');
       sceneUpdateRenderSpy = vi.spyOn(scene, 'updateRender');
     });
@@ -136,7 +136,7 @@ describe('Game', () => {
     afterEach(() => {
       requestAnimationFrameSpy.mockClear();
       sceneExecuteCommandsSpy.mockClear();
-      sceneUpdateSyncSpy.mockClear();
+      sceneUpdateHistorySpy.mockClear();
       sceneUpdatePhysicsSpy.mockClear();
       sceneUpdateRenderSpy.mockClear();
     });
@@ -144,7 +144,7 @@ describe('Game', () => {
     afterAll(() => {
       requestAnimationFrameSpy.mockRestore();
       sceneExecuteCommandsSpy.mockRestore();
-      sceneUpdateSyncSpy.mockRestore();
+      sceneUpdateHistorySpy.mockRestore();
       sceneUpdatePhysicsSpy.mockRestore();
       sceneUpdateRenderSpy.mockRestore();
     });
@@ -176,7 +176,7 @@ describe('Game', () => {
 
       it('Should update the scene sync systems', () => {
         game.step();
-        expect(sceneUpdateSyncSpy).toHaveBeenCalled();
+        expect(sceneUpdateHistorySpy).toHaveBeenCalled();
       });
 
       it('Should update the scene physics systems when enough time has passed', () => {
@@ -195,12 +195,14 @@ describe('Game', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
         game.step();
         expectCallOrder([
-          sceneUpdateSyncSpy,
           sceneExecuteCommandsSpy,
+          sceneUpdateHistorySpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
+          sceneUpdateHistorySpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
+          sceneUpdateHistorySpy,
           sceneUpdatePhysicsSpy,
           sceneExecuteCommandsSpy,
         ]);
@@ -236,7 +238,7 @@ describe('Game', () => {
 
       it('Should not update the scene sync systems', () => {
         game.step();
-        expect(sceneUpdateSyncSpy).not.toHaveBeenCalled();
+        expect(sceneUpdateHistorySpy).not.toHaveBeenCalled();
       });
 
       it('Should not update the scene physics systems', () => {

@@ -82,11 +82,11 @@ export default class Scene {
   }
 
   /**
-   * Updates all sync systems in the scene.
+   * Updates all history systems in the scene.
    */
-  updateSync() {
+  updateHistory() {
     for (const system of this.systems) {
-      if (system.type !== 'sync') continue;
+      if (system.type !== 'history') continue;
       system.update(this.entities, {
         ...this.context,
         sceneCommands: this.commands,

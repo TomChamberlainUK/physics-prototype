@@ -9,11 +9,17 @@ describe('Entity', () => {
   const componentName = 'TestComponent';
   const entityName = 'TestEntity';
 
+  class TestComponent extends Component {
+    constructor(name: string) {
+      super(name);
+    }
+  }
+
   beforeEach(() => {
     entity = new Entity({
       name: entityName,
     });
-    component = new Component(componentName);
+    component = new TestComponent(componentName);
   });
 
   describe('constructor()', () => {
@@ -36,9 +42,9 @@ describe('Entity', () => {
   describe('addComponents()', () => {
     it('Should add multiple components to the entity', () => {
       const components = [
-        new Component('Component1'),
-        new Component('Component2'),
-        new Component('Component3'),
+        new TestComponent('Component1'),
+        new TestComponent('Component2'),
+        new TestComponent('Component3'),
       ];
       entity.addComponents(components);
       for (const { name: componentName } of components) {
@@ -78,7 +84,7 @@ describe('Entity', () => {
         'Component2',
         'Component3',
       ];
-      entity.addComponents(componentNames.map(name => new Component(name)));
+      entity.addComponents(componentNames.map(name => new TestComponent(name)));
       expect(entity.hasComponents(componentNames)).toBe(true);
     });
 
@@ -88,7 +94,7 @@ describe('Entity', () => {
         'Component2',
         'Component3',
       ];
-      entity.addComponents(componentNames.map(name => new Component(name)));
+      entity.addComponents(componentNames.map(name => new TestComponent(name)));
       expect(entity.hasComponents([...componentNames, 'Component4'])).toBe(false);
     });
   });

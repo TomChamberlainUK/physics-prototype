@@ -4,14 +4,14 @@ import Vector2d from '#/maths/Vector2d';
 import System from './System';
 
 /**
- * A system that synchronizes previous positions for 2D transforms to enable interpolation.
+ * A system that captures a snapshot of the previous 2D transform.
  */
-export default class InterpolationSync2dSystem extends System {
-  name = 'InterpolationSync2dSystem';
-  type = 'sync';
+export default class TransformSnapshot2dSystem extends System {
+  name = 'TransformSnapshot2dSystem';
+  type = 'history';
 
   /**
-   * Updates previous positions of 2D transforms to match current positions.
+   * Captures a snapshot of the previous 2D transform for each entity.
    * @param entities - The entities in the system.
    */
   update(entities: Entity[]) {

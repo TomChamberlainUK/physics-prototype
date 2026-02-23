@@ -7,7 +7,6 @@ import {
   Events,
   Gravity2dSystem,
   InputImpulseSystem,
-  InterpolationSync2dSystem,
   IntervalSpawnSystem,
   KeyboardInput,
   Kinetic2dSystem,
@@ -16,6 +15,7 @@ import {
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
   Scene,
+  TransformSnapshot2dSystem,
   Vector2d,
   type ControlScheme,
 } from 'engine';
@@ -105,7 +105,7 @@ export default class GravityScene extends Scene {
       this.addEntity(wallEntity);
     }
 
-    const interpolationSync2dSystem = new InterpolationSync2dSystem();
+    const transformSnapshot2dSystem = new TransformSnapshot2dSystem();
     const inputImpulseSystem = new InputImpulseSystem();
     const colliderUpdate2dSystem = new ColliderUpdate2dSystem();
     const rigidBodyUpdate2dSystem = new RigidBodyUpdate2dSystem();
@@ -142,7 +142,7 @@ export default class GravityScene extends Scene {
     renderDebug2dSystem.enabled = false;
 
     this.addSystem(intervalSpawnSystem);
-    this.addSystem(interpolationSync2dSystem);
+    this.addSystem(transformSnapshot2dSystem);
     this.addSystem(inputImpulseSystem);
     this.addSystem(colliderUpdate2dSystem);
     this.addSystem(rigidBodyUpdate2dSystem);

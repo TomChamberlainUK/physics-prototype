@@ -6,13 +6,13 @@ import {
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
   InputImpulseSystem,
-  InterpolationSync2dSystem,
   KeyboardInput,
   Kinetic2dSystem,
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
+  TransformSnapshot2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
 
@@ -169,16 +169,7 @@ describe('SandboxScene', () => {
 
   it.each([
     {
-      System: InterpolationSync2dSystem,
-    },
-    {
-      System: InputImpulseSystem,
-    },
-    {
       System: ColliderUpdate2dSystem,
-    },
-    {
-      System: RigidBodyUpdate2dSystem,
     },
     {
       System: CollisionDetection2dSystem,
@@ -190,16 +181,25 @@ describe('SandboxScene', () => {
       System: CollisionPositionCorrection2dSystem,
     },
     {
-      System: Kinetic2dSystem,
+      System: InputImpulseSystem,
     },
     {
-      System: RenderClear2dSystem,
+      System: Kinetic2dSystem,
     },
     {
       System: Render2dSystem,
     },
     {
+      System: RenderClear2dSystem,
+    },
+    {
       System: RenderDebug2dSystem,
+    },
+    {
+      System: RigidBodyUpdate2dSystem,
+    },
+    {
+      System: TransformSnapshot2dSystem,
     },
   ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));

@@ -135,23 +135,23 @@ describe('Scene', () => {
     });
   });
 
-  describe('updateSync()', () => {
+  describe('updateHistory()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
 
-    it('Should call all sync systems with the current entities and context', () => {
+    it('Should call all history systems with the current entities and context', () => {
       const entity = new Entity();
       const context = { input: new KeyboardInput() };
-      const system1 = { update: vi.fn(), type: 'sync', name: 'System1' };
-      const system2 = { update: vi.fn(), type: 'sync', name: 'System2' };
-      const system3 = { update: vi.fn(), type: 'sync', name: 'System3' };
+      const system1 = { update: vi.fn(), type: 'history', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'history', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'history', name: 'System3' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.updateSync();
+      scene.updateHistory();
       expect(system1.update).toHaveBeenCalledWith([entity], {
         ...context,
         sceneCommands: scene.commands,

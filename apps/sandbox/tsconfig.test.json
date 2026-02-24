@@ -5,7 +5,10 @@
     "types": ["@testing-library/jest-dom"],
     "baseUrl": ".",
     "paths": {
-      "#/*": ["src/*"],
+      "#/*": [
+        "src/*",
+        "../../packages/engine/src/*" // allow to import from engine in the sandbox
+      ],
     },
     "tsBuildInfoFile": ".tsbuild/test.tsbuildinfo"
   },

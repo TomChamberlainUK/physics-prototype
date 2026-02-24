@@ -2,10 +2,9 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "tsconfig/svelte.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "#/*": [
-        "src/*",
+        "./src/*",
         "../../packages/engine/src/*" // allow to import from engine in the sandbox
       ],
     },

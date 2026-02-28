@@ -1,7 +1,7 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type { AABB } from '#/types';
-import computeBoxAABB from './computeBoxAABB';
-import computeCircleAABB from './computeCircleAABB';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type { AABB } from '#src/types/index.js';
+import computeBoxAABB from './computeBoxAABB.js';
+import computeCircleAABB from './computeCircleAABB.js';
 
 /**
  * The components required to compute the AABB.

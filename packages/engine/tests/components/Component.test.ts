@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Component } from '#/components';
+import { Component } from '#src/components/index.js';
 
 describe('Component', () => {
   class TestComponent extends Component {

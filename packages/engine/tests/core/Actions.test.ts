@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Actions, Events } from '#/core';
-import type { ControlScheme } from '#/types';
+import { Actions, Events } from '#src/core/index.js';
+import type { ControlScheme } from '#src/types/index.js';
 
 describe('Actions', () => {
   let actionManager: Actions;

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { getVertices } from '#/components/Collider2dComponent/logic';
-import * as getBoxVerticesModule from '#/components/Collider2dComponent/logic/getBoxVertices';
-import { Vector2d } from '#/maths';
-import type { Shape } from '#/types';
+import { getVertices } from '#src/components/Collider2dComponent/logic/index.js';
+import * as getBoxVerticesModule from '#src/components/Collider2dComponent/logic/getBoxVertices.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Shape } from '#src/types/index.js';
 
 describe('getVertices', () => {
   let shape: Shape;

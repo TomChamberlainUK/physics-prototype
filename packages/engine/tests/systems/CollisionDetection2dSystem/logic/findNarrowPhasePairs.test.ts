@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import Entity from '#/Entity';
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import { Vector2d } from '#/maths';
-import * as detectCollisionModule from '#/systems/CollisionDetection2dSystem/logic/detectCollision';
-import findNarrowPhasePairs from '#/systems/CollisionDetection2dSystem/logic/findNarrowPhasePairs';
+import Entity from '#src/Entity.js';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import * as detectCollisionModule from '#src/systems/CollisionDetection2dSystem/logic/detectCollision.js';
+import { findNarrowPhasePairs } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('findNarrowPhasePairs', () => {
   let entityA: Entity;

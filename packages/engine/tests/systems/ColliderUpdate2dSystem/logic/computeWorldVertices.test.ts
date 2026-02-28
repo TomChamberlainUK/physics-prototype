@@ -1,5 +1,5 @@
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { computeWorldVertices } from '#src/systems/ColliderUpdate2dSystem/logic/index.js';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('computeWorldVertices', () => {

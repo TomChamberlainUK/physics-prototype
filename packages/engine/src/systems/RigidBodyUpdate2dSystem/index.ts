@@ -1,1 +1,1 @@
-export { default } from './RigidBodyUpdate2dSystem';
+export { default } from './RigidBodyUpdate2dSystem.js';

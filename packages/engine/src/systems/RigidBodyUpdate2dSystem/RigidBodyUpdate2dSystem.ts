@@ -1,7 +1,7 @@
-import type { Collider2dComponent, RigidBody2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import System from '../System';
-import { getBoxMomentOfInertia, getCircleMomentOfInertia } from './logic';
+import type { Collider2dComponent, RigidBody2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import System from '../System.js';
+import { getBoxMomentOfInertia, getCircleMomentOfInertia } from './logic/index.js';
 
 /**
  * A system that updates rigid bodies' moments of inertia based on their colliders.

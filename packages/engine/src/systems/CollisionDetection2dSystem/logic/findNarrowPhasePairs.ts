@@ -1,7 +1,7 @@
-import type Entity from '#/Entity';
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type { NarrowPhaseCollisionPair } from '#/types';
-import detectCollision from './detectCollision';
+import type Entity from '#src/Entity.js';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type { NarrowPhaseCollisionPair } from '#src/types/index.js';
+import detectCollision from './detectCollision.js';
 
 /**
  * Identifies actual collision pairs from candidate pairs using narrow-phase collision detection.

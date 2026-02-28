@@ -1,6 +1,6 @@
-import type { Collider2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import areAABBsOverlapping from './areAABBsOverlapping';
+import type { Collider2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import areAABBsOverlapping from './areAABBsOverlapping.js';
 
 /**
  * Identifies potential collision pairs among the given entities using broad-phase collision detection.

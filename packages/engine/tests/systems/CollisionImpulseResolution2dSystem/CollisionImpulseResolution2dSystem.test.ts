@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import { CollisionImpulseResolution2dSystem } from '#/systems';
-import * as computeContactManifoldImpulseModule from '#/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse';
-import type { ContactManifold } from '#/types';
+import { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import { CollisionImpulseResolution2dSystem } from '#src/systems/index.js';
+import * as computeContactManifoldImpulseModule from '#src/systems/CollisionImpulseResolution2dSystem/logic/computeContactManifoldImpulse.js';
+import type { ContactManifold } from '#src/types/index.js';
 
 describe('CollisionImpulseResolution2dSystem', () => {
   describe('constructor()', () => {

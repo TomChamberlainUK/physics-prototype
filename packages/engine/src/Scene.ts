@@ -1,7 +1,7 @@
-import type Entity from './Entity';
-import type Renderer from './Renderer';
-import type System from './systems/System';
-import type { Context, SceneCommand } from './types';
+import type Entity from './Entity.js';
+import type Renderer from './Renderer.js';
+import type System from './systems/System.js';
+import type { Context, SceneCommand } from './types/index.js';
 
 /**
  * The Scene class manages entities and systems within the game.

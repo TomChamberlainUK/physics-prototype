@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import { computeAABB } from '#/systems/ColliderUpdate2dSystem/logic';
-import * as computeBoxAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeBoxAABB';
-import * as computeCircleAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeCircleAABB';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { computeAABB } from '#src/systems/ColliderUpdate2dSystem/logic/index.js';
+import * as computeBoxAABBModule from '#src/systems/ColliderUpdate2dSystem/logic/computeBoxAABB.js';
+import * as computeCircleAABBModule from '#src/systems/ColliderUpdate2dSystem/logic/computeCircleAABB.js';
 
 describe('computeAABB', () => {
   let collider: Collider2dComponent;

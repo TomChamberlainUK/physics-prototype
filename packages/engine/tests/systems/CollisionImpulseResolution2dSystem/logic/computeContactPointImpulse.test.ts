@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import { Vector2d } from '#/maths';
-import { computeContactPointImpulse } from '#/systems/CollisionImpulseResolution2dSystem/logic';
+import { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import { computeContactPointImpulse } from '#src/systems/CollisionImpulseResolution2dSystem/logic/index.js';
 
 describe('computeContactPointImpulse', () => {
   let contactPoint: Vector2d;

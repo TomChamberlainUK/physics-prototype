@@ -1,4 +1,4 @@
-import type { ContactManifold } from './ContactManifold';
+import type { ContactManifold } from './ContactManifold.js';
 
 /**
  * Represents the result of a collision detection between two entities.

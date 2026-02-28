@@ -1,6 +1,6 @@
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
-import { findBroadPhasePairs, findNarrowPhasePairs } from './logic';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import { findBroadPhasePairs, findNarrowPhasePairs } from './logic/index.js';
 
 /**
  * A system that performs collision detection for 2D entities.

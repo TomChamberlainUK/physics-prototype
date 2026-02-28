@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#/maths';
+import { Vector2d } from '#src/maths/index.js';
 
 describe('Vector2d', () => {
   describe('constructor()', () => {

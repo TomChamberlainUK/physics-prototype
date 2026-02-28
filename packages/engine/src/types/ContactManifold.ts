@@ -1,4 +1,4 @@
-import type { Vector2d } from '#/maths';
+import type { Vector2d } from '#src/maths/index.js';
 
 /**
  * Represents the contact manifold resulting from a collision between two entities.

@@ -1,7 +1,7 @@
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import { Vector2d } from '#/maths';
-import { detectCircleCircleCollision } from '#/systems/CollisionDetection2dSystem/logic';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import { detectCircleCircleCollision } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('detectCircleCircleCollision', () => {
   const radius = 16;

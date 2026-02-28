@@ -1,5 +1,5 @@
-import { getBoxMomentOfInertia } from '#/systems/RigidBodyUpdate2dSystem/logic';
 import { describe, expect, it } from 'vitest';
+import { getBoxMomentOfInertia } from '#src/systems/RigidBodyUpdate2dSystem/logic/index.js';
 
 describe('getBoxMomentOfInertia', () => {
   it('Should calculate the moment of inertia for a box', () => {

@@ -1,5 +1,5 @@
-import { Matrix2d, Vector2d } from '#/maths';
 import { describe, expect, it } from 'vitest';
+import { Matrix2d, Vector2d } from '#src/maths/index.js';
 
 describe('Matrix2d', () => {
   describe('constructor()', () => {

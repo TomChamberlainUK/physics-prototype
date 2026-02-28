@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Component } from '#/components';
+import type { Component } from '#src/components/index.js';
 
 /**
  * Parameters for creating an Entity.

@@ -1,8 +1,8 @@
-import type { RigidBody2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import Vector2d from '#/maths/Vector2d';
-import type { Context } from '#/types';
-import System from './System';
+import type { RigidBody2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Context } from '#src/types/index.js';
+import System from './System.js';
 
 /**
  * A system that applies input-based impulses to 2D rigid bodies.

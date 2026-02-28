@@ -1,7 +1,7 @@
-import { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
-import System from './System';
+import { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import System from './System.js';
 
 /**
  * A system that corrects positions of 2D entities to resolve collisions.

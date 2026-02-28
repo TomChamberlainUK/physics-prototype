@@ -1,6 +1,6 @@
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
-import System from './System';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import System from './System.js';
 
 /** Properties for constructing an IntervalSpawnSystem. */
 type ConstructorProps = {

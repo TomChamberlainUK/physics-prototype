@@ -1,4 +1,4 @@
-import { Vector2d } from '#/maths';
+import { Vector2d } from '#src/maths/index.js';
 
 /**
  * Parameters for calculating box vertices.

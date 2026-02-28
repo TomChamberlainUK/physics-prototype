@@ -1,5 +1,5 @@
-import { clampTangentImpulseMagnitude } from '#/systems/CollisionImpulseResolution2dSystem/logic';
 import { describe, expect, it } from 'vitest';
+import { clampTangentImpulseMagnitude } from '#src/systems/CollisionImpulseResolution2dSystem/logic/index.js';
 
 describe('clampTangentImpulseMagnitude', () => {
   it('Should clamp the tangent impulse magnitude within the maximum allowable tangent impulse', () => {

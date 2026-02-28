@@ -1,7 +1,7 @@
-import Entity from '#/Entity';
-import { getBroadPhaseCollisionPairsSet } from '#/systems/RenderDebug2dSystem/logic';
-import type { BroadPhaseCollisionPair } from '#/types';
 import { describe, expect, it } from 'vitest';
+import Entity from '#src/Entity.js';
+import { getBroadPhaseCollisionPairsSet } from '#src/systems/RenderDebug2dSystem/logic/index.js';
+import type { BroadPhaseCollisionPair } from '#src/types/index.js';
 
 describe('getBroadPhaseCollisionPairsSet', () => {
   it('Should return a set of unique IDs from broadPhaseCollisionPairs', () => {

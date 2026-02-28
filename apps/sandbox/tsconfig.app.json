@@ -3,10 +3,7 @@
   "extends": "tsconfig/svelte.json",
   "compilerOptions": {
     "paths": {
-      "#/*": [
-        "./src/*",
-        "../../packages/engine/src/*" // allow to import from engine in the sandbox
-      ],
+      "#/*": ["./src/*"]
     },
     "tsBuildInfoFile": ".tsbuild/app.tsbuildinfo"
   },

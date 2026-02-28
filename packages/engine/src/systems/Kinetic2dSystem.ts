@@ -1,8 +1,8 @@
-import type Entity from '#/Entity';
-import type { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import Vector2d from '#/maths/Vector2d';
-import type { Context } from '#/types';
-import System from './System';
+import type Entity from '#src/Entity.js';
+import type { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Context } from '#src/types/index.js';
+import System from './System.js';
 
 /**
  * A system that updates the positions of 2D entities based on their rigid body physics.

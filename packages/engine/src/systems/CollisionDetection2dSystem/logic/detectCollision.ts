@@ -1,8 +1,8 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type { Collision } from '#/types';
-import detectBoxBoxCollision from './detectBoxBoxCollision';
-import detectBoxCircleCollision from './detectBoxCircleCollision';
-import detectCircleCircleCollision from './detectCircleCircleCollision';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type { Collision } from '#src/types/index.js';
+import detectBoxBoxCollision from './detectBoxBoxCollision.js';
+import detectBoxCircleCollision from './detectBoxCircleCollision.js';
+import detectCircleCircleCollision from './detectCircleCircleCollision.js';
 
 /**
  * Properties required to detect a collision.

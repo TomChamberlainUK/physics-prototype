@@ -1,2 +1,2 @@
-export { default as getBoxMomentOfInertia } from './getBoxMomentOfInertia';
-export { default as getCircleMomentOfInertia } from './getCircleMomentOfInertia';
+export { default as getBoxMomentOfInertia } from './getBoxMomentOfInertia.js';
+export { default as getCircleMomentOfInertia } from './getCircleMomentOfInertia.js';

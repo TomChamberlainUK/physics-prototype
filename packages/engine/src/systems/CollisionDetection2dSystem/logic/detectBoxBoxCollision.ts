@@ -1,10 +1,10 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import Vector2d from '#/maths/Vector2d';
-import type { Collision } from '#/types';
-import computeBoxAxes from './computeBoxAxes';
-import computeSegmentIntersection from './computeSegmentIntersection';
-import isPointInConvexPolygon from './isPointInConvexPolygon';
-import projectVertices from './projectVertices';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Collision } from '#src/types/index.js';
+import computeBoxAxes from './computeBoxAxes.js';
+import computeSegmentIntersection from './computeSegmentIntersection.js';
+import isPointInConvexPolygon from './isPointInConvexPolygon.js';
+import projectVertices from './projectVertices.js';
 
 /**
  * Properties required to detect a box-box collision.

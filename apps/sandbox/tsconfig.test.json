@@ -4,10 +4,7 @@
   "compilerOptions": {
     "types": ["@testing-library/jest-dom"],
     "paths": {
-      "#/*": [
-        "./src/*",
-        "../../packages/engine/src/*" // allow to import from engine in the sandbox
-      ],
+      "#/*": ["./src/*"]
     },
     "tsBuildInfoFile": ".tsbuild/test.tsbuildinfo"
   },

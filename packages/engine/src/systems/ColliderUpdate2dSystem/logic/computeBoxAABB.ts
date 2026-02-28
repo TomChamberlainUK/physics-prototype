@@ -1,5 +1,5 @@
-import { Matrix2d, Vector2d } from '#/maths';
-import type { AABB } from '#/types';
+import { Matrix2d, Vector2d } from '#src/maths/index.js';
+import type { AABB } from '#src/types/index.js';
 
 /**
  * Properties required to compute the AABB for a box.

@@ -1,5 +1,5 @@
-import { Vector2d } from '#/maths';
-import { computeSegmentIntersection } from '#/systems/CollisionDetection2dSystem/logic';
+import { Vector2d } from '#src/maths/index.js';
+import { computeSegmentIntersection } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
 import { describe, expect, it } from 'vitest';
 
 describe('computeSegmentIntersection', () => {

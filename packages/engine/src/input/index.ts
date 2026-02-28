@@ -1,1 +1,1 @@
-export { default as KeyboardInput } from './KeyboardInput';
+export { default as KeyboardInput } from './KeyboardInput.js';

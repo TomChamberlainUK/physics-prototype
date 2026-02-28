@@ -1,8 +1,8 @@
-import { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import { CollisionPositionCorrection2dSystem } from '#/systems';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import { CollisionPositionCorrection2dSystem } from '#src/systems/index.js';
 
 describe('CollisionPositionCorrection2dSystem', () => {
   describe('constructor()', () => {

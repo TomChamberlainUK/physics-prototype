@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#/maths';
-import { computeCircleAABB } from '#/systems/ColliderUpdate2dSystem/logic';
+import { Vector2d } from '#src/maths/index.js';
+import { computeCircleAABB } from '#src/systems/ColliderUpdate2dSystem/logic/index.js';
 
 describe('computeCircleAABB', () => {
   it('Should return the min and max points of the AABB for a circle', () => {

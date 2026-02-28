@@ -1,5 +1,5 @@
-import type { ControlScheme } from '#/types';
-import type Events from './Events';
+import type { ControlScheme } from '#src/types/index.js';
+import type Events from './Events.js';
 
 /**
  * Parameters for constructing an Actions.

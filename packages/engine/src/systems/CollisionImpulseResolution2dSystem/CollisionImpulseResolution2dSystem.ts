@@ -1,8 +1,8 @@
-import type { Transform2dComponent, RigidBody2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
-import { computeContactManifoldImpulse } from './logic';
-import System from '../System';
+import type { Transform2dComponent, RigidBody2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import { computeContactManifoldImpulse } from './logic/index.js';
+import System from '../System.js';
 
 /**
  * A system that resolves collision impulses between 2D rigid bodies.

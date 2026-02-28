@@ -1,6 +1,6 @@
-import { Vector2d } from '#/maths';
-import { findClosestBoxVertex } from '#/systems/CollisionDetection2dSystem/logic';
 import { describe, expect, it } from 'vitest';
+import { Vector2d } from '#src/maths/index.js';
+import { findClosestBoxVertex } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('findClosestBoxVertex', () => {
   it('Should find the closest vertex of a box to a given point', () => {

@@ -1,4 +1,4 @@
-import Vector2d from './Vector2d';
+import Vector2d from './Vector2d.js';
 
 /**
  * A class representing a 2D transformation matrix.

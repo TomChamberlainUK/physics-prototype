@@ -1,1 +1,1 @@
-export { default } from './CollisionImpulseResolution2dSystem';
+export { default } from './CollisionImpulseResolution2dSystem.js';

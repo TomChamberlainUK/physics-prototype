@@ -1,7 +1,7 @@
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import type Renderer from '#/Renderer';
-import { lerp } from '#/utils';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import type Renderer from '#src/Renderer.js';
+import { lerp } from '#src/utils/index.js';
 
 /**
  * Parameters for rendering the collider.

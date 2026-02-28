@@ -1,5 +1,5 @@
-import type { Vector2d } from '#/maths';
-import type Renderer from '#/Renderer';
+import type { Vector2d } from '#src/maths/index.js';
+import type Renderer from '#src/Renderer.js';
 
 /**
  * Parameters for the renderContactPoints function.

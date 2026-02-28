@@ -1,4 +1,4 @@
-import type { Vector2d } from '#/maths';
+import type { Vector2d } from '#src/maths/index.js';
 
 /**
  * Properties for the isPointInConvexPolygon function.

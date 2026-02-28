@@ -1,4 +1,4 @@
-import type { BroadPhaseCollisionPair } from '#/types';
+import type { BroadPhaseCollisionPair } from '#src/types/index.js';
 
 /**
  * Converts an array of broad-phase collision pairs into a set of unique entity IDs involved in potential collisions.

@@ -1,5 +1,5 @@
-import type Renderer from './Renderer';
-import type Scene from './Scene';
+import type Renderer from './Renderer.js';
+import type Scene from './Scene.js';
 
 /**
  * Parameters for creating a Game.

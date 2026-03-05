@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeTangentImpulseMagnitude } from '#/systems/CollisionImpulseResolution2dSystem/logic';
+import { computeTangentImpulseMagnitude } from '#src/systems/CollisionImpulseResolution2dSystem/logic/index.js';
 
 describe('computeTangentImpulseMagnitude', () => {
   it('Should compute the correct tangent impulse magnitude', () => {

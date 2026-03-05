@@ -1,11 +1,11 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import { CollisionDetection2dSystem } from '#/systems';
-import * as findBroadPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/findBroadPhasePairs';
-import * as findNarrowPhasePairsModule from '#/systems/CollisionDetection2dSystem/logic/findNarrowPhasePairs';
-import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#/types';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import { CollisionDetection2dSystem } from '#src/systems/index.js';
+import * as findBroadPhasePairsModule from '#src/systems/CollisionDetection2dSystem/logic/findBroadPhasePairs.js';
+import * as findNarrowPhasePairsModule from '#src/systems/CollisionDetection2dSystem/logic/findNarrowPhasePairs.js';
+import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#src/types/index.js';
 
 describe('CollisionDetection2dSystem', () => {
   describe('constructor()', () => {

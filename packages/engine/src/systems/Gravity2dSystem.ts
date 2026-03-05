@@ -1,7 +1,7 @@
-import type { RigidBody2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import System from './System';
+import type { RigidBody2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import System from './System.js';
 
 /**
  * A system that applies gravity to 2D entities with rigid body components.

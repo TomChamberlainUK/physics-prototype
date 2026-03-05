@@ -1,8 +1,8 @@
-import Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import { getNarrowPhaseCollisionPairsMap } from '#/systems/RenderDebug2dSystem/logic';
-import type { NarrowPhaseCollisionPair } from '#/types';
 import { describe, expect, it } from 'vitest';
+import Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import { getNarrowPhaseCollisionPairsMap } from '#src/systems/RenderDebug2dSystem/logic/index.js';
+import type { NarrowPhaseCollisionPair } from '#src/types/index.js';
 
 describe('getNarrowPhaseCollisionPairsMap', () => {
   it('Should return a map of entity ID pairs from narrowPhaseCollisionPairs', () => {

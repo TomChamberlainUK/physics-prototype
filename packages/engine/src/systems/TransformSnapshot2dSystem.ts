@@ -1,7 +1,7 @@
-import type { Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import Vector2d from '#/maths/Vector2d';
-import System from './System';
+import type { Transform2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import System from './System.js';
 
 /**
  * A system that captures a snapshot of the previous 2D transform.

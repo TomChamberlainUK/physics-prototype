@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import Renderer from '#/Renderer';
-import { expectCallOrder } from './utils';
+import Renderer from '#src/Renderer.js';
+import { expectCallOrder } from './utils/index.js';
 
 describe('Renderer', () => {
   const fillColor = '#ffffff';

@@ -1,6 +1,7 @@
-import type { ContactManifold, RigidBody2dComponent, Transform2dComponent } from '#/index';
-import { Vector2d } from '#/maths';
-import computeContactPointImpulse from './computeContactPointImpulse';
+import type { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { ContactManifold } from '#src/types/index.js';
+import computeContactPointImpulse from './computeContactPointImpulse.js';
 
 /**
  * Properties required to compute the contact manifold impulse.

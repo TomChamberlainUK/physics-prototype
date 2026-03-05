@@ -1,5 +1,5 @@
 import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
-import expectCallOrder from './expectCallOrder';
+import expectCallOrder from './expectCallOrder.js';
 
 describe('expectCallOrder', () => {
   const mock1 = vi.fn();

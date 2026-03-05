@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Vector2d } from '#/maths';
-import { computeBoxAABB } from '#/systems/ColliderUpdate2dSystem/logic';
+import { Vector2d } from '#src/maths/index.js';
+import { computeBoxAABB } from '#src/systems/ColliderUpdate2dSystem/logic/index.js';
 
 describe('computeBoxAABB', () => {
   let width: number;

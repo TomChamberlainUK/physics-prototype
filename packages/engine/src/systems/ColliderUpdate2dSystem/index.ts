@@ -1,1 +1,1 @@
-export { default } from './ColliderUpdate2dSystem';
+export { default } from './ColliderUpdate2dSystem.js';

@@ -1,2 +1,2 @@
-export { default as Actions } from './Actions';
-export { default as Events } from './Events';
+export { default as Actions } from './Actions.js';
+export { default as Events } from './Events.js';

@@ -1,4 +1,4 @@
-import Component from './Component';
+import Component from './Component.js';
 
 /**
  * A component that flags an entity to receive input impulses.

@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Geometry2dComponent, Transform2dComponent } from '#/components';
-import Entity from '#/Entity';
-import { Vector2d } from '#/maths';
-import Renderer from '#/Renderer';
-import Render2dSystem from '#/systems/Render2dSystem';
-import * as lerpModule from '#/utils/lerp';
+import { Geometry2dComponent, Transform2dComponent } from '#src/components/index.js';
+import Entity from '#src/Entity.js';
+import { Vector2d } from '#src/maths/index.js';
+import Renderer from '#src/Renderer.js';
+import { Render2dSystem } from '#src/systems/index.js';
+import * as lerpModule from '#src/utils/lerp.js';
 
 describe('Render2dSystem', () => {
   let canvas: HTMLCanvasElement;

@@ -1,1 +1,1 @@
-export { default } from './RenderDebug2dSystem';
+export { default } from './RenderDebug2dSystem.js';

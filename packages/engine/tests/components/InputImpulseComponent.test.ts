@@ -1,5 +1,5 @@
-import { InputImpulseComponent } from '#/components';
 import { describe, expect, it } from 'vitest';
+import { InputImpulseComponent } from '#src/components/index.js';
 
 describe('InputImpulseComponent', () => {
   it('Should instantiate', () => {

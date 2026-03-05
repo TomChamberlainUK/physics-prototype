@@ -1,5 +1,5 @@
-import Component from './Component';
-import type { Shape } from '#/types';
+import Component from './Component.js';
+import type { Shape } from '#src/types/index.js';
 
 /**
  * Parameters for constructing a Geometry2dComponent.

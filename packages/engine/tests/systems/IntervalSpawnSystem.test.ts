@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { IntervalSpawnSystem } from '#/systems';
-import type { Context } from 'engine';
+import { IntervalSpawnSystem } from '#src/systems/index.js';
+import type { Context } from '#src/types/index.js';
 
 describe('IntervalSpawnSystem', () => {
   const spawner = vi.fn();

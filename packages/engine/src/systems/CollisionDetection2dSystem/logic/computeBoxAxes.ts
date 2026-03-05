@@ -1,4 +1,4 @@
-import type { Vector2d } from '#/maths';
+import type { Vector2d } from '#src/maths/index.js';
 
 /**
  * Computes the two unique axes (normals) of a box given its four vertices.

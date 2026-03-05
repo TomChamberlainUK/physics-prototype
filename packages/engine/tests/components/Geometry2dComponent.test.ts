@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Geometry2dComponent } from '#/components';
+import { Geometry2dComponent } from '#src/components/index.js';
 
 describe('Geometry2dComponent', () => {
   const fillColor = 'black';

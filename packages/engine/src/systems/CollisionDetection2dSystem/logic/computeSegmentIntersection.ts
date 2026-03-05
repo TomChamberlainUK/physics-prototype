@@ -1,4 +1,4 @@
-import { Vector2d } from '#/maths';
+import { Vector2d } from '#src/maths/index.js';
 
 /**
  * Properties for calculating the intersection of two line segments.

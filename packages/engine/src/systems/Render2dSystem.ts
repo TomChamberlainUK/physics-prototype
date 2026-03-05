@@ -1,7 +1,8 @@
-import type Entity from '#/Entity';
-import System from './System';
-import type { Context, Geometry2dComponent, Transform2dComponent } from '..';
-import { lerp } from '#/utils';
+import type { Geometry2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import { lerp } from '#src/utils/index.js';
+import System from './System.js';
 
 /**
  * A system that renders 2D entities based on their transform and geometry components.

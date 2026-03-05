@@ -1,4 +1,4 @@
-import type { AABB } from '#/types';
+import type { AABB } from '#src/types/index.js';
 
 /**
  * Determines whether two axis-aligned bounding boxes (AABBs) overlap.

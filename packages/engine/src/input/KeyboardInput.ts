@@ -1,5 +1,5 @@
-import type { Events } from '#/core';
-import type { ControlScheme } from '#/types';
+import type { Events } from '#src/core/index.js';
+import type { ControlScheme } from '#src/types/index.js';
 
 /**
  * Constructor parameters for KeyboardInput.

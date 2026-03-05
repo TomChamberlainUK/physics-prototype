@@ -1,7 +1,7 @@
-import type { Vector2d } from '#/maths';
-import type { AABB, Shape } from '#/types';
-import Component from '../Component';
-import { getVertices } from './logic';
+import type { Vector2d } from '#src/maths/index.js';
+import type { AABB, Shape } from '#src/types/index.js';
+import Component from '../Component.js';
+import { getVertices } from './logic/index.js';
 
 /**
  * Parameters for constructing a Collider2dComponent.

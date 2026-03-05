@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from 'engine';
+import {
+  type Collider2dComponent,
+  type Geometry2dComponent,
+  type RigidBody2dComponent,
+  type Transform2dComponent,
+  Vector2d,
+} from 'engine';
 import { PhysicsEntity } from '#/entities';
 
 describe('PhysicsEntity', () => {
@@ -23,7 +29,7 @@ describe('PhysicsEntity', () => {
         position,
         rotation,
       });
-      const transform = physicsEntity.getComponent('Transform2d');
+      const transform = physicsEntity.getComponent<Transform2dComponent>('Transform2d');
       expect(transform.position.x).toBe(position.x);
       expect(transform.position.y).toBe(position.y);
       expect(transform.rotation).toBe(rotation);
@@ -36,7 +42,7 @@ describe('PhysicsEntity', () => {
         shape,
         fillColor,
       });
-      const geometry = physicsEntity.getComponent('Geometry2d');
+      const geometry = physicsEntity.getComponent<Geometry2dComponent>('Geometry2d');
       expect(geometry.shape).toBe(shape);
       expect(geometry.fillColor).toBe(fillColor);
     });
@@ -46,7 +52,7 @@ describe('PhysicsEntity', () => {
       const physicsEntity = new PhysicsEntity({
         shape,
       });
-      const collider = physicsEntity.getComponent('Collider2d');
+      const collider = physicsEntity.getComponent<Collider2dComponent>('Collider2d');
       expect(collider.shape).toBe(shape);
     });
 
@@ -56,7 +62,7 @@ describe('PhysicsEntity', () => {
       const physicsEntity = new PhysicsEntity({
         shape,
       });
-      const rigidBody = physicsEntity.getComponent('RigidBody2d');
+      const rigidBody = physicsEntity.getComponent<RigidBody2dComponent>('RigidBody2d');
       expect(rigidBody.mass).toBeCloseTo(Math.PI * radius * radius);
     });
   });

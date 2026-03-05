@@ -1,5 +1,5 @@
-import { Vector2d } from '#/maths';
-import Component from './Component';
+import { Vector2d } from '#src/maths/index.js';
+import Component from './Component.js';
 
 /**
  * Parameters for constructing a RigidBody2dComponent.

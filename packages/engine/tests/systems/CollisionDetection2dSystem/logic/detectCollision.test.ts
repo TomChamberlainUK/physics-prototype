@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#/components';
-import { Vector2d } from '#/maths';
-import { detectCollision } from '#/systems/CollisionDetection2dSystem/logic';
-import * as detectBoxBoxCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxBoxCollision';
-import * as detectBoxCircleCollision from '#/systems/CollisionDetection2dSystem/logic/detectBoxCircleCollision';
-import * as detectCircleCircleCollision from '#/systems/CollisionDetection2dSystem/logic/detectCircleCircleCollision';
+import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import { detectCollision } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import * as detectBoxBoxCollision from '#src/systems/CollisionDetection2dSystem/logic/detectBoxBoxCollision.js';
+import * as detectBoxCircleCollision from '#src/systems/CollisionDetection2dSystem/logic/detectBoxCircleCollision.js';
+import * as detectCircleCircleCollision from '#src/systems/CollisionDetection2dSystem/logic/detectCircleCircleCollision.js';
 
 describe('detectCollision', () => {
   let colliderA: Collider2dComponent;

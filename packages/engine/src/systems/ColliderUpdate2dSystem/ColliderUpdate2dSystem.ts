@@ -1,7 +1,7 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import type Entity from '#/Entity';
-import System from '../System';
-import { computeAABB, computeWorldVertices } from './logic';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import type Entity from '#src/Entity.js';
+import System from '../System.js';
+import { computeAABB, computeWorldVertices } from './logic/index.js';
 
 /**
  * A system that updates colliders based on their transforms.

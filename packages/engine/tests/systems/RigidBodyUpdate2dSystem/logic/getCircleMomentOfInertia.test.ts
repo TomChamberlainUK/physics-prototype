@@ -1,5 +1,5 @@
-import { getCircleMomentOfInertia } from '#/systems/RigidBodyUpdate2dSystem/logic';
 import { describe, expect, it } from 'vitest';
+import { getCircleMomentOfInertia } from '#src/systems/RigidBodyUpdate2dSystem/logic/index.js';
 
 describe('getCircleMomentOfInertia', () => {
   it('Should calculate the moment of inertia for a circle', () => {

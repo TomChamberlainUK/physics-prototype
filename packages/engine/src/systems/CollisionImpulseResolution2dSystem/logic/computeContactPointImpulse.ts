@@ -1,11 +1,11 @@
-import type { RigidBody2dComponent, Transform2dComponent } from '#/components';
-import Vector2d from '#/maths/Vector2d';
+import type { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
 import {
   computeEffectiveMass,
   computeNormalImpulseMagnitude,
   computeTangentImpulseMagnitude,
   clampTangentImpulseMagnitude,
-} from '.';
+} from './index.js';
 
 /**
  * Properties required to compute the contact impulse.

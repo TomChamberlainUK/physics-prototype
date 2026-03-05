@@ -1,6 +1,6 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import Vector2d from '#/maths/Vector2d';
-import type { Collision } from '#/types';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Collision } from '#src/types/index.js';
 
 /**
  * Properties required to detect a circle-circle collision.

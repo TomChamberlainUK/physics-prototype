@@ -3,9 +3,8 @@
   "extends": "tsconfig/svelte.json",
   "compilerOptions": {
     "types": ["@testing-library/jest-dom"],
-    "baseUrl": ".",
     "paths": {
-      "#/*": ["src/*"],
+      "#/*": ["./src/*"]
     },
     "tsBuildInfoFile": ".tsbuild/test.tsbuildinfo"
   },

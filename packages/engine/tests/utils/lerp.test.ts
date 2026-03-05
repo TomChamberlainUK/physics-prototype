@@ -1,5 +1,5 @@
-import { lerp } from '#/utils';
 import { describe, expect, it } from 'vitest';
+import { lerp } from '#src/utils/index.js';
 
 describe('lerp', () => {
   it('Should linearly interpolate between two values', () => {

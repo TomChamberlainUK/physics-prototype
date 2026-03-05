@@ -2,11 +2,9 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "tsconfig/browser.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "#/*": ["src/*"],
-    },
-    "tsBuildInfoFile": ".tsbuild/library.tsbuildinfo"
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "tsBuildInfoFile": ".tsbuild/library.tsbuildinfo",
   },
   "include": ["src"]
 }

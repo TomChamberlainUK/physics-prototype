@@ -1,6 +1,6 @@
-import Renderer from '#/Renderer';
-import { RenderClear2dSystem } from '#/systems';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import Renderer from '#src/Renderer.js';
+import { RenderClear2dSystem } from '#src/systems/index.js';
 
 describe('RenderClear2dSystem', () => {
   let canvas: HTMLCanvasElement;

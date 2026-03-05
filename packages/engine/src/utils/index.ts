@@ -1,1 +1,1 @@
-export { default as lerp } from './lerp';
+export { default as lerp } from './lerp.js';

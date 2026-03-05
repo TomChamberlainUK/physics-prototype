@@ -1,8 +1,8 @@
-import { Vector2d } from '#/maths';
-import Renderer from '#/Renderer';
-import { renderContactPoints } from '#/systems/RenderDebug2dSystem/logic';
-import { expectCallOrder } from '../../../utils';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { Vector2d } from '#src/maths/index.js';
+import Renderer from '#src/Renderer.js';
+import { renderContactPoints } from '#src/systems/RenderDebug2dSystem/logic/index.js';
+import { expectCallOrder } from '../../../utils/index.js';
 
 describe('renderContactPoints', () => {
   let renderer: Renderer;

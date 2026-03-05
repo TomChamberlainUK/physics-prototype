@@ -1,4 +1,4 @@
-import type Entity from '#/Entity';
+import type Entity from '#src/Entity.js';
 
 /**
  * A pair of entities that are potentially colliding.

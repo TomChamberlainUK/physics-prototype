@@ -1,1 +1,1 @@
-export { default } from './Collider2dComponent';
+export { default } from './Collider2dComponent.js';

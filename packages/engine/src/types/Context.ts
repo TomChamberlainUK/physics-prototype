@@ -1,9 +1,9 @@
-import type { Actions } from '#/core';
-import type { KeyboardInput } from '#/input';
-import type Renderer from '#/Renderer';
-import type { BroadPhaseCollisionPair } from './BroadPhaseCollisionPair';
-import type { NarrowPhaseCollisionPair } from './NarrowPhaseCollisionPair';
-import type { SceneCommand } from './SceneCommand';
+import type { Actions } from '#src/core/index.js';
+import type { KeyboardInput } from '#src/input/index.js';
+import type Renderer from '#src/Renderer.js';
+import type { BroadPhaseCollisionPair } from './BroadPhaseCollisionPair.js';
+import type { NarrowPhaseCollisionPair } from './NarrowPhaseCollisionPair.js';
+import type { SceneCommand } from './SceneCommand.js';
 
 /**
  * The context object passed to systems during updates.

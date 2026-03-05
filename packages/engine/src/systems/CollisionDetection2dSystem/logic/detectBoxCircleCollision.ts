@@ -1,12 +1,12 @@
-import type { Collider2dComponent, Transform2dComponent } from '#/components';
-import Vector2d from '#/maths/Vector2d';
-import type { Collision } from '#/types';
-import computeBoxAxes from './computeBoxAxes';
-import findClosestBoxVertex from './findClosestBoxVertex';
-import findClosestPointOnEdgeOfBox from './findClosestPointOnEdgeOfBox';
-import isPointInConvexPolygon from './isPointInConvexPolygon';
-import projectCircle from './projectCircle';
-import projectVertices from './projectVertices';
+import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
+import { Vector2d } from '#src/maths/index.js';
+import type { Collision } from '#src/types/index.js';
+import computeBoxAxes from './computeBoxAxes.js';
+import findClosestBoxVertex from './findClosestBoxVertex.js';
+import findClosestPointOnEdgeOfBox from './findClosestPointOnEdgeOfBox.js';
+import isPointInConvexPolygon from './isPointInConvexPolygon.js';
+import projectCircle from './projectCircle.js';
+import projectVertices from './projectVertices.js';
 
 /**
  * Properties required to detect a box-circle collision.

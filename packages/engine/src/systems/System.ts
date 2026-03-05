@@ -1,5 +1,5 @@
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
 
 /**
  * Base class for all systems.

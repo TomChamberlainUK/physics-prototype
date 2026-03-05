@@ -1,4 +1,4 @@
-import { Vector2d } from '#/maths';
+import { Vector2d } from '#src/maths/index.js';
 
 /**
  * Properties for projecting a circle onto an axis.

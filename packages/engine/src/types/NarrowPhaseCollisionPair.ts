@@ -1,5 +1,5 @@
-import type Entity from '#/Entity';
-import type { ContactManifold } from './ContactManifold';
+import type Entity from '#src/Entity.js';
+import type { ContactManifold } from './ContactManifold.js';
 
 /**
  * A pair of entities that are confirmed to be colliding, along with collision details.

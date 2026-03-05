@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeNormalImpulseMagnitude } from '#/systems/CollisionImpulseResolution2dSystem/logic';
+import { computeNormalImpulseMagnitude } from '#src/systems/CollisionImpulseResolution2dSystem/logic/index.js';
 
 describe('computeNormalImpulseMagnitude', () => {
   it('Should compute the correct impulse magnitude', () => {

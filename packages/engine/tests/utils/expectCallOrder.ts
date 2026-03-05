@@ -1,5 +1,4 @@
-import { expect } from 'vitest';
-import type { MockInstance } from 'vitest';
+import { expect, type MockInstance } from 'vitest';
 
 export default function expectCallOrder(mocks: MockInstance[]) {
   const callsCount = new Map<MockInstance, number>();

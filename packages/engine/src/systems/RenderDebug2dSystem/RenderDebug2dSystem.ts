@@ -1,7 +1,7 @@
-import type { Events } from '#/core';
-import type Entity from '#/Entity';
-import type { Context } from '#/types';
-import System from '../System';
+import type { Events } from '#src/core/index.js';
+import type Entity from '#src/Entity.js';
+import type { Context } from '#src/types/index.js';
+import System from '../System.js';
 import {
   getBroadPhaseCollisionPairsSet,
   getNarrowPhaseCollisionPairsMap,
@@ -9,7 +9,7 @@ import {
   renderCollider,
   renderContactPoints,
   renderPotentialCollisionLine,
-} from './logic';
+} from './logic/index.js';
 
 /**
  * Constructor parameters for RenderDebug2dSystem.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getBoxVertices } from '#/components/Collider2dComponent/logic';
+import { getBoxVertices } from '#src/components/Collider2dComponent/logic/index.js';
 
 describe('getBoxVertices', () => {
   it('Should return vertices for a box', () => {

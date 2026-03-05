@@ -1,5 +1,5 @@
-import type { Shape } from '#/types';
-import getBoxVertices from './getBoxVertices';
+import type { Shape } from '#src/types/index.js';
+import getBoxVertices from './getBoxVertices.js';
 
 /**
  * Returns the vertices of a given shape.

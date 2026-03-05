@@ -1,4 +1,4 @@
-import type { NarrowPhaseCollisionPair } from '#/types';
+import type { NarrowPhaseCollisionPair } from '#src/types/index.js';
 
 /**
  * Converts an array of narrow-phase collision pairs into a map where each key is an entity ID

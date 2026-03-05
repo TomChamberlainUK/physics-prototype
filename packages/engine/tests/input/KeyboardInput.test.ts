@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Events } from '#/core';
-import { KeyboardInput } from '#/input';
-import type { ControlScheme } from '#/types/ControlScheme';
+import { Events } from '#src/core/index.js';
+import { KeyboardInput } from '#src/input/index.js';
+import type { ControlScheme } from '#src/types/index.js';
 
 describe('KeyboardInput', () => {
   let keyboardInput: KeyboardInput;

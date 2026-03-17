@@ -4,8 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "pnpm --recursive run build",
+    "git-hooks:disable": "git config --unset core.hooksPath",
+    "git-hooks:enable": "git config core.hooksPath ./git-hooks",
     "lint": "pnpm --recursive run lint",
     "lint:fix": "pnpm --recursive run lint:fix",
+    "postinstall": "pnpm run git-hooks:enable",
     "sandbox:dev": "pnpm --filter sandbox run dev",
     "test": "vitest run",
     "test:dev": "vitest --watch",

@@ -87,7 +87,10 @@ export default class Scene {
   updateInput() {
     for (const system of this.systems) {
       if (system.type !== 'input') continue;
-      system.update(this.entities, this.context);
+      system.update(this.entities, {
+        ...this.context,
+        sceneCommands: this.commands,
+      });
     }
   }
 
@@ -97,10 +100,7 @@ export default class Scene {
   updateHistory() {
     for (const system of this.systems) {
       if (system.type !== 'history') continue;
-      system.update(this.entities, {
-        ...this.context,
-        sceneCommands: this.commands,
-      });
+      system.update(this.entities, this.context);
     }
   }
 

@@ -152,9 +152,18 @@ describe('Scene', () => {
       scene.addSystem(system2);
       scene.addSystem(system3);
       scene.updateInput();
-      expect(system1.update).toHaveBeenCalledWith([entity], context);
-      expect(system2.update).toHaveBeenCalledWith([entity], context);
-      expect(system3.update).toHaveBeenCalledWith([entity], context);
+      expect(system1.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
+      expect(system2.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
+      expect(system3.update).toHaveBeenCalledWith([entity], {
+        ...context,
+        sceneCommands: scene.commands,
+      });
     });
   });
 
@@ -175,18 +184,9 @@ describe('Scene', () => {
       scene.addSystem(system2);
       scene.addSystem(system3);
       scene.updateHistory();
-      expect(system1.update).toHaveBeenCalledWith([entity], {
-        ...context,
-        sceneCommands: scene.commands,
-      });
-      expect(system2.update).toHaveBeenCalledWith([entity], {
-        ...context,
-        sceneCommands: scene.commands,
-      });
-      expect(system3.update).toHaveBeenCalledWith([entity], {
-        ...context,
-        sceneCommands: scene.commands,
-      });
+      expect(system1.update).toHaveBeenCalledWith([entity], context);
+      expect(system2.update).toHaveBeenCalledWith([entity], context);
+      expect(system3.update).toHaveBeenCalledWith([entity], context);
     });
   });
 

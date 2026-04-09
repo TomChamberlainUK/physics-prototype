@@ -174,7 +174,7 @@ describe('Game', () => {
         vi.clearAllMocks();
       });
 
-      it('Should update the scene sync systems', () => {
+      it('Should update the scene history systems', () => {
         game.step();
         expect(sceneUpdateHistorySpy).toHaveBeenCalled();
       });

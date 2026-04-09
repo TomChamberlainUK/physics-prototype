@@ -135,6 +135,29 @@ describe('Scene', () => {
     });
   });
 
+  describe('updateInput()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should call all input systems with the current entities and context', () => {
+      const entity = new Entity();
+      const context = { input: new KeyboardInput() };
+      const system1 = { update: vi.fn(), type: 'input', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'input', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'input', name: 'System3' };
+      scene.setContext(context);
+      scene.addEntity(entity);
+      scene.addSystem(system1);
+      scene.addSystem(system2);
+      scene.addSystem(system3);
+      scene.updateInput();
+      expect(system1.update).toHaveBeenCalledWith([entity], context);
+      expect(system2.update).toHaveBeenCalledWith([entity], context);
+      expect(system3.update).toHaveBeenCalledWith([entity], context);
+    });
+  });
+
   describe('updateHistory()', () => {
     beforeEach(() => {
       scene = new Scene();

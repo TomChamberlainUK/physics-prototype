@@ -82,6 +82,16 @@ export default class Scene {
   }
 
   /**
+   * Updates all input systems in the scene.
+   */
+  updateInput() {
+    for (const system of this.systems) {
+      if (system.type !== 'input') continue;
+      system.update(this.entities, this.context);
+    }
+  }
+
+  /**
    * Updates all history systems in the scene.
    */
   updateHistory() {

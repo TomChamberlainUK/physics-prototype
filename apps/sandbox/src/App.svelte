@@ -12,6 +12,10 @@
     const game = new SandboxGame({ canvas });
 
     game.start();
+
+    return () => {
+      game.stop();
+    };
   });
 </script>
 

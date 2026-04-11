@@ -4,10 +4,12 @@ import App from '#/App.svelte';
 
 describe('App', () => {
   const startGameMock = vi.hoisted(() => vi.fn());
+  const stopGameMock = vi.hoisted(() => vi.fn());
   const SandboxGameMock = vi.hoisted(() => (
     vi.fn()
       .mockImplementation(() => ({
         start: startGameMock,
+        stop: stopGameMock,
       }))
   ));
 
@@ -32,5 +34,11 @@ describe('App', () => {
 
   it('Should start the game', () => {
     expect(startGameMock).toHaveBeenCalled();
+  });
+
+  it('Should stop the game on unmount', () => {
+    const { unmount } = render(App);
+    unmount();
+    expect(stopGameMock).toHaveBeenCalled();
   });
 });

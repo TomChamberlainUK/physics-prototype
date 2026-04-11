@@ -27,4 +27,6 @@ export type Context = {
   renderer?: Renderer;
   /** Scene commands to be processed. */
   sceneCommands?: SceneCommand[];
+  /** Indicates whether debug rendering is enabled. */
+  showDebug?: boolean;
 };

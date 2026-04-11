@@ -144,9 +144,7 @@ export default class SandboxScene extends Scene {
     const kinetic2dSystem = new Kinetic2dSystem();
     const renderClear2dSystem = new RenderClear2dSystem();
     const render2dSystem = new Render2dSystem();
-    const renderDebug2dSystem = new RenderDebug2dSystem({ events });
-
-    renderDebug2dSystem.enabled = false;
+    const renderDebug2dSystem = new RenderDebug2dSystem();
 
     this.addSystem(transformSnapshot2dSystem);
     this.addSystem(inputImpulseSystem);

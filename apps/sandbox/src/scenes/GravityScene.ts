@@ -116,7 +116,7 @@ export default class GravityScene extends Scene {
     const kinetic2dSystem = new Kinetic2dSystem();
     const renderClear2dSystem = new RenderClear2dSystem();
     const render2dSystem = new Render2dSystem();
-    const renderDebug2dSystem = new RenderDebug2dSystem({ events });
+    const renderDebug2dSystem = new RenderDebug2dSystem();
     const intervalSpawnSystem = new IntervalSpawnSystem({
       spawner: () => {
         const fillColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -138,8 +138,6 @@ export default class GravityScene extends Scene {
       minEntities: 100,
       maxEntities: 200,
     });
-
-    renderDebug2dSystem.enabled = false;
 
     this.addSystem(intervalSpawnSystem);
     this.addSystem(transformSnapshot2dSystem);

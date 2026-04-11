@@ -205,11 +205,6 @@ describe('SandboxScene', () => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
   });
 
-  it('Should disable the RenderDebug2dSystem by default', () => {
-    const renderDebug2dSystem = scene.getSystem<RenderDebug2dSystem>('RenderDebug2dSystem');
-    expect(renderDebug2dSystem.enabled).toBe(false);
-  });
-
   it('Should set the input in the scene context', () => {
     expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
       keyboardInput: expect.any(KeyboardInput),

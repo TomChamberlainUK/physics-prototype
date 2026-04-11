@@ -83,7 +83,10 @@ describe('InputImpulseSystem', () => {
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
 
       inputImpulseSystem.update([entity], {
-        actions: new Set(actions),
+        // @ts-expect-error - we only need the isActive method for this test
+        actions: {
+          isActive: (action: string) => actions.includes(action),
+        },
         deltaTime,
       });
 
@@ -101,9 +104,14 @@ describe('InputImpulseSystem', () => {
       const rigidBody2dComponent = new RigidBody2dComponent();
       const inputImpulseComponent = new InputImpulseComponent();
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-      const actions = new Set(['moveUp', 'boost']);
 
-      inputImpulseSystem.update([entity], { actions, deltaTime });
+      inputImpulseSystem.update([entity], {
+        // @ts-expect-error - we only need the isActive method for this test
+        actions: {
+          isActive: (action: string) => action === 'moveUp' || action === 'boost',
+        },
+        deltaTime,
+      });
 
       const expectedImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
@@ -119,9 +127,14 @@ describe('InputImpulseSystem', () => {
       const rigidBody2dComponent = new RigidBody2dComponent();
       const inputImpulseComponent = new InputImpulseComponent();
       entity.addComponents([rigidBody2dComponent, inputImpulseComponent]);
-      const actions = new Set(['moveUp', 'moveRight']);
 
-      inputImpulseSystem.update([entity], { actions, deltaTime });
+      inputImpulseSystem.update([entity], {
+        // @ts-expect-error - we only need the isActive method for this test
+        actions: {
+          isActive: (action: string) => action === 'moveUp' || action === 'moveRight',
+        },
+        deltaTime,
+      });
 
       const singleDirectionImpulse = getExpectedImpulse(
         new Vector2d({ x: 0, y: -1 }),
@@ -147,9 +160,14 @@ describe('InputImpulseSystem', () => {
       const entity = new Entity();
       const rigidBody2dComponent = new RigidBody2dComponent();
       entity.addComponent(rigidBody2dComponent);
-      const actions = new Set(['moveUp']);
 
-      inputImpulseSystem.update([entity], { actions, deltaTime });
+      inputImpulseSystem.update([entity], {
+        // @ts-expect-error - we only need the isActive method for this test
+        actions: {
+          isActive: (action: string) => action === 'moveUp',
+        },
+        deltaTime,
+      });
 
       expect(rigidBody2dComponent.impulse.y).toBeCloseTo(0);
     });

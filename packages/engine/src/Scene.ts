@@ -90,6 +90,9 @@ export default class Scene {
       if (system.type !== 'input') continue;
       system.update(this.entities, this.context);
     }
+    if (this.context.actions) {
+      this.context.actions.clearTriggers();
+    }
   }
 
   /**

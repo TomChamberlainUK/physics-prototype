@@ -12,6 +12,7 @@ import {
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
+  ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
@@ -197,6 +198,9 @@ describe('SandboxScene', () => {
     },
     {
       System: RigidBodyUpdate2dSystem,
+    },
+    {
+      System: ToggleDebugSystem,
     },
     {
       System: TransformSnapshot2dSystem,

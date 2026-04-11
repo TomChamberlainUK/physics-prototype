@@ -14,6 +14,7 @@ import {
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
+  ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
@@ -170,6 +171,9 @@ describe('GravityScene', () => {
     },
     {
       System: RigidBodyUpdate2dSystem,
+    },
+    {
+      System: ToggleDebugSystem,
     },
     {
       System: TransformSnapshot2dSystem,

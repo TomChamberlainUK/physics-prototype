@@ -15,6 +15,7 @@ import {
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
   Scene,
+  ToggleDebugSystem,
   TransformSnapshot2dSystem,
   Vector2d,
   type ControlScheme,
@@ -105,6 +106,7 @@ export default class GravityScene extends Scene {
       this.addEntity(wallEntity);
     }
 
+    const toggleDebugSystem = new ToggleDebugSystem();
     const transformSnapshot2dSystem = new TransformSnapshot2dSystem();
     const inputImpulseSystem = new InputImpulseSystem();
     const colliderUpdate2dSystem = new ColliderUpdate2dSystem();
@@ -139,6 +141,7 @@ export default class GravityScene extends Scene {
       maxEntities: 200,
     });
 
+    this.addSystem(toggleDebugSystem);
     this.addSystem(intervalSpawnSystem);
     this.addSystem(transformSnapshot2dSystem);
     this.addSystem(inputImpulseSystem);

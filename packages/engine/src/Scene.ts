@@ -22,6 +22,7 @@ export default class Scene {
    */
   setContext(context: Context) {
     this.context = context;
+    this.context.sceneCommands = this.commands;
   }
 
   /**
@@ -87,10 +88,7 @@ export default class Scene {
   updateInput() {
     for (const system of this.systems) {
       if (system.type !== 'input') continue;
-      system.update(this.entities, {
-        ...this.context,
-        sceneCommands: this.commands,
-      });
+      system.update(this.entities, this.context);
     }
   }
 

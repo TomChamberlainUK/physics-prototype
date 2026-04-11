@@ -142,7 +142,7 @@ describe('Scene', () => {
 
     it('Should call all input systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const system1 = { update: vi.fn(), type: 'input', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'input', name: 'System2' };
       const system3 = { update: vi.fn(), type: 'input', name: 'System3' };
@@ -174,7 +174,7 @@ describe('Scene', () => {
 
     it('Should call all history systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const system1 = { update: vi.fn(), type: 'history', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'history', name: 'System2' };
       const system3 = { update: vi.fn(), type: 'history', name: 'System3' };
@@ -197,7 +197,7 @@ describe('Scene', () => {
 
     it('Should call all systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const deltaTime = 1 / 60;
       const system1 = { update: vi.fn(), type: 'physics', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'physics', name: 'System2' };
@@ -225,7 +225,7 @@ describe('Scene', () => {
 
     it('Should call all render systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const system1 = { update: vi.fn(), type: 'render', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'render', name: 'System2' };
       const system3 = { update: vi.fn(), type: 'render', name: 'System3' };

@@ -212,7 +212,7 @@ describe('SandboxScene', () => {
 
   it('Should set the input in the scene context', () => {
     expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
-      input: expect.any(KeyboardInput),
+      keyboardInput: expect.any(KeyboardInput),
     }));
   });
 

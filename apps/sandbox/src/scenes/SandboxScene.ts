@@ -42,11 +42,11 @@ export default class SandboxScene extends Scene {
 
     const actions = new Actions({ controlScheme, events });
 
-    const input = new KeyboardInput({
+    const keyboardInput = new KeyboardInput({
       events,
       controlScheme,
     });
-    input.enable();
+    keyboardInput.enable();
 
     const playerEntity = new PlayerEntity({
       shape: {
@@ -162,7 +162,7 @@ export default class SandboxScene extends Scene {
 
     this.setContext({
       actions,
-      input,
+      keyboardInput,
     });
   }
 }

@@ -44,11 +44,11 @@ export default class GravityScene extends Scene {
 
     const actions = new Actions({ controlScheme, events });
 
-    const input = new KeyboardInput({
+    const keyboardInput = new KeyboardInput({
       events,
       controlScheme,
     });
-    input.enable();
+    keyboardInput.enable();
 
     const playerEntity = new PlayerEntity({
       shape: {
@@ -156,7 +156,7 @@ export default class GravityScene extends Scene {
     this.addSystem(renderDebug2dSystem);
     this.setContext({
       actions,
-      input,
+      keyboardInput,
     });
   }
 }

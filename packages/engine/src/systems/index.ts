@@ -10,4 +10,5 @@ export { default as Render2dSystem } from './Render2dSystem.js';
 export { default as RenderClear2dSystem } from './RenderClear2dSystem.js';
 export { default as RenderDebug2dSystem } from './RenderDebug2dSystem/index.js';
 export { default as RigidBodyUpdate2dSystem } from './RigidBodyUpdate2dSystem/index.js';
+export { default as ToggleDebugSystem } from './ToggleDebugSystem.js';
 export { default as TransformSnapshot2dSystem } from './TransformSnapshot2dSystem.js';

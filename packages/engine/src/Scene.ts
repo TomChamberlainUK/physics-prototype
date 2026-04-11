@@ -65,7 +65,7 @@ export default class Scene {
           break;
       }
     }
-    this.commands = [];
+    this.commands.length = 0;
   }
 
   /**

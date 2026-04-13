@@ -1,4 +1,3 @@
-import type { Events } from '#src/core/index.js';
 import type Entity from '#src/Entity.js';
 import type { Context } from '#src/types/index.js';
 import System from '../System.js';
@@ -12,28 +11,11 @@ import {
 } from './logic/index.js';
 
 /**
- * Constructor parameters for RenderDebug2dSystem.
- */
-type ConstructorParams = {
-  /** Event emitter to listen for toggleDebug events. */
-  events: Events;
-};
-
-/**
  * A system that renders debug information for 2D entities, including colliders and collision pairs.
  */
 export default class RenderDebug2dSystem extends System {
   name = 'RenderDebug2dSystem';
   type = 'render';
-  /** Indicates whether debug rendering is currently enabled. */
-  enabled = true;
-
-  constructor({ events }: ConstructorParams) {
-    super();
-    events.on('toggleDebug', () => {
-      this.enabled = !this.enabled;
-    });
-  }
 
   /**
    * Renders debug information for entities, including colliders and collision pairs.
@@ -45,8 +27,9 @@ export default class RenderDebug2dSystem extends System {
     broadPhaseCollisionPairs = [],
     narrowPhaseCollisionPairs = [],
     renderer,
+    showDebug,
   }: Context) {
-    if (!this.enabled || !renderer) return;
+    if (!renderer || !showDebug) return;
 
     const broadPhaseCollisionPairsSet = getBroadPhaseCollisionPairsSet(broadPhaseCollisionPairs);
     const narrowPhaseCollisionPairsMap = getNarrowPhaseCollisionPairsMap(narrowPhaseCollisionPairs);

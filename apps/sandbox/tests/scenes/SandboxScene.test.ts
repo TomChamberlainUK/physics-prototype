@@ -12,6 +12,7 @@ import {
   RenderClear2dSystem,
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
+  ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
@@ -199,20 +200,18 @@ describe('SandboxScene', () => {
       System: RigidBodyUpdate2dSystem,
     },
     {
+      System: ToggleDebugSystem,
+    },
+    {
       System: TransformSnapshot2dSystem,
     },
   ])('Should add $System.name to the scene', ({ System }) => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
   });
 
-  it('Should disable the RenderDebug2dSystem by default', () => {
-    const renderDebug2dSystem = scene.getSystem<RenderDebug2dSystem>('RenderDebug2dSystem');
-    expect(renderDebug2dSystem.enabled).toBe(false);
-  });
-
   it('Should set the input in the scene context', () => {
     expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
-      input: expect.any(KeyboardInput),
+      keyboardInput: expect.any(KeyboardInput),
     }));
   });
 

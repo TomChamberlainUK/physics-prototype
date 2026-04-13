@@ -121,6 +121,7 @@ describe('Game', () => {
   describe('step()', () => {
     let requestAnimationFrameSpy: MockInstance<typeof requestAnimationFrame>;
     let sceneExecuteCommandsSpy: MockInstance<typeof scene.executeCommands>;
+    let sceneUpdateInputSpy: MockInstance<typeof scene.updateInput>;
     let sceneUpdateHistorySpy: MockInstance<typeof scene.updateHistory>;
     let sceneUpdatePhysicsSpy: MockInstance<typeof scene.updatePhysics>;
     let sceneUpdateRenderSpy: MockInstance<typeof scene.updateRender>;
@@ -128,6 +129,7 @@ describe('Game', () => {
     beforeAll(() => {
       requestAnimationFrameSpy = vi.spyOn(window, 'requestAnimationFrame');
       sceneExecuteCommandsSpy = vi.spyOn(scene, 'executeCommands');
+      sceneUpdateInputSpy = vi.spyOn(scene, 'updateInput');
       sceneUpdateHistorySpy = vi.spyOn(scene, 'updateHistory');
       sceneUpdatePhysicsSpy = vi.spyOn(scene, 'updatePhysics');
       sceneUpdateRenderSpy = vi.spyOn(scene, 'updateRender');
@@ -136,6 +138,7 @@ describe('Game', () => {
     afterEach(() => {
       requestAnimationFrameSpy.mockClear();
       sceneExecuteCommandsSpy.mockClear();
+      sceneUpdateInputSpy.mockClear();
       sceneUpdateHistorySpy.mockClear();
       sceneUpdatePhysicsSpy.mockClear();
       sceneUpdateRenderSpy.mockClear();
@@ -144,6 +147,7 @@ describe('Game', () => {
     afterAll(() => {
       requestAnimationFrameSpy.mockRestore();
       sceneExecuteCommandsSpy.mockRestore();
+      sceneUpdateInputSpy.mockRestore();
       sceneUpdateHistorySpy.mockRestore();
       sceneUpdatePhysicsSpy.mockRestore();
       sceneUpdateRenderSpy.mockRestore();
@@ -174,7 +178,12 @@ describe('Game', () => {
         vi.clearAllMocks();
       });
 
-      it('Should update the scene sync systems', () => {
+      it('Should update the scene input systems', () => {
+        game.step();
+        expect(sceneUpdateInputSpy).toHaveBeenCalled();
+      });
+
+      it('Should update the scene history systems', () => {
         game.step();
         expect(sceneUpdateHistorySpy).toHaveBeenCalled();
       });
@@ -195,6 +204,7 @@ describe('Game', () => {
         performanceNowSpy.mockReturnValueOnce(fixedDelta * 3 * 1000);
         game.step();
         expectCallOrder([
+          sceneUpdateInputSpy,
           sceneExecuteCommandsSpy,
           sceneUpdateHistorySpy,
           sceneUpdatePhysicsSpy,

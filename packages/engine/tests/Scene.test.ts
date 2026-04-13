@@ -3,6 +3,7 @@ import Entity from '#src/Entity.js';
 import { KeyboardInput } from '#src/input/index.js';
 import Scene from '#src/Scene.js';
 import Renderer from '#src/Renderer.js';
+import type { Context } from '#src/index.js';
 
 describe('Scene', () => {
   let scene: Scene;
@@ -135,23 +136,23 @@ describe('Scene', () => {
     });
   });
 
-  describe('updateHistory()', () => {
+  describe('updateInput()', () => {
     beforeEach(() => {
       scene = new Scene();
     });
 
-    it('Should call all history systems with the current entities and context', () => {
+    it('Should call all input systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
-      const system1 = { update: vi.fn(), type: 'history', name: 'System1' };
-      const system2 = { update: vi.fn(), type: 'history', name: 'System2' };
-      const system3 = { update: vi.fn(), type: 'history', name: 'System3' };
+      const context = { keyboardInput: new KeyboardInput() };
+      const system1 = { update: vi.fn(), type: 'input', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'input', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'input', name: 'System3' };
       scene.setContext(context);
       scene.addEntity(entity);
       scene.addSystem(system1);
       scene.addSystem(system2);
       scene.addSystem(system3);
-      scene.updateHistory();
+      scene.updateInput();
       expect(system1.update).toHaveBeenCalledWith([entity], {
         ...context,
         sceneCommands: scene.commands,
@@ -165,6 +166,41 @@ describe('Scene', () => {
         sceneCommands: scene.commands,
       });
     });
+
+    it('Should clear action triggers after updating input systems', () => {
+      const context: Context = {
+        // @ts-expect-error - we only need the clearTriggers method for this test
+        actions: {
+          clearTriggers: vi.fn(),
+        },
+      };
+      scene.setContext(context);
+      scene.updateInput();
+      expect(context.actions!.clearTriggers).toHaveBeenCalled();
+    });
+  });
+
+  describe('updateHistory()', () => {
+    beforeEach(() => {
+      scene = new Scene();
+    });
+
+    it('Should call all history systems with the current entities and context', () => {
+      const entity = new Entity();
+      const context = { keyboardInput: new KeyboardInput() };
+      const system1 = { update: vi.fn(), type: 'history', name: 'System1' };
+      const system2 = { update: vi.fn(), type: 'history', name: 'System2' };
+      const system3 = { update: vi.fn(), type: 'history', name: 'System3' };
+      scene.setContext(context);
+      scene.addEntity(entity);
+      scene.addSystem(system1);
+      scene.addSystem(system2);
+      scene.addSystem(system3);
+      scene.updateHistory();
+      expect(system1.update).toHaveBeenCalledWith([entity], context);
+      expect(system2.update).toHaveBeenCalledWith([entity], context);
+      expect(system3.update).toHaveBeenCalledWith([entity], context);
+    });
   });
 
   describe('updatePhysics()', () => {
@@ -174,7 +210,7 @@ describe('Scene', () => {
 
     it('Should call all systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const deltaTime = 1 / 60;
       const system1 = { update: vi.fn(), type: 'physics', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'physics', name: 'System2' };
@@ -202,7 +238,7 @@ describe('Scene', () => {
 
     it('Should call all render systems with the current entities and context', () => {
       const entity = new Entity();
-      const context = { input: new KeyboardInput() };
+      const context = { keyboardInput: new KeyboardInput() };
       const system1 = { update: vi.fn(), type: 'render', name: 'System1' };
       const system2 = { update: vi.fn(), type: 'render', name: 'System2' };
       const system3 = { update: vi.fn(), type: 'render', name: 'System3' };

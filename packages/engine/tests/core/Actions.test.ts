@@ -9,10 +9,13 @@ describe('Actions', () => {
 
   let eventsOnSpy: MockInstance<typeof events.on>;
 
+  const stateActionControl = { key: 'x', action: 'testStateAction', actionType: 'state' } as const;
+  const triggerActionControl = { key: 'y', action: 'testTriggerAction', actionType: 'trigger' } as const;
+
   beforeEach(() => {
     controlScheme = [
-      { key: 'x', action: 'testStateAction', actionType: 'state' },
-      { key: 'y', action: 'testTriggerAction', actionType: 'trigger' },
+      stateActionControl,
+      triggerActionControl,
     ];
     events = new Events();
     eventsOnSpy = vi.spyOn(events, 'on');
@@ -27,45 +30,76 @@ describe('Actions', () => {
       expect(actionManager).toBeInstanceOf(Actions);
     });
 
-    it('Should register actions on state events', () => {
-      for (const { action, actionType } of controlScheme) {
-        if (actionType === 'state') {
-          expect(eventsOnSpy).toHaveBeenCalledWith(
-            `${action}:start`,
-            expect.any(Function),
-          );
-          expect(eventsOnSpy).toHaveBeenCalledWith(
-            `${action}:stop`,
-            expect.any(Function),
-          );
-        }
-      }
+    it('Should subscribe to state start events', () => {
+      expect(eventsOnSpy).toHaveBeenCalledWith(
+        `${stateActionControl.action}:start`,
+        expect.any(Function),
+      );
     });
 
-    it('Should not register actions on trigger events', () => {
-      for (const { action, actionType } of controlScheme) {
-        if (actionType === 'trigger') {
-          expect(eventsOnSpy).not.toHaveBeenCalledWith(
-            `${action}:start`,
-            expect.any(Function),
-          );
-          expect(eventsOnSpy).not.toHaveBeenCalledWith(
-            `${action}:stop`,
-            expect.any(Function),
-          );
-        }
-      }
+    it('Should subscribe to state stop events', () => {
+      expect(eventsOnSpy).toHaveBeenCalledWith(
+        `${stateActionControl.action}:stop`,
+        expect.any(Function),
+      );
+    });
+
+    it('Should subscribe to trigger events', () => {
+      expect(eventsOnSpy).toHaveBeenCalledWith(
+        `${triggerActionControl.action}`,
+        expect.any(Function),
+      );
     });
   });
 
-  describe('has()', () => {
-    it('Should return true for active actions', () => {
-      events.emit('testStateAction:start');
-      expect(actionManager.has('testStateAction')).toBe(true);
+  describe('isActive()', () => {
+    it('Should return false for inactive state actions', () => {
+      expect(actionManager.isActive(stateActionControl.action)).toBe(false);
     });
 
-    it('Should return false for inactive actions', () => {
-      expect(actionManager.has('testStateAction')).toBe(false);
+    it('Should return true for started state actions', () => {
+      events.emit(`${stateActionControl.action}:start`);
+      expect(actionManager.isActive(stateActionControl.action)).toBe(true);
+    });
+
+    it('Should return false for stopped state actions', () => {
+      events.emit(`${stateActionControl.action}:start`);
+      expect(actionManager.isActive(stateActionControl.action)).toBe(true);
+      events.emit(`${stateActionControl.action}:stop`);
+      expect(actionManager.isActive(stateActionControl.action)).toBe(false);
+    });
+
+    it('Should return false for trigger actions', () => {
+      events.emit(triggerActionControl.action);
+      expect(actionManager.isActive(triggerActionControl.action)).toBe(false);
+    });
+  });
+
+  describe('wasTriggered()', () => {
+    it('Should return true for triggered actions', () => {
+      events.emit(triggerActionControl.action);
+      expect(actionManager.wasTriggered(triggerActionControl.action)).toBe(true);
+    });
+
+    it('Should return false for state actions', () => {
+      events.emit(`${stateActionControl.action}:start`);
+      expect(actionManager.wasTriggered(stateActionControl.action)).toBe(false);
+    });
+  });
+
+  describe('clearTriggers()', () => {
+    it('Should clear triggered actions', () => {
+      events.emit(triggerActionControl.action);
+      expect(actionManager.wasTriggered(triggerActionControl.action)).toBe(true);
+      actionManager.clearTriggers();
+      expect(actionManager.wasTriggered(triggerActionControl.action)).toBe(false);
+    });
+
+    it('Should not affect active state actions', () => {
+      events.emit(`${stateActionControl.action}:start`);
+      expect(actionManager.isActive(stateActionControl.action)).toBe(true);
+      actionManager.clearTriggers();
+      expect(actionManager.isActive(stateActionControl.action)).toBe(true);
     });
   });
 });

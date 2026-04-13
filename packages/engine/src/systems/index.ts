@@ -2,6 +2,7 @@ export { default as ColliderUpdate2dSystem } from './ColliderUpdate2dSystem/inde
 export { default as CollisionDetection2dSystem } from './CollisionDetection2dSystem/index.js';
 export { default as CollisionImpulseResolution2dSystem } from './CollisionImpulseResolution2dSystem/index.js';
 export { default as CollisionPositionCorrection2dSystem } from './CollisionPositionCorrection2dSystem.js';
+export { default as EditorSpawn2dSystem } from './EditorSpawn2dSystem.js';
 export { default as Gravity2dSystem } from './Gravity2dSystem.js';
 export { default as InputImpulseSystem } from './InputImpulseSystem.js';
 export { default as IntervalSpawnSystem } from './IntervalSpawnSystem.js';
@@ -10,4 +11,5 @@ export { default as Render2dSystem } from './Render2dSystem.js';
 export { default as RenderClear2dSystem } from './RenderClear2dSystem.js';
 export { default as RenderDebug2dSystem } from './RenderDebug2dSystem/index.js';
 export { default as RigidBodyUpdate2dSystem } from './RigidBodyUpdate2dSystem/index.js';
+export { default as ToggleDebugSystem } from './ToggleDebugSystem.js';
 export { default as TransformSnapshot2dSystem } from './TransformSnapshot2dSystem.js';

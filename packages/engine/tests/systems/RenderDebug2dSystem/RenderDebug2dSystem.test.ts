@@ -1,5 +1,4 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Events } from '#src/core/index.js';
 import Entity from '#src/Entity.js';
 import { Vector2d } from '#src/maths/index.js';
 import Renderer from '#src/Renderer.js';
@@ -10,17 +9,13 @@ import * as renderAABBModule from '#src/systems/RenderDebug2dSystem/logic/render
 import * as renderColliderModule from '#src/systems/RenderDebug2dSystem/logic/renderCollider.js';
 import * as renderContactPointsModule from '#src/systems/RenderDebug2dSystem/logic/renderContactPoints.js';
 import * as renderPotentialCollisionLineModule from '#src/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine.js';
-import type { BroadPhaseCollisionPair, NarrowPhaseCollisionPair } from '#src/types/index.js';
+import type { BroadPhaseCollisionPair, Context, NarrowPhaseCollisionPair } from '#src/types/index.js';
 
 describe('RenderDebug2dSystem', () => {
   let system: RenderDebug2dSystem;
-  let events: Events;
-  let eventsOnSpy: MockInstance<typeof events.on>;
 
   beforeEach(() => {
-    events = new Events();
-    eventsOnSpy = vi.spyOn(events, 'on');
-    system = new RenderDebug2dSystem({ events });
+    system = new RenderDebug2dSystem();
   });
 
   describe('constructor()', () => {
@@ -28,11 +23,6 @@ describe('RenderDebug2dSystem', () => {
       expect(system).toBeInstanceOf(RenderDebug2dSystem);
       expect(system.name).toBe('RenderDebug2dSystem');
       expect(system.type).toBe('render');
-      expect(system.enabled).toBe(true);
-    });
-
-    it('Should subscribe to the toggleDebug event', () => {
-      expect(eventsOnSpy).toHaveBeenCalledWith('toggleDebug', expect.any(Function));
     });
   });
 
@@ -45,18 +35,21 @@ describe('RenderDebug2dSystem', () => {
       });
     });
 
-    describe('When the system is disabled', () => {
+    describe('When debug is disabled', () => {
       it('Should do nothing', () => {
         const renderer = new Renderer(document.createElement('canvas'));
-        system.enabled = false;
         const renderAABBSpy = vi.spyOn(renderAABBModule, 'default');
-        system.update([], { renderer });
+        system.update([], {
+          renderer,
+          showDebug: false,
+        });
         expect(renderAABBSpy).not.toHaveBeenCalled();
       });
     });
 
-    describe('When passed a renderer in the context', () => {
+    describe('When passed a renderer and debug is enabled', () => {
       let renderer: Renderer;
+      let context: Context;
 
       let getBroadPhaseCollisionPairsSetSpy: MockInstance<typeof getBroadPhaseCollisionPairsSetModule.default>;
       let getNarrowPhaseCollisionPairsMapSpy: MockInstance<typeof getNarrowPhaseCollisionPairsMapModule.default>;
@@ -76,6 +69,10 @@ describe('RenderDebug2dSystem', () => {
 
       beforeEach(() => {
         renderer = new Renderer(document.createElement('canvas'));
+        context = {
+          renderer,
+          showDebug: true,
+        };
       });
 
       afterEach(() => {
@@ -100,7 +97,10 @@ describe('RenderDebug2dSystem', () => {
         const broadPhaseCollisionPairs: BroadPhaseCollisionPair[] = [
           [new Entity(), new Entity()],
         ];
-        system.update([], { renderer, broadPhaseCollisionPairs });
+        system.update([], {
+          ...context,
+          broadPhaseCollisionPairs,
+        });
         expect(getBroadPhaseCollisionPairsSetSpy).toHaveBeenCalledWith(broadPhaseCollisionPairs);
       });
 
@@ -116,7 +116,10 @@ describe('RenderDebug2dSystem', () => {
             },
           },
         ];
-        system.update([], { renderer, narrowPhaseCollisionPairs });
+        system.update([], {
+          ...context,
+          narrowPhaseCollisionPairs,
+        });
         expect(getNarrowPhaseCollisionPairsMapSpy).toHaveBeenCalledWith(narrowPhaseCollisionPairs);
       });
 
@@ -126,7 +129,11 @@ describe('RenderDebug2dSystem', () => {
           new Entity(),
         ];
         const alpha = 0.5;
-        system.update(entities, { alpha, renderer, broadPhaseCollisionPairs: [] });
+        system.update(entities, {
+          ...context,
+          alpha,
+          broadPhaseCollisionPairs: [],
+        });
         for (const entity of entities) {
           expect(renderColliderSpy).toHaveBeenCalledWith(entity, {
             alpha,
@@ -143,7 +150,11 @@ describe('RenderDebug2dSystem', () => {
         const alpha = 0.5;
         const broadPhaseCollisionPairsSet = new Set<string>();
         getBroadPhaseCollisionPairsSetSpy.mockReturnValue(broadPhaseCollisionPairsSet);
-        system.update(entities, { alpha, renderer, broadPhaseCollisionPairs: [] });
+        system.update(entities, {
+          ...context,
+          alpha,
+          broadPhaseCollisionPairs: [],
+        });
         for (const entity of entities) {
           expect(renderAABBSpy).toHaveBeenCalledWith(entity, {
             alpha,
@@ -161,7 +172,11 @@ describe('RenderDebug2dSystem', () => {
         const alpha = 0.5;
         const narrowPhaseCollisionPairsMap = new Map<string, Set<string>>();
         getNarrowPhaseCollisionPairsMapSpy.mockReturnValue(narrowPhaseCollisionPairsMap);
-        system.update([], { alpha, renderer, broadPhaseCollisionPairs });
+        system.update([], {
+          ...context,
+          alpha,
+          broadPhaseCollisionPairs,
+        });
         for (const [entityA, entityB] of broadPhaseCollisionPairs) {
           expect(renderPotentialCollisionLineSpy).toHaveBeenCalledWith(entityA, entityB, {
             alpha,
@@ -182,7 +197,10 @@ describe('RenderDebug2dSystem', () => {
             contactPoints: [new Vector2d(), new Vector2d()],
           },
         };
-        system.update([], { renderer, narrowPhaseCollisionPairs: [narrowPhaseCollisionPair] });
+        system.update([], {
+          ...context,
+          narrowPhaseCollisionPairs: [narrowPhaseCollisionPair],
+        });
         expect(renderContactPointsSpy).toHaveBeenCalledWith(
           narrowPhaseCollisionPair.contactManifold.contactPoints,
           {
@@ -191,15 +209,6 @@ describe('RenderDebug2dSystem', () => {
           },
         );
       });
-    });
-  });
-
-  describe('When the toggleDebug event is emitted', () => {
-    it('Should toggle the enabled state', () => {
-      events.emit('toggleDebug');
-      expect(system.enabled).toBe(false);
-      events.emit('toggleDebug');
-      expect(system.enabled).toBe(true);
     });
   });
 });

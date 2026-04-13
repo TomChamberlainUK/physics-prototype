@@ -95,7 +95,9 @@ export default class Game {
 
     this.#timeAccumulator += frameTime;
 
+    this.scene.updateInput();
     this.scene.executeCommands();
+
     while (this.#timeAccumulator >= this.#fixedDeltaTime) {
       this.scene.updateHistory();
       this.scene.updatePhysics(this.#fixedDeltaTime);

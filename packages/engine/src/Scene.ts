@@ -22,6 +22,7 @@ export default class Scene {
    */
   setContext(context: Context) {
     this.context = context;
+    this.context.sceneCommands = this.commands;
   }
 
   /**
@@ -64,7 +65,7 @@ export default class Scene {
           break;
       }
     }
-    this.commands = [];
+    this.commands.length = 0;
   }
 
   /**
@@ -82,15 +83,25 @@ export default class Scene {
   }
 
   /**
+   * Updates all input systems in the scene.
+   */
+  updateInput() {
+    for (const system of this.systems) {
+      if (system.type !== 'input') continue;
+      system.update(this.entities, this.context);
+    }
+    if (this.context.actions) {
+      this.context.actions.clearTriggers();
+    }
+  }
+
+  /**
    * Updates all history systems in the scene.
    */
   updateHistory() {
     for (const system of this.systems) {
       if (system.type !== 'history') continue;
-      system.update(this.entities, {
-        ...this.context,
-        sceneCommands: this.commands,
-      });
+      system.update(this.entities, this.context);
     }
   }
 

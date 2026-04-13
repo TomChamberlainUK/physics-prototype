@@ -13,6 +13,7 @@ import {
   RenderDebug2dSystem,
   RigidBodyUpdate2dSystem,
   Scene,
+  ToggleDebugSystem,
   TransformSnapshot2dSystem,
   Vector2d,
   type ControlScheme,
@@ -42,11 +43,11 @@ export default class SandboxScene extends Scene {
 
     const actions = new Actions({ controlScheme, events });
 
-    const input = new KeyboardInput({
+    const keyboardInput = new KeyboardInput({
       events,
       controlScheme,
     });
-    input.enable();
+    keyboardInput.enable();
 
     const playerEntity = new PlayerEntity({
       shape: {
@@ -134,6 +135,7 @@ export default class SandboxScene extends Scene {
       this.addEntity(boxEntity);
     }
 
+    const toggleDebugSystem = new ToggleDebugSystem();
     const transformSnapshot2dSystem = new TransformSnapshot2dSystem();
     const inputImpulseSystem = new InputImpulseSystem();
     const colliderUpdate2dSystem = new ColliderUpdate2dSystem();
@@ -144,10 +146,9 @@ export default class SandboxScene extends Scene {
     const kinetic2dSystem = new Kinetic2dSystem();
     const renderClear2dSystem = new RenderClear2dSystem();
     const render2dSystem = new Render2dSystem();
-    const renderDebug2dSystem = new RenderDebug2dSystem({ events });
+    const renderDebug2dSystem = new RenderDebug2dSystem();
 
-    renderDebug2dSystem.enabled = false;
-
+    this.addSystem(toggleDebugSystem);
     this.addSystem(transformSnapshot2dSystem);
     this.addSystem(inputImpulseSystem);
     this.addSystem(colliderUpdate2dSystem);
@@ -162,7 +163,7 @@ export default class SandboxScene extends Scene {
 
     this.setContext({
       actions,
-      input,
+      keyboardInput,
     });
   }
 }

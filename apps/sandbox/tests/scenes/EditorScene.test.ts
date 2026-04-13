@@ -1,15 +1,14 @@
-import { GravityScene } from '#/scenes';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import {
   Actions,
   ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
+  EditorSpawn2dSystem,
   Gravity2dSystem,
-  InputImpulseSystem,
-  IntervalSpawnSystem,
-  KeyboardInput,
   Kinetic2dSystem,
+  MouseInput,
   Render2dSystem,
   RenderClear2dSystem,
   RenderDebug2dSystem,
@@ -17,44 +16,36 @@ import {
   ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { EditorScene } from '#/scenes';
 
-const PlayerEntityMock = vi.hoisted(vi.fn);
 const PhysicsEntityMock = vi.hoisted(vi.fn);
-
-vi.mock('#/entities/PlayerEntity', () => ({
-  default: PlayerEntityMock,
-}));
 
 vi.mock('#/entities/PhysicsEntity', () => ({
   default: PhysicsEntityMock,
 }));
 
-describe('GravityScene', () => {
+describe('EditorScene', () => {
   const height = 600;
   const width = 800;
 
-  let scene: GravityScene;
-  let sceneAddEntitySpy: MockInstance<typeof GravityScene.prototype.addEntity>;
-  let sceneAddSystemSpy: MockInstance<typeof GravityScene.prototype.addSystem>;
-  let sceneSetContextSpy: MockInstance<typeof GravityScene.prototype.setContext>;
+  let scene: EditorScene;
+  let sceneAddEntitySpy: MockInstance<typeof EditorScene.prototype.addEntity>;
+  let sceneAddSystemSpy: MockInstance<typeof EditorScene.prototype.addSystem>;
+  let sceneSetContextSpy: MockInstance<typeof EditorScene.prototype.setContext>;
 
   beforeAll(() => {
-    PlayerEntityMock.mockImplementation(() => (
-      { name: 'player-entity' }
-    ));
     PhysicsEntityMock.mockImplementation(({ name }) => (
       { name }
     ));
-    sceneAddEntitySpy = vi.spyOn(GravityScene.prototype, 'addEntity');
-    sceneAddSystemSpy = vi.spyOn(GravityScene.prototype, 'addSystem');
-    sceneSetContextSpy = vi.spyOn(GravityScene.prototype, 'setContext');
+    sceneAddEntitySpy = vi.spyOn(EditorScene.prototype, 'addEntity');
+    sceneAddSystemSpy = vi.spyOn(EditorScene.prototype, 'addSystem');
+    sceneSetContextSpy = vi.spyOn(EditorScene.prototype, 'setContext');
   });
 
   beforeEach(() => {
-    scene = new GravityScene({
-      height,
+    scene = new EditorScene({
       width,
+      height,
     });
   });
 
@@ -67,18 +58,7 @@ describe('GravityScene', () => {
   });
 
   it('Should instantiate', () => {
-    expect(scene).toBeInstanceOf(GravityScene);
-  });
-
-  it('Should add a player entity', () => {
-    expect(PlayerEntityMock).toHaveBeenCalledWith({
-      shape: {
-        type: 'box',
-        width: 32,
-        height: 32,
-      },
-    });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
+    expect(scene).toBeInstanceOf(EditorScene);
   });
 
   it.each([
@@ -149,10 +129,7 @@ describe('GravityScene', () => {
       System: CollisionPositionCorrection2dSystem,
     },
     {
-      System: InputImpulseSystem,
-    },
-    {
-      System: IntervalSpawnSystem,
+      System: EditorSpawn2dSystem,
     },
     {
       System: Gravity2dSystem,
@@ -182,9 +159,9 @@ describe('GravityScene', () => {
     expect(sceneAddSystemSpy).toHaveBeenCalledWith(expect.any(System));
   });
 
-  it('Should set the input in the scene context', () => {
+  it('Should set mouseInput in the scene context', () => {
     expect(sceneSetContextSpy).toHaveBeenCalledWith(expect.objectContaining({
-      keyboardInput: expect.any(KeyboardInput),
+      mouseInput: expect.any(MouseInput),
     }));
   });
 

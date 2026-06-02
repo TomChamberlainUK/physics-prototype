@@ -1,10 +1,11 @@
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Actions,
   ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
+  Entity,
   InputImpulseSystem,
   KeyboardInput,
   Kinetic2dSystem,
@@ -16,6 +17,21 @@ import {
   TransformSnapshot2dSystem,
 } from 'engine';
 import SandboxScene from '#/scenes/SandboxScene';
+import { PhysicsEntity, PlayerEntity } from '#/entities';
+
+vi.mock(import('#/entities'), () => ({
+  PhysicsEntity: vi.fn(class extends Entity {
+    constructor({ name }: { name: string }) {
+      super({ name });
+    }
+  }),
+
+  PlayerEntity: vi.fn(class extends Entity {
+    constructor() {
+      super({ name: 'player-entity' });
+    }
+  }),
+}));
 
 describe('SandboxScene', () => {
   const height = 600;
@@ -26,24 +42,6 @@ describe('SandboxScene', () => {
   const sceneAddEntitySpy = vi.spyOn(SandboxScene.prototype, 'addEntity');
   const sceneAddSystemSpy = vi.spyOn(SandboxScene.prototype, 'addSystem');
   const sceneSetContextSpy = vi.spyOn(SandboxScene.prototype, 'setContext');
-
-  const PhysicsEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(({ name }) => ({ name }))
-  ));
-  const PlayerEntityConstructorMock = vi.hoisted(() => (
-    vi.fn()
-      .mockImplementation(() => ({ name: 'player-entity' }))
-  ));
-
-  beforeAll(() => {
-    vi.mock('#/entities/PhysicsEntity', () => ({
-      default: PhysicsEntityConstructorMock,
-    }));
-    vi.mock('#/entities/PlayerEntity', () => ({
-      default: PlayerEntityConstructorMock,
-    }));
-  });
 
   beforeEach(() => {
     scene = new SandboxScene({
@@ -65,14 +63,16 @@ describe('SandboxScene', () => {
   });
 
   it('Should add a player entity', () => {
-    expect(PlayerEntityConstructorMock).toHaveBeenCalledWith({
+    expect(PlayerEntity).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: 32,
         height: 32,
       },
     });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
+    expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'player-entity' }),
+    );
   });
 
   it.each([
@@ -111,7 +111,7 @@ describe('SandboxScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith({
+    expect(PhysicsEntity).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: wallWidth,
@@ -126,13 +126,15 @@ describe('SandboxScene', () => {
       name,
       restitution: 0.1,
     });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+    expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+      expect.objectContaining({ name }),
+    );
   });
 
   it('Should add 250 circle entities to the scene', () => {
     for (let i = 0; i < 250; i++) {
       const name = `circle-${i}`;
-      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+      expect(PhysicsEntity).toHaveBeenCalledWith(expect.objectContaining({
         position: {
           x: expect.any(Number),
           y: expect.any(Number),
@@ -144,14 +146,16 @@ describe('SandboxScene', () => {
         fillColor: expect.any(String),
         name,
       }));
-      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+      expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name }),
+      );
     }
   });
 
   it('Should add 250 box entities to the scene', () => {
     for (let i = 0; i < 250; i++) {
       const name = `box-${i}`;
-      expect(PhysicsEntityConstructorMock).toHaveBeenCalledWith(expect.objectContaining({
+      expect(PhysicsEntity).toHaveBeenCalledWith(expect.objectContaining({
         position: {
           x: expect.any(Number),
           y: expect.any(Number),
@@ -164,7 +168,9 @@ describe('SandboxScene', () => {
         fillColor: expect.any(String),
         name,
       }));
-      expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+      expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name }),
+      );
     }
   });
 

@@ -1,10 +1,10 @@
-import { GravityScene } from '#/scenes';
 import {
   Actions,
   ColliderUpdate2dSystem,
   CollisionDetection2dSystem,
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
+  Entity,
   Gravity2dSystem,
   InputImpulseSystem,
   IntervalSpawnSystem,
@@ -17,17 +17,22 @@ import {
   ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
+import { PhysicsEntity, PlayerEntity } from '#/entities';
+import { GravityScene } from '#/scenes';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 
-const PlayerEntityMock = vi.hoisted(vi.fn);
-const PhysicsEntityMock = vi.hoisted(vi.fn);
+vi.mock(import('#/entities'), () => ({
+  PhysicsEntity: vi.fn(class extends Entity {
+    constructor({ name }: { name: string }) {
+      super({ name });
+    }
+  }),
 
-vi.mock('#/entities/PlayerEntity', () => ({
-  default: PlayerEntityMock,
-}));
-
-vi.mock('#/entities/PhysicsEntity', () => ({
-  default: PhysicsEntityMock,
+  PlayerEntity: vi.fn(class extends Entity {
+    constructor() {
+      super({ name: 'player-entity' });
+    }
+  }),
 }));
 
 describe('GravityScene', () => {
@@ -40,12 +45,6 @@ describe('GravityScene', () => {
   let sceneSetContextSpy: MockInstance<typeof GravityScene.prototype.setContext>;
 
   beforeAll(() => {
-    PlayerEntityMock.mockImplementation(() => (
-      { name: 'player-entity' }
-    ));
-    PhysicsEntityMock.mockImplementation(({ name }) => (
-      { name }
-    ));
     sceneAddEntitySpy = vi.spyOn(GravityScene.prototype, 'addEntity');
     sceneAddSystemSpy = vi.spyOn(GravityScene.prototype, 'addSystem');
     sceneSetContextSpy = vi.spyOn(GravityScene.prototype, 'setContext');
@@ -71,14 +70,16 @@ describe('GravityScene', () => {
   });
 
   it('Should add a player entity', () => {
-    expect(PlayerEntityMock).toHaveBeenCalledWith({
+    expect(PlayerEntity).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: 32,
         height: 32,
       },
     });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name: 'player-entity' });
+    expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'player-entity' }),
+    );
   });
 
   it.each([
@@ -117,7 +118,7 @@ describe('GravityScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(PhysicsEntityMock).toHaveBeenCalledWith({
+    expect(PhysicsEntity).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: wallWidth,
@@ -132,7 +133,9 @@ describe('GravityScene', () => {
       name,
       restitution: 0.1,
     });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+    expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+      expect.objectContaining({ name }),
+    );
   });
 
   it.each([

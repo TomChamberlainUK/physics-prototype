@@ -6,6 +6,7 @@ import {
   CollisionImpulseResolution2dSystem,
   CollisionPositionCorrection2dSystem,
   EditorSpawn2dSystem,
+  Entity,
   Gravity2dSystem,
   Kinetic2dSystem,
   MouseInput,
@@ -16,12 +17,15 @@ import {
   ToggleDebugSystem,
   TransformSnapshot2dSystem,
 } from 'engine';
+import { PhysicsEntity } from '#/entities';
 import { EditorScene } from '#/scenes';
 
-const PhysicsEntityMock = vi.hoisted(vi.fn);
-
-vi.mock('#/entities/PhysicsEntity', () => ({
-  default: PhysicsEntityMock,
+vi.mock(import('#/entities'), () => ({
+  PhysicsEntity: vi.fn(class extends Entity {
+    constructor({ name }: { name: string }) {
+      super({ name });
+    }
+  }),
 }));
 
 describe('EditorScene', () => {
@@ -34,9 +38,6 @@ describe('EditorScene', () => {
   let sceneSetContextSpy: MockInstance<typeof EditorScene.prototype.setContext>;
 
   beforeAll(() => {
-    PhysicsEntityMock.mockImplementation(({ name }) => (
-      { name }
-    ));
     sceneAddEntitySpy = vi.spyOn(EditorScene.prototype, 'addEntity');
     sceneAddSystemSpy = vi.spyOn(EditorScene.prototype, 'addSystem');
     sceneSetContextSpy = vi.spyOn(EditorScene.prototype, 'setContext');
@@ -97,7 +98,7 @@ describe('EditorScene', () => {
     height: wallHeight,
     name,
   }) => {
-    expect(PhysicsEntityMock).toHaveBeenCalledWith({
+    expect(PhysicsEntity).toHaveBeenCalledWith({
       shape: {
         type: 'box',
         width: wallWidth,
@@ -112,7 +113,9 @@ describe('EditorScene', () => {
       name,
       restitution: 0.1,
     });
-    expect(sceneAddEntitySpy).toHaveBeenCalledWith({ name });
+    expect(sceneAddEntitySpy).toHaveBeenCalledWith(
+      expect.objectContaining({ name }),
+    );
   });
 
   it.each([

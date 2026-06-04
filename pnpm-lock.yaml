@@ -54,8 +54,8 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8(jsdom@29.1.1)(vite@8.0.16)
       vitest-canvas-mock:
-        specifier: ^0.3.3
-        version: 0.3.3(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16))
+        specifier: ^1.1.4
+        version: 1.1.4(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16))
 
   packages/engine:
     dependencies:
@@ -85,8 +85,8 @@ importers:
         specifier: ^4.1.8
         version: 4.1.8(jsdom@29.1.1)(vite@8.0.16)
       vitest-canvas-mock:
-        specifier: ^0.3.3
-        version: 0.3.3(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16))
+        specifier: ^1.1.4
+        version: 1.1.4(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16))
 
   packages/eslint-config-custom:
     dependencies:
@@ -912,9 +912,6 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  jest-canvas-mock@2.5.2:
-    resolution: {integrity: sha512-vgnpPupjOL6+L5oJXzxTxFrlGEIbHdZqFU+LFNdtLxZ3lRDCl17FlTMM7IatoRQkrcyOTMlDinjUguqmQ6bR2A==}
-
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
 
@@ -1370,10 +1367,10 @@ packages:
       vite:
         optional: true
 
-  vitest-canvas-mock@0.3.3:
-    resolution: {integrity: sha512-3P968tYBpqYyzzOaVtqnmYjqbe13576/fkjbDEJSfQAkHtC5/UjuRHOhFEN/ZV5HVZIkaROBUWgazDKJ+Ibw+Q==}
+  vitest-canvas-mock@1.1.4:
+    resolution: {integrity: sha512-4boWHY+STwAxGl1+uwakNNoQky5EjPLC8HuponXNoAscYyT1h/F7RUvTkl4IyF/MiWr3V8Q626je3Iel3eArqA==}
     peerDependencies:
-      vitest: '*'
+      vitest: ^3.0.0 || ^4.0.0
 
   vitest@4.1.8:
     resolution: {integrity: sha512-flY6ScbCIt9HThs+C5HS7jvGOB560DJtk/Z15IQROTA6zEy49Nh8T/dofWTQL+n3vswqn87sbJNiuqw1SDp5Ig==}
@@ -2253,11 +2250,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  jest-canvas-mock@2.5.2:
-    dependencies:
-      cssfontparser: 1.2.1
-      moo-color: 1.0.3
-
   jju@1.4.0: {}
 
   js-tokens@4.0.0: {}
@@ -2652,9 +2644,10 @@ snapshots:
     optionalDependencies:
       vite: 8.0.16
 
-  vitest-canvas-mock@0.3.3(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16)):
+  vitest-canvas-mock@1.1.4(vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16)):
     dependencies:
-      jest-canvas-mock: 2.5.2
+      cssfontparser: 1.2.1
+      moo-color: 1.0.3
       vitest: 4.1.8(jsdom@29.1.1)(vite@8.0.16)
 
   vitest@4.1.8(jsdom@29.1.1)(vite@8.0.16):

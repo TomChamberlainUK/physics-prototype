@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { computeBoxAxes } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
-import { Vector2d } from '#src/maths/index.js';
+import { computeBoxAxes } from '#/systems/CollisionDetection2dSystem/logic/index.js';
+import { Vector2d } from '#/maths/index.js';
 
 describe('computeBoxAxes', () => {
   describe('When passed 4 valid box vertices', () => {

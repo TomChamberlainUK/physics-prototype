@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeEffectiveMass } from '#src/systems/CollisionImpulseResolution2dSystem/logic/index.js';
+import { computeEffectiveMass } from '#/systems/CollisionImpulseResolution2dSystem/logic/index.js';
 
 describe('computeEffectiveMass', () => {
   it('Should return the effective mass at a contact point between two rigid bodies', () => {

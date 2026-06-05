@@ -1,6 +1,6 @@
-import type { Actions } from '#src/core/index.js';
-import type { KeyboardInput, MouseInput } from '#src/input/index.js';
-import type Renderer from '#src/Renderer.js';
+import type { Actions } from '#/core/index.js';
+import type { KeyboardInput, MouseInput } from '#/input/index.js';
+import type Renderer from '#/Renderer.js';
 import type { BroadPhaseCollisionPair } from './BroadPhaseCollisionPair.js';
 import type { NarrowPhaseCollisionPair } from './NarrowPhaseCollisionPair.js';
 import type { SceneCommand } from './SceneCommand.js';

@@ -1,7 +1,7 @@
 import System from './System.js';
-import type { Context } from '#src/types/index.js';
-import Entity from '#src/Entity.js';
-import type Vector2d from '#src/maths/Vector2d.js';
+import type { Context } from '#/types/index.js';
+import Entity from '#/Entity.js';
+import type Vector2d from '#/maths/Vector2d.js';
 
 type ConstuctorProps = {
   /** A function that spawns a new entity. */

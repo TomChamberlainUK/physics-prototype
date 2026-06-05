@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Transform2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
-import { TransformSnapshot2dSystem } from '#src/systems/index.js';
+import { Transform2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
+import { TransformSnapshot2dSystem } from '#/systems/index.js';
 
 describe('TransformSnapshot2dSystem', () => {
   describe('constructor()', () => {

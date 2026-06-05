@@ -1,4 +1,4 @@
-import { areAABBsOverlapping } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import { areAABBsOverlapping } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 import { describe, expect, it } from 'vitest';
 
 describe('areAABBsOverlapping', () => {

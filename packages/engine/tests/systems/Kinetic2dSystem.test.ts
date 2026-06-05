@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
-import { Kinetic2dSystem } from '#src/systems/index.js';
+import { RigidBody2dComponent, Transform2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
+import { Kinetic2dSystem } from '#/systems/index.js';
 
 describe('Kinetic2dSystem', () => {
   describe('constructor()', () => {

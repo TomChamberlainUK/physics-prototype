@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import Game from '#src/Game.js';
-import Renderer from '#src/Renderer.js';
-import Scene from '#src/Scene.js';
+import Game from '#/Game.js';
+import Renderer from '#/Renderer.js';
+import Scene from '#/Scene.js';
 import { expectCallOrder } from './utils/index.js';
 
 describe('Game', () => {

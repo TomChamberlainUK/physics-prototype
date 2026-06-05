@@ -1,4 +1,4 @@
-import type { Vector2d } from '#src/maths/index.js';
+import type { Vector2d } from '#/maths/index.js';
 
 /**
  * Properties for findClosestBoxVertex function.

@@ -1,4 +1,4 @@
-import { Vector2d } from '#src/maths/index.js';
+import { Vector2d } from '#/maths/index.js';
 import Component from './Component.js';
 
 /**

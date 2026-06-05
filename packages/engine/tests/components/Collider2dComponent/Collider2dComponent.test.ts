@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Collider2dComponent } from '#src/components/index.js';
-import * as getVerticesModule from '#src/components/Collider2dComponent/logic/getVertices.js';
-import { Vector2d } from '#src/maths/index.js';
+import { Collider2dComponent } from '#/components/index.js';
+import * as getVerticesModule from '#/components/Collider2dComponent/logic/getVertices.js';
+import { Vector2d } from '#/maths/index.js';
 
 describe('Collider2dComponent', () => {
   it('Should instantiate with a circle shape', () => {

@@ -1,5 +1,5 @@
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import type { Collision } from '#src/types/index.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import type { Collision } from '#/types/index.js';
 import detectBoxBoxCollision from './detectBoxBoxCollision.js';
 import detectBoxCircleCollision from './detectBoxCircleCollision.js';
 import detectCircleCircleCollision from './detectCircleCircleCollision.js';

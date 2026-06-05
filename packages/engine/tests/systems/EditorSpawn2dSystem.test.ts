@@ -1,4 +1,4 @@
-import { EditorSpawn2dSystem, type Context } from '#src/index.js';
+import { EditorSpawn2dSystem, type Context } from '#/index.js';
 import { describe, expect, it, vi } from 'vitest';
 
 describe('EditorSpawn2dSystem', () => {

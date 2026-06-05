@@ -1,10 +1,10 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
-import Renderer from '#src/Renderer.js';
-import { renderAABB } from '#src/systems/RenderDebug2dSystem/logic/index.js';
-import * as lerpModule from '#src/utils/lerp.js';
+import { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
+import Renderer from '#/Renderer.js';
+import { renderAABB } from '#/systems/RenderDebug2dSystem/logic/index.js';
+import * as lerpModule from '#/utils/lerp.js';
 
 describe('renderAABB', () => {
   let broadPhaseCollisionPairsSet: Set<string>;

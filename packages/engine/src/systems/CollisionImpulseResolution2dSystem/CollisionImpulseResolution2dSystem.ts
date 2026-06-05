@@ -1,6 +1,6 @@
-import type { Transform2dComponent, RigidBody2dComponent } from '#src/components/index.js';
-import type Entity from '#src/Entity.js';
-import type { Context } from '#src/types/index.js';
+import type { Transform2dComponent, RigidBody2dComponent } from '#/components/index.js';
+import type Entity from '#/Entity.js';
+import type { Context } from '#/types/index.js';
 import { computeContactManifoldImpulse } from './logic/index.js';
 import System from '../System.js';
 

@@ -1,5 +1,5 @@
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import type { AABB } from '#src/types/index.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import type { AABB } from '#/types/index.js';
 import computeBoxAABB from './computeBoxAABB.js';
 import computeCircleAABB from './computeCircleAABB.js';
 

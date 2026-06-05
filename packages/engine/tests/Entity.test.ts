@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Component } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
+import { Component } from '#/components/index.js';
+import Entity from '#/Entity.js';
 
 describe('Entity', () => {
   let entity: Entity;

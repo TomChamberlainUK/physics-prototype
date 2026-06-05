@@ -1,5 +1,5 @@
-import type { Vector2d } from '#src/maths/index.js';
-import type { AABB } from '#src/types/index.js';
+import type { Vector2d } from '#/maths/index.js';
+import type { AABB } from '#/types/index.js';
 
 /**
  * Properties required to compute the AABB for a circle.

@@ -1,5 +1,5 @@
-import type Entity from '#src/Entity.js';
-import type { Context } from '#src/types/Context.js';
+import type Entity from '#/Entity.js';
+import type { Context } from '#/types/Context.js';
 import System from './System.js';
 
 /**

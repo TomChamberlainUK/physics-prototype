@@ -1,5 +1,5 @@
-import type { Collider2dComponent, RigidBody2dComponent } from '#src/components/index.js';
-import type Entity from '#src/Entity.js';
+import type { Collider2dComponent, RigidBody2dComponent } from '#/components/index.js';
+import type Entity from '#/Entity.js';
 import System from '../System.js';
 import { getBoxMomentOfInertia, getCircleMomentOfInertia } from './logic/index.js';
 

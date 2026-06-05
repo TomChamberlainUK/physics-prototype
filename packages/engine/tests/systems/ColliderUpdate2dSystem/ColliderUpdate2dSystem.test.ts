@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
-import { ColliderUpdate2dSystem } from '#src/systems/index.js';
-import * as computeAABBModule from '#src/systems/ColliderUpdate2dSystem/logic/computeAABB.js';
-import * as computeWorldVerticesModule from '#src/systems/ColliderUpdate2dSystem/logic/computeWorldVertices.js';
+import { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
+import { ColliderUpdate2dSystem } from '#/systems/index.js';
+import * as computeAABBModule from '#/systems/ColliderUpdate2dSystem/logic/computeAABB.js';
+import * as computeWorldVerticesModule from '#/systems/ColliderUpdate2dSystem/logic/computeWorldVertices.js';
 
 describe('ColliderUpdate2dSystem', () => {
   describe('constructor()', () => {

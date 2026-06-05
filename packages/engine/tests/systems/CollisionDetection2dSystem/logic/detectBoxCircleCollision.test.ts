@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import { Vector2d } from '#src/maths/index.js';
-import { computeWorldVertices } from '#src/systems/ColliderUpdate2dSystem/logic/index.js';
-import { detectBoxCircleCollision } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import { Vector2d } from '#/maths/index.js';
+import { computeWorldVertices } from '#/systems/ColliderUpdate2dSystem/logic/index.js';
+import { detectBoxCircleCollision } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 import { isPointNearConvexPolygon } from '../../../utils/index.js';
 
 describe('detectBoxCircleCollision', () => {

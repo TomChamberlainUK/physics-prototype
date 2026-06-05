@@ -1,7 +1,7 @@
-import type { Geometry2dComponent, Transform2dComponent } from '#src/components/index.js';
-import type Entity from '#src/Entity.js';
-import type { Context } from '#src/types/index.js';
-import { lerp } from '#src/utils/index.js';
+import type { Geometry2dComponent, Transform2dComponent } from '#/components/index.js';
+import type Entity from '#/Entity.js';
+import type { Context } from '#/types/index.js';
+import { lerp } from '#/utils/index.js';
 import System from './System.js';
 
 /**

@@ -1,4 +1,4 @@
-import { ToggleDebugSystem, type Context } from '#src/index.js';
+import { ToggleDebugSystem, type Context } from '#/index.js';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('ToggleDebugSystem', () => {

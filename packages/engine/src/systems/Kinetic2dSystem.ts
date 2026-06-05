@@ -1,7 +1,7 @@
-import type Entity from '#src/Entity.js';
-import type { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
-import { Vector2d } from '#src/maths/index.js';
-import type { Context } from '#src/types/index.js';
+import type Entity from '#/Entity.js';
+import type { RigidBody2dComponent, Transform2dComponent } from '#/components/index.js';
+import { Vector2d } from '#/maths/index.js';
+import type { Context } from '#/types/index.js';
 import System from './System.js';
 
 /**

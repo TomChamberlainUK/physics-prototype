@@ -28,7 +28,7 @@
     "uuid": "^14.0.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.9.1",
     "eslint": "^10.4.0",
     "eslint-config-custom": "workspace:*",
     "jsdom": "^29.1.1",

@@ -1,5 +1,5 @@
-import type { Vector2d } from '#src/maths/index.js';
-import type { AABB, Shape } from '#src/types/index.js';
+import type { Vector2d } from '#/maths/index.js';
+import type { AABB, Shape } from '#/types/index.js';
 import Component from '../Component.js';
 import { getVertices } from './logic/index.js';
 

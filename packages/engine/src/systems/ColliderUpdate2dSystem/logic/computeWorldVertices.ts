@@ -1,5 +1,5 @@
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import { Matrix2d, Vector2d } from '#src/maths/index.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import { Matrix2d, Vector2d } from '#/maths/index.js';
 
 /**
  * The properties required to compute world vertices.

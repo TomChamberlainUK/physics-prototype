@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#src/maths/index.js';
-import { isPointInConvexPolygon } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import { Vector2d } from '#/maths/index.js';
+import { isPointInConvexPolygon } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('isPointInConvexPolygon', () => {
   const polygonVertices = [

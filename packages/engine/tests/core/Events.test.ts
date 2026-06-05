@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { Events } from '#src/core/index.js';
+import { Events } from '#/core/index.js';
 
 describe('Events', () => {
   describe('constructor()', () => {

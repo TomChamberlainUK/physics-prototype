@@ -1,15 +1,15 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
-import Renderer from '#src/Renderer.js';
-import { RenderDebug2dSystem } from '#src/systems/index.js';
-import * as getBroadPhaseCollisionPairsSetModule from '#src/systems/RenderDebug2dSystem/logic/getBroadPhaseCollisionPairsSet.js';
-import * as getNarrowPhaseCollisionPairsMapModule from '#src/systems/RenderDebug2dSystem/logic/getNarrowPhaseCollisionPairsMap.js';
-import * as renderAABBModule from '#src/systems/RenderDebug2dSystem/logic/renderAABB.js';
-import * as renderColliderModule from '#src/systems/RenderDebug2dSystem/logic/renderCollider.js';
-import * as renderContactPointsModule from '#src/systems/RenderDebug2dSystem/logic/renderContactPoints.js';
-import * as renderPotentialCollisionLineModule from '#src/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine.js';
-import type { BroadPhaseCollisionPair, Context, NarrowPhaseCollisionPair } from '#src/types/index.js';
+import Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
+import Renderer from '#/Renderer.js';
+import { RenderDebug2dSystem } from '#/systems/index.js';
+import * as getBroadPhaseCollisionPairsSetModule from '#/systems/RenderDebug2dSystem/logic/getBroadPhaseCollisionPairsSet.js';
+import * as getNarrowPhaseCollisionPairsMapModule from '#/systems/RenderDebug2dSystem/logic/getNarrowPhaseCollisionPairsMap.js';
+import * as renderAABBModule from '#/systems/RenderDebug2dSystem/logic/renderAABB.js';
+import * as renderColliderModule from '#/systems/RenderDebug2dSystem/logic/renderCollider.js';
+import * as renderContactPointsModule from '#/systems/RenderDebug2dSystem/logic/renderContactPoints.js';
+import * as renderPotentialCollisionLineModule from '#/systems/RenderDebug2dSystem/logic/renderPotentialCollisionLine.js';
+import type { BroadPhaseCollisionPair, Context, NarrowPhaseCollisionPair } from '#/types/index.js';
 
 describe('RenderDebug2dSystem', () => {
   let system: RenderDebug2dSystem;

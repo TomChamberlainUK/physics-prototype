@@ -1,4 +1,4 @@
-import type { ControlScheme } from '#src/types/index.js';
+import type { ControlScheme } from '#/types/index.js';
 import type Events from './Events.js';
 
 /**

@@ -1,8 +1,8 @@
-import { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
+import { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import * as areAABBsOverlappingModule from '#src/systems/CollisionDetection2dSystem/logic/areAABBsOverlapping.js';
-import { findBroadPhasePairs } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import * as areAABBsOverlappingModule from '#/systems/CollisionDetection2dSystem/logic/areAABBsOverlapping.js';
+import { findBroadPhasePairs } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('findBroadPhasePairs', () => {
   let entityA: Entity;

@@ -1,9 +1,9 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
-import { Collider2dComponent, RigidBody2dComponent } from '#src/components/index.js';
-import Entity from '#src/Entity.js';
-import { RigidBodyUpdate2dSystem } from '#src/systems/index.js';
-import * as getBoxMomentOfInertiaModule from '#src/systems/RigidBodyUpdate2dSystem/logic/getBoxMomentOfInertia.js';
-import * as getCircleMomentOfInertiaModule from '#src/systems/RigidBodyUpdate2dSystem/logic/getCircleMomentOfInertia.js';
+import { Collider2dComponent, RigidBody2dComponent } from '#/components/index.js';
+import Entity from '#/Entity.js';
+import { RigidBodyUpdate2dSystem } from '#/systems/index.js';
+import * as getBoxMomentOfInertiaModule from '#/systems/RigidBodyUpdate2dSystem/logic/getBoxMomentOfInertia.js';
+import * as getCircleMomentOfInertiaModule from '#/systems/RigidBodyUpdate2dSystem/logic/getCircleMomentOfInertia.js';
 
 describe('RigidBodyUpdate2dSystem', () => {
   describe('constructor()', () => {

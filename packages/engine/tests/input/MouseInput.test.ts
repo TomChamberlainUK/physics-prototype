@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Events, MouseInput, Vector2d, type ControlScheme } from '#src/index.js';
+import { Events, MouseInput, Vector2d, type ControlScheme } from '#/index.js';
 
 describe('MouseInput', () => {
   let input: MouseInput;

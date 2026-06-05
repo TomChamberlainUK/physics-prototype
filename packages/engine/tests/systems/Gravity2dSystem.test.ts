@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Gravity2dSystem } from '#src/systems/index.js';
-import Entity from '#src/Entity.js';
-import { RigidBody2dComponent } from '#src/components/index.js';
+import { Gravity2dSystem } from '#/systems/index.js';
+import Entity from '#/Entity.js';
+import { RigidBody2dComponent } from '#/components/index.js';
 
 describe('Gravity2dSystem', () => {
   let gravity2dSystem: Gravity2dSystem;

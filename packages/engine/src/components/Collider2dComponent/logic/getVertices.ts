@@ -1,4 +1,4 @@
-import type { Shape } from '#src/types/index.js';
+import type { Shape } from '#/types/index.js';
 import getBoxVertices from './getBoxVertices.js';
 
 /**

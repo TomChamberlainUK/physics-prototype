@@ -1,6 +1,6 @@
-import type Events from '#src/core/Events.js';
-import Vector2d from '#src/maths/Vector2d.js';
-import type { ControlScheme } from '#src/types/ControlScheme.js';
+import type Events from '#/core/Events.js';
+import Vector2d from '#/maths/Vector2d.js';
+import type { ControlScheme } from '#/types/ControlScheme.js';
 
 type ConstructorParams = {
   /** A control scheme for mapping keys to events. */

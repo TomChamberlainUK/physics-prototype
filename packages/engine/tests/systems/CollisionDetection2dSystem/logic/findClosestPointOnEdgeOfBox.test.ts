@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#src/maths/index.js';
-import { findClosestPointOnEdgeOfBox } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import { Vector2d } from '#/maths/index.js';
+import { findClosestPointOnEdgeOfBox } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('findClosestPointOnEdgeOfBox', () => {
   const vertices: Vector2d[] = [

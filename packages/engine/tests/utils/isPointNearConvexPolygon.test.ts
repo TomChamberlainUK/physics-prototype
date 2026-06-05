@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#src/maths/index.js';
+import { Vector2d } from '#/maths/index.js';
 import isPointNearConvexPolygon from './isPointNearConvexPolygon.js';
 
 describe('isPointNearConvexPolygon', () => {

@@ -1,7 +1,7 @@
-import type Entity from '#src/Entity.js';
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import type Renderer from '#src/Renderer.js';
-import { lerp } from '#src/utils/index.js';
+import type Entity from '#/Entity.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import type Renderer from '#/Renderer.js';
+import { lerp } from '#/utils/index.js';
 
 /**
  * Parameters for rendering the AABB.

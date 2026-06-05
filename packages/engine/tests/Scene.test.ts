@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Entity from '#src/Entity.js';
-import { KeyboardInput } from '#src/input/index.js';
-import Scene from '#src/Scene.js';
-import Renderer from '#src/Renderer.js';
-import type { Context } from '#src/index.js';
+import Entity from '#/Entity.js';
+import { KeyboardInput } from '#/input/index.js';
+import Scene from '#/Scene.js';
+import Renderer from '#/Renderer.js';
+import type { Context } from '#/index.js';
 
 describe('Scene', () => {
   let scene: Scene;

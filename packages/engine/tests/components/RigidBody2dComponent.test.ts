@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { RigidBody2dComponent } from '#src/components/index.js';
-import { Vector2d } from '#src/maths/index.js';
+import { RigidBody2dComponent } from '#/components/index.js';
+import { Vector2d } from '#/maths/index.js';
 
 describe('RigidBody2dComponent', () => {
   describe('constructor()', () => {

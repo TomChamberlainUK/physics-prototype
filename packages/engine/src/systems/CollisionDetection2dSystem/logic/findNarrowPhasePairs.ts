@@ -1,6 +1,6 @@
-import type Entity from '#src/Entity.js';
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import type { NarrowPhaseCollisionPair } from '#src/types/index.js';
+import type Entity from '#/Entity.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import type { NarrowPhaseCollisionPair } from '#/types/index.js';
 import detectCollision from './detectCollision.js';
 
 /**

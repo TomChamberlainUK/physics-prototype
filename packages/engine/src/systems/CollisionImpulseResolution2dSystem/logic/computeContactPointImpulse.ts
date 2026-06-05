@@ -1,5 +1,5 @@
-import type { RigidBody2dComponent, Transform2dComponent } from '#src/components/index.js';
-import { Vector2d } from '#src/maths/index.js';
+import type { RigidBody2dComponent, Transform2dComponent } from '#/components/index.js';
+import { Vector2d } from '#/maths/index.js';
 import {
   computeEffectiveMass,
   computeNormalImpulseMagnitude,

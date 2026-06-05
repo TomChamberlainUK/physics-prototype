@@ -1,6 +1,6 @@
-import type { Transform2dComponent } from '#src/components/index.js';
-import type Entity from '#src/Entity.js';
-import { Vector2d } from '#src/maths/index.js';
+import type { Transform2dComponent } from '#/components/index.js';
+import type Entity from '#/Entity.js';
+import { Vector2d } from '#/maths/index.js';
 import System from './System.js';
 
 /**

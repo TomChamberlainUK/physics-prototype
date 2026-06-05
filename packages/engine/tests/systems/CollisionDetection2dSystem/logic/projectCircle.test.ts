@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Vector2d } from '#src/maths/index.js';
-import { projectCircle } from '#src/systems/CollisionDetection2dSystem/logic/index.js';
+import { Vector2d } from '#/maths/index.js';
+import { projectCircle } from '#/systems/CollisionDetection2dSystem/logic/index.js';
 
 describe('projectCircle', () => {
   it('Should return correct min and max projections for a circle onto an axis', () => {

@@ -1,4 +1,4 @@
-import type Entity from '#src/Entity.js';
+import type Entity from '#/Entity.js';
 import type { ContactManifold } from './ContactManifold.js';
 
 /**

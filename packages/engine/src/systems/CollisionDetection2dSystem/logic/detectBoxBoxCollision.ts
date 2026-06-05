@@ -1,6 +1,6 @@
-import type { Collider2dComponent, Transform2dComponent } from '#src/components/index.js';
-import { Vector2d } from '#src/maths/index.js';
-import type { Collision } from '#src/types/index.js';
+import type { Collider2dComponent, Transform2dComponent } from '#/components/index.js';
+import { Vector2d } from '#/maths/index.js';
+import type { Collision } from '#/types/index.js';
 import computeBoxAxes from './computeBoxAxes.js';
 import computeSegmentIntersection from './computeSegmentIntersection.js';
 import isPointInConvexPolygon from './isPointInConvexPolygon.js';

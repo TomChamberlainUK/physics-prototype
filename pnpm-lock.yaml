@@ -23,6 +23,12 @@ importers:
       '@types/node':
         specifier: ^24.13.2
         version: 24.13.2
+      eslint:
+        specifier: ^10.5.0
+        version: 10.5.0
+      eslint-config-custom:
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       svelte:
         specifier: ^5.56.4
         version: 5.56.4(@typescript-eslint/types@8.61.1)

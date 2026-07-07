@@ -14,6 +14,7 @@ export default defineConfig([
   }),
   tseslint.configs.recommended,
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts'],
     plugins: {
       tsdoc: tsdoceslint,
     },

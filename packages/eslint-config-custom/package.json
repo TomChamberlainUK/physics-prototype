@@ -18,7 +18,7 @@
     "eslint-plugin-svelte": "^3.20.0",
     "eslint-plugin-tsdoc": "^0.5.2",
     "globals": "^17.7.0",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.63.0"
   },
   "peerDependencies": {
     "eslint": ">= 10.4.0"

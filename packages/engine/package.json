@@ -33,7 +33,7 @@
     "eslint-config-custom": "workspace:*",
     "jsdom": "^29.1.1",
     "tsconfig": "workspace:*",
-    "typescript": "~6.0.3",
+    "typescript": "~7.0.2",
     "vitest": "^4.1.10",
     "vitest-canvas-mock": "^1.1.4"
   }

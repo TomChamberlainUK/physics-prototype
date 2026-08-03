@@ -31,7 +31,7 @@
     "@testing-library/jest-dom": "^7.0.0",
     "eslint": "^10.8.0",
     "eslint-config-custom": "workspace:*",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "tsconfig": "workspace:*",
     "typescript": "~6.0.3",
     "vitest": "^4.1.10",

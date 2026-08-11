@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.0",
-    "eslint": "^10.8.0",
+    "eslint": "^10.8.1",
     "eslint-config-custom": "workspace:*",
     "jsdom": "^30.0.1",
     "tsconfig": "workspace:*",
